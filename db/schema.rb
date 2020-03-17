@@ -186,6 +186,18 @@ ActiveRecord::Schema.define(version: 2020_03_17_143601) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "taxes", force: :cascade do |t|
+    t.datetime "date", null: false
+    t.bigint "store_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "nominal", null: false
+    t.string "invoice", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_taxes_on_store_id"
+    t.index ["user_id"], name: "index_taxes_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -225,4 +237,6 @@ ActiveRecord::Schema.define(version: 2020_03_17_143601) do
   add_foreign_key "operationals", "stores"
   add_foreign_key "operationals", "users"
   add_foreign_key "sub_categories", "categories"
+  add_foreign_key "taxes", "stores"
+  add_foreign_key "taxes", "users"
 end

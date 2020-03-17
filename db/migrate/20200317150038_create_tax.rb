@@ -5,6 +5,7 @@ class CreateTax < ActiveRecord::Migration[5.2]
     	t.references :store, foreign_key: true, null: false
     	t.references :user, foreign_key: true, null: false
     	t.bigint :nominal, null: false
+    	t.string :invoice , null:false
     	t.timestamps
     end
   end
