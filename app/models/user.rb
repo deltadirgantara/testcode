@@ -20,6 +20,7 @@ class User < ApplicationRecord
   STAFF = 'staff'
 
   belongs_to :store
+  has_many :taxs
   has_many :customers
   has_many :custom_orders
   has_many :operationals
