@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_17_065119) do
+ActiveRecord::Schema.define(version: 2020_03_17_143601) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -140,6 +140,18 @@ ActiveRecord::Schema.define(version: 2020_03_17_065119) do
     t.index ["to_user_id"], name: "index_notifications_on_to_user_id"
   end
 
+  create_table "operationals", force: :cascade do |t|
+    t.datetime "date", null: false
+    t.bigint "store_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "nominal", null: false
+    t.string "invoice", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_operationals_on_store_id"
+    t.index ["user_id"], name: "index_operationals_on_user_id"
+  end
+
   create_table "stores", force: :cascade do |t|
     t.string "name", default: "DEFAULT STORE NAME", null: false
     t.string "address", default: "DEFAULT STORE ADDRESS", null: false
@@ -210,5 +222,7 @@ ActiveRecord::Schema.define(version: 2020_03_17_065119) do
   add_foreign_key "items", "sub_categories"
   add_foreign_key "notifications", "users", column: "from_user_id"
   add_foreign_key "notifications", "users", column: "to_user_id"
+  add_foreign_key "operationals", "stores"
+  add_foreign_key "operationals", "users"
   add_foreign_key "sub_categories", "categories"
 end
