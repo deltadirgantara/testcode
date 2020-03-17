@@ -4,5 +4,6 @@ class Store < ApplicationRecord
   has_many :items
   has_many :customers
   has_many :custom_orders
+  has_many :operationals
 end
 
