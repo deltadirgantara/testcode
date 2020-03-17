@@ -1,0 +1,10 @@
+tr
+  td #{customer.name}
+  td #{customer.email}
+  td #{customer.address}
+  td #{number_to_phone(customer.phone, country_code: 62)}
+  td
+    a href='#{customer_path(id: customer.id)}'
+    	button.btn.btn-info type="button" 
+	       	| Detil
+

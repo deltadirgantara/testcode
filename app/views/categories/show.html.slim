@@ -1,0 +1,38 @@
+container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Detil Kategori Barang
+      .card-body
+        = form_for :category, url: "", method: "" do |form|
+          .form-group
+            label for="name" Nama
+            = form.text_field :name, required: true, class: "form-control md-form", id: "name", readonly: "true"
+
+          .form-group
+            label Jumlah Sub-kategori
+            input readonly=true value="#{@category.sub_categories.count}" class="form-control md-form"
+
+          - total = 0
+          - if @category.sub_categories.count > 0
+            - @category.sub_categories.each do |sub_cat|
+              - total += sub_cat.items.count
+          .form-group
+            label Jumlah Barang
+            input readonly=true value="#{total}" class="form-control md-form"
+
+          .row
+            .col-4.text-center
+              = button_to "Hapus", @category, :method=>:delete, :class=>"btn btn-danger"
+
+            .col-4.text-center
+              a href='#{edit_category_path(id: @category.id)}' 
+                button.btn.btn-warning.black-text type="button" 
+                  | Ubah
+                  
+            .col-4.text-center
+              a href='#{sub_categories_path(id: @category.id)}' 
+                button.btn.btn-primary type="button" 
+                  | Sub-kategori
+

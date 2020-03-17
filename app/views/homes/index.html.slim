@@ -1,0 +1,19 @@
+.section.mb-5
+  .card.card-cascade.narrower
+    .section
+      .row
+        .col-xl-12.col-lg-12.mr-0.pb-2
+          .view.view-cascade.gradient-card-header.light-blue.lighten-1
+            h2.h2-responsive.mb-0.font-weight-500 Harga Emas
+          .card-body.card-body-cascade.pb-0
+            .row.py-3.pl-4
+              table class="table"
+              	tr
+              		th Jenis Emas
+              		th Jual
+              		th Beli
+              	- GoldPrice.all.each do |gold_price|
+              		tr
+              			td	#{gold_price.gold_type.name}
+              			td 	#{number_with_delimiter(gold_price.sell.to_i, delimiter: ".")}
+              			td 	#{number_with_delimiter(gold_price.buy.to_i, delimiter: ".")}

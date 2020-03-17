@@ -1,0 +1,25 @@
+container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Detil Sub-kategori Barang - #{@sub_category.name}
+      .card-body
+        = form_for :sub_category, url: "", method: "" do |form|
+          .form-group
+            label for="name" Nama
+            = form.text_field :name, required: true, class: "form-control md-form", id: "name", readonly: "true"
+
+          .form-group
+            label Kategori
+            input class="form-control md-form" value="#{@sub_category.category.name}" readonly=true
+
+          .form-group
+            label Jumlah Item
+            input class="form-control md-form" value="#{@sub_category.items.count}"  readonly=true
+
+          .row
+            .col-12.text-center
+              a href='#{edit_sub_category_path(id: @sub_category.id)}' 
+                button.btn.btn-warning.black-text type="button" 
+                  | Ubah

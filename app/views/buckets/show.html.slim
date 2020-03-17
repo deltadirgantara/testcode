@@ -1,0 +1,25 @@
+container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Detil Baki
+      .card-body
+        = form_for :bucket, url: "", method: "" do |form|
+          .form-group
+            label for="name" Nama
+            = form.text_field :name, required: true, class: "form-control md-form", id: "name", readonly: "true"
+
+          .form-group
+            label Jumlah Barang
+            input readonly=true value="#{@bucket.items.count}" class="form-control md-form"
+
+          .row
+            .col.text-center
+              a href='#{edit_bucket_path(id: @bucket.id)}' 
+                button.btn.btn-warning.black-text type="button" 
+                  | Ubah
+            - if !@bucket.items.present?
+              .col.text-center
+                = button_to "Hapus", @bucket, :method=>:delete, :class=>"btn btn-danger"
+

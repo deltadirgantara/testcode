@@ -1,0 +1,18 @@
+tr
+	td #{item.code}
+	td #{item.sub_category.category.name}
+	td #{item.sub_category.name}
+	td #{item.weight}
+	td
+		- if item.stock == 1
+			.text-success
+				| Tersedia
+		- else
+			.text-danger
+				| Tidak Tersedia
+	td
+		a href='#{item_path(id: item.id)}'
+          button.btn.btn-info type="button" 
+              | Detil
+	
+		    

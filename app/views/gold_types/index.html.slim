@@ -1,0 +1,43 @@
+.row
+  .col.text-left
+    h5
+      | Jenis Emas
+  .col.text-right
+    a href="#{new_gold_type_path}"
+      button.btn.btn-success. type="button" 
+        i.fas.fa-plus 
+        |   Tambah
+br
+.container-fluid
+  .col-lg-12.col-md-12
+    .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Pencarian
+    .card.mb-4
+      .card-body
+        = form_for :gold, url: gold_types_path, method: 'GET' do |form|
+          .row.align-middle
+            .col-md-12
+              input type="text" class="form-control md-form" id="search" name="search"
+            .col-md-12.text-center
+              button class="btn btn-primary"
+                | Cari
+
+.container-fluid
+  .col-lg-12.col-md-12
+    .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Data
+    .card.mb-4 
+      .card-body.table-responsive.text-nowrap
+        table class="table" 
+          thead
+            th Nama
+            th Jumlah Barang
+            th Aksi
+          tbody
+            = render partial: 'list', collection: @gold_types, as: :gold_type
+        = paginate @gold_types
+
+
+

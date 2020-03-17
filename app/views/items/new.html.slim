@@ -1,0 +1,54 @@
+container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Tambah Barang
+      .card-body
+        = form_for :item, url: items_path, html: { multipart: true }, method: "POST" do |form|
+          .form-group
+            label for="name" Kode
+            = form.text_field :code, class: "form-control md-form"
+
+          .form-group
+            label for="item" Jenis Emas
+            select name="item[gold_type_id]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" searchable="Cari..."
+              - @gold_types.each do |gold_type|
+                option value="#{gold_type.id}"
+                  | #{gold_type.name} 
+          .form-group
+            label for="item" Kategori
+            select name="item[sub_category_id]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" searchable="Cari..."
+              - @categories.each do |category|
+                - @sub_categories = category.sub_categories.order("name ASC")
+                - @sub_categories.each do |sub_cat|
+                  option value="#{sub_cat.id}"
+                    | #{category.name} - #{sub_cat.name} 
+                    
+          .form-group
+            label for="item" Baki
+            select name="item[bucket_id]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" searchable="Cari..."
+              - @buckets.each do |bucket|
+                option value="#{bucket.id}"
+                  | #{bucket.name}
+          .form-group
+            label for="name" Berat
+            = form.number_field :weight, required: true, class: "form-control md-form", step: "0.00001"
+
+          .form-group
+            label for="name" Harga Beli
+            = form.number_field :buy, required: true, class: "form-control md-form", step: "1", value:"100000"
+
+          .form-group
+            label for="store" Foto
+            .input-group
+              .input-group-prepend
+                span#inputGroupFileAddon01.input-group-text
+                  | Upload
+              .custom-file
+                input#inputGroupFile01.custom-file-input[type="file" name="item[image]" aria-describedby="inputGroupFileAddon01"]
+                label.custom-file-label[for="inputGroupFile01"]
+                  | Pilih Foto
+
+          .form-group.text-center
+            = form.submit "Tambah", class: "btn btn-primary"

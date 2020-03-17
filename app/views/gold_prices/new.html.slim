@@ -1,0 +1,22 @@
+container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Tambah Harga Emas
+      .card-body
+        = form_for :gold, url: gold_prices_path, method: "POST" do |form|
+          .form-group
+            select name="gold[gold_type_id]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" searchable="Cari..."
+              - @gold_types.each do |gold_type|
+                option value="#{gold_type.id}"
+                  | #{gold_type.name}
+          .form-group
+            label for="name" Jual
+            = form.number_field :sell, required: true, class: "form-control md-form", id: "name"
+          .form-group
+            label for="name" Beli
+            = form.number_field :buy, required: true, class: "form-control md-form", id: "name"
+
+          .form-group.text-center
+            = form.submit "Tambah", class: "btn btn-primary"

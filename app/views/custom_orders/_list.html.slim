@@ -1,0 +1,28 @@
+tr
+	td #{custom_order.invoice}
+	td #{custom_order.user.name} - #{custom_order.store.name}
+	td #{custom_order.customer.name}
+	td #{number_with_delimiter(custom_order.down_payment.to_i, delimiter: ".")}
+	
+	- total_payment = custom_order.total_payment
+	- if total_payment <= 0
+		td -
+	- else
+		td #{number_with_delimiter(@total_payment.to_i, delimiter: ".")}
+	
+
+	- deficiency = custom_order.total_payment - custom_order.down_payment
+	- if deficiency < 0
+		td -
+	- else
+		td #{number_with_delimiter(deficiency.to_i, delimiter: ".")}
+
+	- if custom_order.date_receive.present?
+		td #{custom_order.date_receive.to_date}
+	- else
+		td - 
+
+	td
+		a href='#{custom_order_path(id: custom_order.id)}'
+          button.btn.btn-info type="button" 
+              | Detil

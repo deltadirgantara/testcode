@@ -1,0 +1,18 @@
+tr
+	td #{category.name}
+	td #{category.sub_categories.count}
+	- if category.sub_categories.count > 0
+		- total = 0
+		- category.sub_categories.each do |sub_cat|
+			- total += sub_cat.items.count
+	- else
+		td 0
+
+	td
+		.row
+			.col.text-right
+		    	a href='#{category_path(id: category.id)}'
+		          button.btn.btn-info type="button" 
+		              | Detil
+		    .col.text-left
+		    	= button_to "Hapus", category, :method=>:delete, :class=>"btn btn-danger"

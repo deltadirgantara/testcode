@@ -1,0 +1,10 @@
+tr	
+	td #{bucket.name}
+	td #{bucket.items.count}
+	td #{bucket.items.sum(:weight)}
+	td
+		.row
+			.col.text-right
+		    	a href='#{bucket_path(id: bucket.id)}'
+		          button.btn.btn-info type="button" 
+		              | Detil

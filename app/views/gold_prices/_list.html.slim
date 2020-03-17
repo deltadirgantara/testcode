@@ -1,0 +1,8 @@
+tr	
+	td #{gold_price.gold_type.name}
+	td #{number_with_delimiter(gold_price.sell.to_i, delimiter: ".")}
+	td #{number_with_delimiter(gold_price.buy.to_i, delimiter: ".")}
+	td
+	    a href='#{edit_gold_price_path(id: gold_price.id)}' 
+            button.btn.btn-warning.black-text type="button" 
+                | Ubah

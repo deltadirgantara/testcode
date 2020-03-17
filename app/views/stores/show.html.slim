@@ -1,0 +1,42 @@
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Detil Toko - #{@store.name}
+      .card-body
+        = form_for :store, url: "" do |form|
+          .form-group
+            label for="name" Nama
+            = form.text_field :name, required: true, class: "form-control md-form", id: "name", readonly:"true"
+          .form_group
+            label for="address" Alamat
+            = form.text_field :address, required: true, class: "form-control md-form", id: "address", readonly:"true"
+          .form-group
+            label for="phone" Nomor Telepon
+            input class="form-control md-form" value="#{number_to_phone(@store.phone, country_code: 62)}" readonly="true"
+          .form-group
+            label for="phone" Jumlah Pelanggan
+            - users = User.where(store: @store)
+            - customer_count = Customer.where(user: users).count
+            input type="number" class="form-control md-form" value='#{number_with_delimiter(customer_count, delimiter: ".")}' readonly="true"
+          .form-group
+            label for="user" Karyawan
+            textarea class="form-control md-form" disabled="disabled"
+              - users = User.where(store: @store).pluck(:name)
+              - users.each do |user|
+                -if users.last == user
+                  | #{user}
+                - else
+                  | #{user}, 
+        
+        .row
+          - if @store.users.nil?
+            .col.text-center
+              = button_to "Hapus Toko", @store, :method=>:delete, :class=>"btn btn-danger"
+          .col.text-center
+            a href='#{edit_store_path(id: @store.id)}'
+              button.btn.btn-warning type="button" 
+                | Edit
+
+

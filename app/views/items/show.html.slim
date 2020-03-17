@@ -1,0 +1,67 @@
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Detil Barang
+      .card-body
+        .row
+          .col-12.text-center
+            - if @item.image.present?
+              =image_tag("/uploads/items/#{@item.image}", height: '400', width: '600', class:" z-depth-2")
+            - else
+              =image_tag("/uploads/items/default.png", height: '400', width: '600', class:"z-depth-2")
+          .col-12
+            = form_for :item, url: "", method: "" do |form|
+              .form-group
+                label for="code" Kode
+                = form.text_field :code, required: true, class: "form-control md-form", id: "name", readonly: "true"
+
+              .form-group
+                label Jenis Emas
+                input readonly=true value="#{@item.gold_type.name}" class="form-control md-form"
+
+              .form-group
+                label Kategori
+                input readonly=true value="#{@item.sub_category.category.name} - #{@item.sub_category.name}" class="form-control md-form"
+
+              .form-group
+                label Baki
+                input readonly=true value="#{@item.bucket.name}" class="form-control md-form"
+
+              .form-group
+                label Berat
+                input readonly=true value="#{@item.weight}" class="form-control md-form"
+
+              .form-group
+                label Harga Beli
+                input readonly=true value="#{number_with_delimiter(@item.buy.to_i, delimiter: ".")}" class="form-control md-form"
+
+              .form-group
+                - price = @item.gold_type.gold_price.sell
+                label Harga Jual ( #{number_with_delimiter(price.to_i, delimiter: ".")} / gram )
+                - price *= @item.weight
+                input readonly=true value="#{number_with_delimiter(price.to_i, delimiter: ".")}" class="form-control md-form"
+
+              .form-group
+                label Status
+                - if @item.stock == 1
+                    input readonly=true value="Tersedia" class="form-control md-form" style="color: green" 
+                - else
+                  input readonly=true value="Tidak Tersedia" class="form-control md-form"  style="color: red" 
+
+                  .form-group
+                    label.text-danger TERJUAL
+                    br
+                    label Kasir - Tanggal
+                    input readonly=true value="-" class="form-control md-form"
+              
+              - if @item.stock > 0
+                .row
+                  .col-6.text-center
+                    = button_to "Hapus", @item, :method=>:delete, :class=>"btn btn-danger"
+                  .col-6.text-center
+                    a href='#{edit_item_path(id: @item.id)}' 
+                      button.btn.btn-warning.black-text type="button" 
+                        | Ubah
+
