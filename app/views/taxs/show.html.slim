@@ -3,21 +3,22 @@
     .card.mb-4
       .card-header.white-text.info-color
         h5.font-weight-500.my-1
-          | Detil Pajak - #{@tax.name}
+          | Detil Pajak - #{@tax.invoice}
       .card-body
-        = form_for :tax, url: test_path(id: @tax.id), method: "PUT" do |form|
+        = form_for :tax, url: tax_path(id: @tax.id), method: "PUT" do |form|
           .form-group
-            label for="invoice" Nomor Invoice
-            = form.text_field :name, required: true, class: "form-control md-form", id: "name", disabled: "disabled"
+            label for="store" Toko
+            input class= "form-control md-form" disabled= "disabled" value="#{@tax.store.name}"
 
           .form-group
-            label for="name" Store
-            input class= "form-control md-form" disabled= "disabled" value="#{@tax.store.name}"
+            label for="name" Nominal
+            input class= "form-control md-form" disabled= "disabled" value="#{@tax.nominal}"
+            
 
         .row
           .col-6.text-center
             = button_to "Hapus", @tax, :method=>:delete, :class=>"btn btn-danger"
           .col-6.text-center
-             a href='#{edit_test_path(id: @tax.id)}'
+             a href='#{edit_tax_path(id: @tax.id)}'
               button.btn.btn-warning type="button" 
                 | Edit
