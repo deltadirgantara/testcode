@@ -12,15 +12,15 @@ class TaxsController < ApplicationController
   end
 
   def new
-  	
+  	# @users = User.all
+   #  @stores = Store.all
   end
 
   def create
     tax = Tax.new tax_params
-    tax.store = current_user.store
-    tax.user = current_user
-    invoice = DateTime.now.to_i.to_s
-  	return redirect_back_data_error new_tax_path, "Data error" if tax.invalid?
+    nominal = params[:tax][:nominal]
+    tax.invoice = "TAX-" + DateTime.now.to_i.to_s + current_user.store.id.to_s
+    return redirect_back_data_error new_tax_path, "Data error" if tax.invalid?  
   	tax.save!
   	tax.create_activity :create, owner: current_user
   	return redirect_success tax_path(id: tax.id), "Data disimpan"
@@ -56,7 +56,7 @@ class TaxsController < ApplicationController
   private
     def tax_params
       params.require(:tax).permit(
-        :user_id, :store_id, :nominal, :invoice
+        :nominal, :date
       )
     end
 

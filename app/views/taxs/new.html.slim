@@ -7,8 +7,12 @@
       .card-body
         = form_for :tax, url: taxs_path, method: "POST" do |form|
           .form-group
-            label for="name" Nominal
-            = form.text_field :number, required: true, class: "form-control md-form", id: "nominal", placeholder:"nilai pajak"
+            label for="nominal" Nominal
+            = form.number_field :nominal, required: true, class: "form-control md-form", id: "nominal"
+          
+          .form-group
+            label.text-primary for="type" Tanggal Pembayaran
+            input class="form-control md-form" type="date" name="tax[date]" id="invoice"
 
           .form-group.text-center
             = form.submit "Tambah", class: "btn btn-primary"
