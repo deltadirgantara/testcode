@@ -12,8 +12,6 @@ class TaxsController < ApplicationController
   end
 
   def new
-  	# @users = User.all
-   #  @stores = Store.all
   end
 
   def create
