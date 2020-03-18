@@ -1,8 +1,8 @@
 tr 
+	td #{tax.invoice}
 	td #{tax.store.name}
 	td #{tax.nominal}
-	td #{tax.invoice}
 	td
-		a href='#{test_path(id: test.id)}'
+		a href='#{tax_path(id: tax.id)}'
 	      	button.btn.btn-info type="button" 
 	  	       	| Detil
