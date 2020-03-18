@@ -2,22 +2,25 @@ class TaxsController < ApplicationController
   before_action :require_login
 
   def index
-  	@taxs = Taxs.page param_page
+  	@taxs = Tax.page param_page
   end
 
   def show
   	return redirect_back_data_error taxs_path, "Date tidak ditemukan" if params[:id].nil?
-  	@taxs = Taxs.find_by(id: params[:id])
+  	@taxs = Tax.find_by(id: params[:id])
   	return redirect_back_data_error taxs_path, "Data tidak ditemukan" if @tax.nil?
   end
 
   def new
-  	@taxs = Taxs.all
+  	# @users = User.all
+   #  @stores = Store.all
   end
 
   def create
-  	tax = Taxs.new tax_params
-  	return redirect_back_data_error new_taxs_path, "Data error" if tax.invalid?
+    tax = Tax.new tax_params
+    nominal = params[:tax][:nominal]
+    tax.invoice = "TAX-" + DateTime.now.to_i.to_s + current_user.store.id.to_s
+    return redirect_back_data_error new_tax_path, "Data error" if tax.invalid?  
   	tax.save!
   	tax.create_activity :create, owner: current_user
   	return redirect_success tax_path(id: tax.id), "Data disimpan"
@@ -25,7 +28,7 @@ class TaxsController < ApplicationController
 
   def destroy
   	return redirect_back_data_error taxs_path, "Data tidak ditemukan" if params[:id].nil?
-  	tax = Taxs.find_by(id: params[:id])
+  	tax = Tax.find_by(id: params[:id])
   	return redirect_back_data_error taxs_path, "Data tidak ditemukan" if tax.nil?
   	tax.destroy
   	return redirect_success taxs_path, "Data " + tax.name + " dihapus"
@@ -33,14 +36,14 @@ class TaxsController < ApplicationController
 
   def edit
   	return redirect_back_data_error taxs_path, "Date tidak ditemukan" if params[:id].nil?
-  	@tax = Taxs.find_by(id: params[:id])
+  	@tax = Tax.find_by(id: params[:id])
   	return redirect_back_data_error taxs_path, "Data tidak ditemukan" if @tax.nil?
-  	@stores = Store.all
+  	@taxs = Tax.all
   end
 
   def update
   	return redirect_back_data_error taxs_path, "Date tidak ditemukan" if params[:id].nil?
-  	@tax = Taxs.find_by(id: params[:id])
+  	@tax = Tax.find_by(id: params[:id])
   	return redirect_back_data_error taxs_path, "Data tidak ditemukan" if @tax.nil?
   	@tax.assign_attributes tax_params
   	return redirect_success taxs_path(id: @tax.id), "Data tidak ada perubahan" if !@tax.changed
@@ -53,7 +56,7 @@ class TaxsController < ApplicationController
   private
     def tax_params
       params.require(:tax).permit(
-        :user_id, :store_id, :nominal, :invoice
+        :nominal, :date
       )
     end
 
