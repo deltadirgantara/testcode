@@ -7,7 +7,7 @@ class TaxsController < ApplicationController
 
   def show
   	return redirect_back_data_error taxs_path, "Date tidak ditemukan" if params[:id].nil?
-  	@taxs = Tax.find_by(id: params[:id])
+  	@tax = Tax.find_by(id: params[:id])
   	return redirect_back_data_error taxs_path, "Data tidak ditemukan" if @tax.nil?
   end
 
@@ -16,7 +16,8 @@ class TaxsController < ApplicationController
 
   def create
     tax = Tax.new tax_params
-    nominal = params[:tax][:nominal]
+    tax.store = current_user.store
+    tax.user = current_user
     tax.invoice = "TAX-" + DateTime.now.to_i.to_s + current_user.store.id.to_s
     return redirect_back_data_error new_tax_path, "Data error" if tax.invalid?  
   	tax.save!
