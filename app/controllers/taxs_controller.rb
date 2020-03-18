@@ -30,26 +30,27 @@ class TaxsController < ApplicationController
   	tax = Tax.find_by(id: params[:id])
   	return redirect_back_data_error taxs_path, "Data tidak ditemukan" if tax.nil?
   	tax.destroy
-  	return redirect_success taxs_path, "Data " + tax.name + " dihapus"
+  	return redirect_success taxs_path, "Data " + tax.invoice + " dihapus"
   end
 
   def edit
-  	return redirect_back_data_error taxs_path, "Date tidak ditemukan" if params[:id].nil?
+  	return redirect_back_data_error taxs_path, "Data tidak ditemukan" if params[:id].nil?
   	@tax = Tax.find_by(id: params[:id])
   	return redirect_back_data_error taxs_path, "Data tidak ditemukan" if @tax.nil?
-  	@taxs = Tax.all
   end
 
   def update
-  	return redirect_back_data_error taxs_path, "Date tidak ditemukan" if params[:id].nil?
+  	return redirect_back_data_error taxs_path, "Data tidak ditemukan" if params[:id].nil?
   	@tax = Tax.find_by(id: params[:id])
   	return redirect_back_data_error taxs_path, "Data tidak ditemukan" if @tax.nil?
   	@tax.assign_attributes tax_params
   	return redirect_success taxs_path(id: @tax.id), "Data tidak ada perubahan" if !@tax.changed
-  	@tax.save!
   	changes = @tax.changes
-  	@tax.create_activity :edit, owner: current_user, params: changes
-  	return redirect_success tax_path(id: @tax.id), "Data disimpan" if !@tax.changed
+    if @tax.changed?
+      @tax.save! 
+      @tax.create_activity :edit, owner: current_user, parameters: changes
+    end
+    return redirect_success taxs_path, "Data Pajak - " + @tax.invoice + " - Berhasil Diubah"
   end
 
   private
