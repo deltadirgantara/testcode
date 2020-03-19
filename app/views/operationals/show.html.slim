@@ -16,7 +16,7 @@
 
           .form-group
             label for="name" Nominal
-            = form.number_field :nominal, required: true, class: "form-control md-form", id: "nominal", disabled:"disabled"
+            = form.text_field :nominal, required: true, class: "form-control md-form", id: "nominal", disabled:"disabled", value:"#{number_with_delimiter(@operational.nominal, delimiter: ".")}"
 
           
           .form-group
