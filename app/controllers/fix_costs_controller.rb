@@ -3,6 +3,13 @@ class FixCostsController < ApplicationController
 
   def index
     @fix_costs = FixCost.page param_page
+    
+    store = current_user.store
+    start_day = DateTime.now - 90.days
+    end_day = DateTime.now + 1.day
+    graphs = graph start_day, end_day
+    gon.label = graphs[0]
+    gon.data = graphs[1]
   end
 
   def show
@@ -59,6 +66,28 @@ class FixCostsController < ApplicationController
   end
 
   private
+    def graph start_day, end_day, store
+      fix_costs_data = FixCost.where(store: store).where("date >= ? AND date <= ?", start_day, end_day).order("date ASC").group_by{ |m| m.date.beginning_of_day}
+      
+      graphs = {}
+
+      fix_costs_data.each do |fix_costs|
+        total = 0
+        day_idx = fix_costs[0].day.to_i - 1
+        fix_costs[1].each do |fix_cost|
+          total += fix_cost.nominal
+        end
+        graphs[fix_costs[0].to_date] = total
+      end
+      vals = graphs.values
+      days = graphs.keys
+      days.each_with_index do |day, idx|
+        days[idx] = day.strftime("%d-%m-%Y")
+      end
+
+      return days, vals
+    end
+
     def fix_cost_params
       params.require(:fix_cost).permit(
         :nominal, :date, :description

@@ -3,6 +3,14 @@ class BankFlowsController < ApplicationController
 
   def index
   	@bank_flows = BankFlow.page param_page
+
+    store = current_user.store
+    start_day = DateTime.now - 90.days
+    end_day = DateTime.now + 1.day
+    graphs = graph start_day, end_day, store
+    gon.label = graphs[0]
+    gon.debit = graphs[1]
+    gon.kredit = graphs[2]
   end
 
   def show
@@ -69,6 +77,33 @@ class BankFlowsController < ApplicationController
   end
 
   private
+    def graph start_day, end_day, store
+      bank_flows_data = BankFlow.where(store: store).where("date >= ? AND date <= ?", start_day, end_day).order("date ASC").group_by{ |m| m.date.beginning_of_day}
+      graphs = {}
+
+      bank_flows_data.each do |bank_flows|
+        debit = 0
+        kredit = 0
+        day_idx = bank_flows[0].day.to_i - 1
+        bank_flows[1].each do |bank_flow|
+          if bank_flow.type_flow == "IN"
+            debit += bank_flow.nominal
+          else
+            kredit += bank_flow.nominal
+          end
+        end
+        graphs[bank_flows[0].to_date] = [debit,kredit]
+      end
+      vals = graphs.values
+      debit = vals.collect {|ind| ind[0]}
+      kredit = vals.collect {|ind| ind[1]}
+      days = graphs.keys
+      days.each_with_index do |day, idx|
+        days[idx] = day.strftime("%d-%m-%Y")
+      end
+      return days, debit, kredit
+    end
+
     def bank_flow_params
       params.require(:bank_flow).permit(
         :type_bank, :type_flow, :nominal, :invoice, :date, :description

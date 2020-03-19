@@ -1,4 +1,4 @@
-- if ["operationals"].include? controller_name
+- if ["operationals", "taxs", "fix_costs"].include? controller_name
   javascript:
     var ctxL = document.getElementById("graph").getContext('2d');
     var myLineChart = new Chart(ctxL, {
@@ -23,3 +23,41 @@
         responsive: true
       }
     });
+
+- if ["bank_flows"].include? controller_name
+      javascript:
+        var ctxL = document.getElementById("graph").getContext('2d');
+        var myLineChart = new Chart(ctxL, {
+          type: 'line',
+          data: {
+            labels: gon.label,
+            datasets: [
+              {
+                label: "Debit",
+                data: gon.debit,
+                backgroundColor: [
+                'rgba(75, 192, 192, 0.2)',
+                ],
+                borderColor: [
+                "rgb(75, 192, 192)",
+                ],
+                borderWidth: 2
+              },
+              {
+                label: "Kredit",
+                data: gon.kredit,
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.1)',
+                ],
+                borderColor: [
+                'rgba(255, 99, 132, 1)',
+                ],
+                borderWidth: 2
+              }
+
+            ]
+          },
+          options: {
+            responsive: true
+          }
+        });
