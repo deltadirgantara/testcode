@@ -6,6 +6,7 @@ class CreateOperational < ActiveRecord::Migration[5.2]
     	t.references :user, foreign_key: true, null: false
     	t.bigint :nominal, null: false
     	t.string :invoice, null: false
+        t.string :description
 
     	t.timestamps
     end

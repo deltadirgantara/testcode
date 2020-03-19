@@ -9,8 +9,14 @@
           .form-group
             label for="nominal" Nominal
             = form.number_field :nominal, required: true, class: "form-control md-form", id: "nominal"
+
           .form-group
-            label.text-primary for="type" Tanggal Pembayaran
+            label for="type" Tanggal Pembayaran
             input class="form-control md-form" type="date" name="tax[date]" id="invoice" value="#{@tax.date.strftime('%Y-%m-%d')}"
+
+          .form-group
+            label for="nominal" Keterangan
+            = form.text_field :description, class: "form-control md-form", id: "nominal"
+            
           .form-group.text-center
               = form.submit "Edit", class: "btn btn-warning"

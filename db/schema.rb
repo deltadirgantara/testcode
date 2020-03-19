@@ -146,6 +146,7 @@ ActiveRecord::Schema.define(version: 2020_03_17_150038) do
     t.bigint "user_id", null: false
     t.bigint "nominal", null: false
     t.string "invoice", null: false
+    t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["store_id"], name: "index_operationals_on_store_id"
@@ -192,6 +193,7 @@ ActiveRecord::Schema.define(version: 2020_03_17_150038) do
     t.bigint "user_id", null: false
     t.bigint "nominal", null: false
     t.string "invoice", null: false
+    t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["store_id"], name: "index_taxes_on_store_id"

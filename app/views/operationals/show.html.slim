@@ -3,16 +3,16 @@
     .card.mb-4
       .card-header.white-text.info-color
         h5.font-weight-500.my-1
-          | Detil Pajak - #{@tax.invoice}
+          | Detil Operasional - #{@operational.invoice}
       .card-body
-        = form_for :tax, url: tax_path(id: @tax.id), method: "PUT" do |form|
+        = form_for :operational, url: "", method: "" do |form|
           .form-group
             label for="store" Toko
-            input class= "form-control md-form" disabled= "disabled" value="#{@tax.store.name}"
+            input class= "form-control md-form" disabled= "disabled" value="#{@operational.store.name}"
 
           .form-group
             label for="store" Dibuat Oleh
-            input class= "form-control md-form" disabled= "disabled" value="#{@tax.user.name}"
+            input class= "form-control md-form" disabled= "disabled" value="#{@operational.user.name}"
 
           .form-group
             label for="name" Nominal
@@ -21,17 +21,16 @@
           
           .form-group
             label for="name" Tanggal Pembayaran
-            input class= "form-control md-form" disabled= "disabled" value="#{@tax.date.strftime("%d/%m/%Y")}"
+            input class= "form-control md-form" disabled= "disabled" value="#{@operational.date.strftime("%d/%m/%Y")}"
 
           .form-group
             label for="name" Keterangan
             = form.text_field :description, required: true, class: "form-control md-form", id: "nominal", disabled:"disabled"
-            
 
         .row
           .col-6.text-center
-            = button_to "Hapus", @tax, :method=>:delete, :class=>"btn btn-danger"
+            = button_to "Hapus", @operational, :method=>:delete, :class=>"btn btn-danger"
           .col-6.text-center
-             a href='#{edit_tax_path(id: @tax.id)}'
+             a href='#{edit_operational_path(id: @operational.id)}'
               button.btn.btn-warning type="button" 
                 | Edit
