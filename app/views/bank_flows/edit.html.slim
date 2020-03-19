@@ -3,23 +3,31 @@
     .card.mb-4
       .card-header.white-text.info-color
         h5.font-weight-500.my-1
-          | Edit Modal - #{@modal.invoice}
+          | Edit Arus Bank - #{@bank_flow.invoice}
       .card-body
-        = form_for :modal, url: modal_path(id: @modal.id), method: "PUT" do |form|
+        = form_for :bank_flow, url: bank_flow_path(id: @bank_flow.id), method: "PUT" do |form|
           .form-group
             label for="type" Jenis
-            select name="modal[type_modal]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" 
-              option value="IN" 
-                | Penambahan
-              option value="OUT"
-                | Penarikan
+            select name="bank_flow[type_flow]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" 
+              option value="IN" selected="#{'selected' if @bank_flow.type_flow == 'IN'}"
+                | Setor
+              option value="OUT" selected="#{'selected' if @bank_flow.type_flow == 'OUT'}"
+                | Tarik
+
+          .form-group
+            label for="type" Bank
+            select name="bank_flow[type_bank]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" 
+              - @banks.each do |bank|
+                option value="#{bank}" selected="#{'selected' if bank == @bank_flow.type_bank}" 
+                  | #{bank}
+
           .form-group
             label for="nominal" Nominal
             = form.number_field :nominal, required: true, class: "form-control md-form", id: "nominal"
-
+          
           .form-group
-            label for="type" Tanggal Pembayaran
-            input class="form-control md-form" type="date" name="modal[date]" id="invoice" value="#{@modal.date.strftime('%Y-%m-%d')}"
+            label for="type" Tanggal
+            input class="form-control md-form" type="date" name="bank_flow[date]" id="invoice" value="#{Date.today.strftime('%Y-%m-%d')}"
 
           .form-group
             label for="nominal" Keterangan

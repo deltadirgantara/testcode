@@ -63,7 +63,7 @@
       cf.save!
       @modal.create_activity :edit, owner: current_user, parameters: changes
     end
-    return redirect_success modal_path(id: @modal.id), "Data Pajak - " + @modal.invoice + " - Berhasil Diubah"
+    return redirect_success modal_path(id: @modal.id), "Data - " + @modal.invoice + " - Berhasil Diubah"
   end
 
   private
