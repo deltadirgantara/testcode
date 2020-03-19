@@ -8,7 +8,7 @@ tr
 		- data = Operational.find_by(id: cash_flow.ref_id)
 		- url = operational_path(id: data.id)
 	- elsif cash_flow.type_cash == CashFlow::FIX_COST
-		- data = Operational.find_by(id: cash_flow.ref_id)
+		- data = FixCost.find_by(id: cash_flow.ref_id)
 		- url = fix_cost_path(id: data.id)
 	- elsif cash_flow.type_cash == CashFlow::MODAL
 		- data = Modal.find_by(id: cash_flow.ref_id)
