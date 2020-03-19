@@ -1,8 +1,9 @@
 tr 
 	td #{tax.invoice}
 	td #{tax.store.name}
-	td #{tax.nominal}
 	td #{tax.date.strftime("%d/%m/%Y")}
+	td #{tax.nominal}
+	td #{tax.description}
 	td
 		a href='#{tax_path(id: tax.id)}'
 	      	button.btn.btn-info type="button" 

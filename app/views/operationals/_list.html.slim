@@ -1,0 +1,10 @@
+tr 
+	td #{operational.invoice}
+	td #{operational.store.name}
+	td #{operational.date.strftime("%d/%m/%Y")}
+	td #{operational.nominal}
+	td #{operational.description}
+	td
+		a href='#{operational_path(id: operational.id)}'
+	      	button.btn.btn-info type="button" 
+	  	       	| Detil

@@ -3,16 +3,16 @@
     .card.mb-4
       .card-header.white-text.info-color
         h5.font-weight-500.my-1
-          | Tambah Pengeluaran Pajak
+          | Tambah Pengeluaran Operasional
       .card-body
-        = form_for :tax, url: taxs_path, method: "POST" do |form|
+        = form_for :operational, url: operationals_path, method: "POST" do |form|
           .form-group
             label for="nominal" Nominal
             = form.number_field :nominal, required: true, class: "form-control md-form", id: "nominal"
           
           .form-group
             label for="type" Tanggal Pembayaran
-            input class="form-control md-form" type="date" name="tax[date]" id="invoice" value="#{Date.today.strftime('%Y-%m-%d')}"
+            input class="form-control md-form" type="date" name="operational[date]" id="invoice" value="#{Date.today.strftime('%Y-%m-%d')}"
 
           .form-group
             label for="nominal" Keterangan

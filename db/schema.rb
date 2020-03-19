@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2020_03_17_065119) do
+=======
+ActiveRecord::Schema.define(version: 2020_03_19_003009) do
+>>>>>>> ca8f53637efadc4d146e47a2418284c235871433
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +41,14 @@ ActiveRecord::Schema.define(version: 2020_03_17_065119) do
   create_table "buckets", force: :cascade do |t|
     t.string "name", null: false
     t.float "weight", default: 0.0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "cash_flows", force: :cascade do |t|
+    t.bigint "ref_id", null: false
+    t.integer "type_cash", null: false
+    t.integer "type_flow", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -93,6 +105,19 @@ ActiveRecord::Schema.define(version: 2020_03_17_065119) do
     t.index ["user_id"], name: "index_customers_on_user_id"
   end
 
+  create_table "fix_costs", force: :cascade do |t|
+    t.datetime "date", null: false
+    t.bigint "store_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "nominal", null: false
+    t.string "invoice", null: false
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_fix_costs_on_store_id"
+    t.index ["user_id"], name: "index_fix_costs_on_user_id"
+  end
+
   create_table "gold_prices", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -140,6 +165,22 @@ ActiveRecord::Schema.define(version: 2020_03_17_065119) do
     t.index ["to_user_id"], name: "index_notifications_on_to_user_id"
   end
 
+<<<<<<< HEAD
+=======
+  create_table "operationals", force: :cascade do |t|
+    t.datetime "date", null: false
+    t.bigint "store_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "nominal", null: false
+    t.string "invoice", null: false
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_operationals_on_store_id"
+    t.index ["user_id"], name: "index_operationals_on_user_id"
+  end
+
+>>>>>>> ca8f53637efadc4d146e47a2418284c235871433
   create_table "stores", force: :cascade do |t|
     t.string "name", default: "DEFAULT STORE NAME", null: false
     t.string "address", default: "DEFAULT STORE ADDRESS", null: false
@@ -174,6 +215,22 @@ ActiveRecord::Schema.define(version: 2020_03_17_065119) do
     t.datetime "updated_at", null: false
   end
 
+<<<<<<< HEAD
+=======
+  create_table "taxes", force: :cascade do |t|
+    t.datetime "date", null: false
+    t.bigint "store_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "nominal", null: false
+    t.string "invoice", null: false
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_taxes_on_store_id"
+    t.index ["user_id"], name: "index_taxes_on_user_id"
+  end
+
+>>>>>>> ca8f53637efadc4d146e47a2418284c235871433
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -203,6 +260,8 @@ ActiveRecord::Schema.define(version: 2020_03_17_065119) do
   add_foreign_key "custom_orders", "suppliers"
   add_foreign_key "custom_orders", "users"
   add_foreign_key "customers", "users"
+  add_foreign_key "fix_costs", "stores"
+  add_foreign_key "fix_costs", "users"
   add_foreign_key "gold_prices", "gold_types"
   add_foreign_key "items", "buckets"
   add_foreign_key "items", "gold_types"

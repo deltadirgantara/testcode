@@ -1,0 +1,25 @@
+- if ["operationals"].include? controller_name
+  javascript:
+    var ctxL = document.getElementById("graph").getContext('2d');
+    var myLineChart = new Chart(ctxL, {
+      type: 'line',
+      data: {
+        labels: gon.label,
+        datasets: [
+          {
+            label: "Operasional",
+            data: gon.data,
+            backgroundColor: [
+            'rgba(255, 206, 86, 0.1)',
+            ],
+            borderColor: [
+            'rgba(255, 206, 86, 1)',
+            ],
+            borderWidth: 2
+          }
+        ]
+      },
+      options: {
+        responsive: true
+      }
+    });
