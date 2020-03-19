@@ -2,15 +2,16 @@ class TaxsController < ApplicationController
   before_action :require_login
 
   def index
-  	@taxs = Tax.page param_page
-
+    @taxs = Tax.page param_page
+    
     store = current_user.store
     start_day = DateTime.now - 90.days
     end_day = DateTime.now + 1.day
-    graphs = graph start_day, end_day
+    graphs = graph start_day, end_day, store
     gon.label = graphs[0]
     gon.data = graphs[1]
   end
+
 
   def show
   	return redirect_back_data_error taxs_path, "Data tidak ditemukan" if params[:id].nil?

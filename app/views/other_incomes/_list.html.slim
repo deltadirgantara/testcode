@@ -1,0 +1,10 @@
+tr 
+	td #{other_income.invoice}
+	td #{other_income.store.name}
+	td #{other_income.date.strftime("%d/%m/%Y")}
+	td #{other_income.nominal}
+	td #{other_income.description}
+	td
+		a href='#{other_income_path(id: other_income.id)}'
+	      	button.btn.btn-info type="button" 
+	  	       	| Detil

@@ -19,6 +19,9 @@ tr
 	- elsif cash_flow.type_cash == CashFlow::OTHEROUTCOME
 		- data = OtherOutcome.find_by(id: cash_flow.ref_id)
 		- url = other_outcome_path(id: data.id)
+	- elsif cash_flow.type_cash == CashFlow::OTHERINCOME
+		- data = OtherIncome.find_by(id: cash_flow.ref_id)
+		- url = other_income_path(id: data.id)
 
 
 	td #{data.invoice}

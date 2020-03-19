@@ -1,0 +1,24 @@
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Tambah Pemasukan Lainnya
+      .card-body
+        = form_for :other_income, url: other_incomes_path, method: "POST" do |form|
+          .form-group
+            label for="nominal" Nominal
+            = form.number_field :nominal, required: true, class: "form-control md-form", id: "nominal"
+            
+            label.text-danger for="type" (*Nominal tidak boleh kurang dari Rp.10.000,-)
+
+          .form-group
+            label for="type" Tanggal Pembayaran
+            input class="form-control md-form" type="date" name="other_income[date]" id="invoice" value="#{Date.today.strftime('%Y-%m-%d')}"
+
+          .form-group
+            label for="nominal" Keterangan
+            = form.text_field :description, class: "form-control md-form", id: "nominal"
+
+          .form-group.text-center
+            = form.submit "Tambah", class: "btn btn-primary"

@@ -22,6 +22,6 @@ class CashFlow < ApplicationRecord
   FIX_COST = 'Biaya_Pasti'
   BANK = 'Bank'
   OTHEROUTCOME = 'Pengeluaran_Lainnya'
-  OTHERINCOME = 'PemasukkanLainnya'
+  OTHERINCOME = 'Pemasukkan_Lainnya'
 
 end
