@@ -1,0 +1,30 @@
+- action = activity.key.split('.')[1].upcase
+tr
+  td #{action}
+  td #{activity.trackable_type.upcase}
+  td #{activity.created_at}
+  td #{User.find_by(id: activity.owner_id.to_i).name}
+  - if activity.parameters.present?
+    td #{activity.parameters.keys.join(', ').upcase}
+  - else
+    td -
+  td  
+    - if action == "EDIT"
+      a href="#{activity_path(id: activity.id)}"
+        | Detil Perubahan
+    - else
+      - @activity = PublicActivity::Activity.find activity.id
+      - if @activity.trackable.present?
+        - class_name = @activity.trackable.class.name 
+
+        - if ["Modal", "Tax", "Operational", "BankFlow", "FixCost"].include? class_name
+          = link_to @activity.trackable.invoice, @activity.trackable
+        
+        - elsif ["GoldPrice"].include? class_name
+          = link_to @activity.trackable.gold_type.name, @gold_prices_path
+
+        - elsif ["Item"].include? class_name
+          = link_to @activity.trackable.code, @activity.trackable
+        
+        - else
+          = link_to @activity.trackable.name, @activity.trackable
