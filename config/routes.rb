@@ -31,10 +31,9 @@ Rails.application.routes.draw do
     resources :other_incomes
     resources :other_outcomes
 
-    resources :custom_orders
-
-
     resources :cash_flows
     resources :bank_flows
+
+    resources :custom_orders
     
 end

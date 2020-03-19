@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_19_024412) do
+ActiveRecord::Schema.define(version: 2020_03_19_074725) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -203,6 +203,32 @@ ActiveRecord::Schema.define(version: 2020_03_19_024412) do
     t.index ["user_id"], name: "index_operationals_on_user_id"
   end
 
+  create_table "other_incomes", force: :cascade do |t|
+    t.datetime "date", null: false
+    t.bigint "store_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "nominal", null: false
+    t.string "invoice", null: false
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_other_incomes_on_store_id"
+    t.index ["user_id"], name: "index_other_incomes_on_user_id"
+  end
+
+  create_table "other_outcomes", force: :cascade do |t|
+    t.datetime "date", null: false
+    t.bigint "store_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "nominal", null: false
+    t.string "invoice", null: false
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_other_outcomes_on_store_id"
+    t.index ["user_id"], name: "index_other_outcomes_on_user_id"
+  end
+
   create_table "store_banks", force: :cascade do |t|
     t.datetime "date", null: false
     t.bigint "store_id", null: false
@@ -314,6 +340,10 @@ ActiveRecord::Schema.define(version: 2020_03_19_024412) do
   add_foreign_key "notifications", "users", column: "to_user_id"
   add_foreign_key "operationals", "stores"
   add_foreign_key "operationals", "users"
+  add_foreign_key "other_incomes", "stores"
+  add_foreign_key "other_incomes", "users"
+  add_foreign_key "other_outcomes", "stores"
+  add_foreign_key "other_outcomes", "users"
   add_foreign_key "store_banks", "stores"
   add_foreign_key "store_cashes", "stores"
   add_foreign_key "sub_categories", "categories"

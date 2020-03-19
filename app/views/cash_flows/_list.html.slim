@@ -13,6 +13,10 @@ tr
 	- elsif cash_flow.type_cash == CashFlow::MODAL
 		- data = Modal.find_by(id: cash_flow.ref_id)
 		- url = modal_path(id: data.id)
+	- elsif cash_flow.type_cash == CashFlow::BANK
+		- data = BankFlow.find_by(id: cash_flow.ref_id)
+		- url = bank_flow_path(id: data.id)
+
 
 	td #{data.invoice}
 	td #{data.store.name}

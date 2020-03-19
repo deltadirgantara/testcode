@@ -3,30 +3,34 @@
     .card.mb-4
       .card-header.white-text.info-color
         h5.font-weight-500.my-1
-          | Detil Modal - #{@modal.invoice}
+          | Detil Arus Bank - #{@bank_flow.invoice}
       .card-body
-        = form_for :modal, url: modal_path(id: @modal.id), method: "PUT" do |form|
+        = form_for :bank_flow, url: bank_flow_path(id: @bank_flow.id), method: "PUT" do |form|
           .form-group
             label for="store" Toko
-            input class= "form-control md-form" disabled= "disabled" value="#{@modal.store.name}"
+            input class= "form-control md-form" disabled= "disabled" value="#{@bank_flow.store.name}"
 
           .form-group
             label for="store" Dibuat Oleh
-            input class= "form-control md-form" disabled= "disabled" value="#{@modal.user.name}"
+            input class= "form-control md-form" disabled= "disabled" value="#{@bank_flow.user.name}"
+
+          .form-group
+            label for="store" Bank
+            input class= "form-control md-form" disabled= "disabled" value="#{@bank_flow.type_bank}"
 
           .form-group
             label for="store" Jenis
-            - jenis = "Penambahan"
-            - jenis = "Penarikan" if @modal.type_modal == "OUT"
+            - jenis = "Penambahan (Setor)"
+            - jenis = "Penarikan" if @bank_flow.type_flow == "OUT"
             input class= "form-control md-form" disabled= "disabled" value="#{jenis}"
 
           .form-group
             label for="name" Nominal
-            = form.text_field :nominal, required: true, class: "form-control md-form", id: "nominal", disabled:"disabled", value:"#{number_with_delimiter(@modal.nominal, delimiter: ".")}"
+            = form.text_field :nominal, required: true, class: "form-control md-form", id: "nominal", disabled:"disabled", value:"#{number_with_delimiter(@bank_flow.nominal, delimiter: ".")}"
           
           .form-group
-            label for="name" Tanggal Pembayaran
-            input class= "form-control md-form" disabled= "disabled" value="#{@modal.date.strftime("%d/%m/%Y")}"
+            label for="name" Tanggal
+            input class= "form-control md-form" disabled= "disabled" value="#{@bank_flow.date.strftime("%d/%m/%Y")}"
 
           .form-group
             label for="name" Keterangan
@@ -35,8 +39,8 @@
 
         .row
           .col-6.text-center
-            = button_to "Hapus", @modal, :method=>:delete, :class=>"btn btn-danger"
+            = button_to "Hapus", @bank_flow, :method=>:delete, :class=>"btn btn-danger"
           .col-6.text-center
-             a href='#{edit_modal_path(id: @modal.id)}'
+             a href='#{edit_bank_flow_path(id: @bank_flow.id)}'
               button.btn.btn-warning type="button" 
                 | Edit

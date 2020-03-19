@@ -10,12 +10,13 @@ class CashFlow < ApplicationRecord
     Pajak: 1,
     Operasional: 2,
     Biaya_Pasti: 3,
-    Modal: 4
+    Modal: 4,
+    Bank: 5,
   }
 
   TAX = 'Pajak'
   MODAL = 'Modal'
   OPERATIONAL= 'Operasional'
   FIX_COST = 'Biaya_Pasti'
-
+  BANK = 'Bank'
 end
