@@ -22,7 +22,7 @@ class OtherOutcomesController < ApplicationController
     other_outcome.invoice = "OUT-" + DateTime.now.to_i.to_s + current_user.store.id.to_s
     return redirect_back_data_error new_other_outcome_path, "Data error" if other_outcome.invalid?  
   	other_outcome.save!
-    CashFlow.create ref_id: other_outcome.id, type_cash: 1, type_flow: 2
+    CashFlow.create ref_id: other_outcome.id, type_cash: 6, type_flow: 2
   	other_outcome.create_activity :create, owner: current_user
   	return redirect_success other_outcome_path(id: other_outcome.id), "Data disimpan"
   end
@@ -31,7 +31,7 @@ class OtherOutcomesController < ApplicationController
   	return redirect_back_data_error other_outcomes_path, "Data tidak ditemukan" if params[:id].nil?
   	other_outcome = OtherOutcome.find_by(id: params[:id])
   	return redirect_back_data_error outcomes_path, "Data tidak ditemukan" if other_outcome.nil?
-    cf = CashFlow.find_by(ref_id: other_outcome.id, type_cash: CashFlow::OUTCOME)
+    cf = CashFlow.find_by(ref_id: other_outcome.id, type_cash: CashFlow::OTHEROUTCOME)
     cf.destroy
   	other_outcome.destroy
   	return redirect_success other_outcomes_path, "Data " + other_outcome.invoice + " dihapus"
@@ -47,15 +47,15 @@ class OtherOutcomesController < ApplicationController
   	return redirect_back_data_error other_outcomes_path, "Data tidak ditemukan" if params[:id].nil?
   	@other_outcome = OtherOutcome.find_by(id: params[:id])
   	return redirect_back_data_error other_outcome_path, "Data tidak ditemukan" if @other_outcome.nil?
-  	@other_outcome.assign_attributes outcome_params
-    return redirect_back_data_error other_outcome_path(id: other_outcome.id), "Data error" if @other_outcome.nominal < 10000  || @outcome.date > Date.today
+  	@other_outcome.assign_attributes other_outcome_params
+    return redirect_back_data_error other_outcome_path(id: other_outcome.id), "Data error" if @other_outcome.nominal < 10000  || @other_outcome.date > Date.today
   	return redirect_success other_outcome_path(id: other_outcome.id), "Data tidak ada perubahan" if !@other_outcome.changed
   	changes = @other_outcome.changes
     if @other_outcome.changed?
-      @outcome.save! 
-      @outcome.create_activity :edit, owner: current_user, parameters: changes
+      @other_outcome.save! 
+      @other_outcome.create_activity :edit, owner: current_user, parameters: changes
     end
-    return redirect_success other_outcome_path(id: @other_outcome.id), "Data Pajak - " + @other_outcome.invoice + " - Berhasil Diubah"
+    return redirect_success other_outcome_path(id: @other_outcome.id), "Data Pengeluaran Lain - " + @other_outcome.invoice + " - Berhasil Diubah"
   end
 
   private
