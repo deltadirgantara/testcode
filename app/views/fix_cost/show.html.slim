@@ -1,0 +1,37 @@
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Detil Pengeluaran - #{@fix_cost.invoice}
+      .card-body
+        = form_for :fix_cost, url: fix_cost_path(id: @fix_cost.id), method: "PUT" do |form|
+          .form-group
+            label for="store" Toko
+            input class= "form-control md-form" disabled= "disabled" value="#{@fix_cost.store.name}"
+
+          .form-group
+            label for="store" Dibuat Oleh
+            input class= "form-control md-form" disabled= "disabled" value="#{@fix_cost.user.name}"
+
+          .form-group
+            label for="name" Nominal
+            = form.text_field :nominal, required: true, class: "form-control md-form", id: "nominal", disabled:"disabled", value:"#{number_with_delimiter(@fix_cost.nominal, delimiter: ".")}"
+
+          
+          .form-group
+            label for="name" Tanggal Pembayaran
+            input class= "form-control md-form" disabled= "disabled" value="#{@fix_cost.date.strftime("%d/%m/%Y")}"
+
+          .form-group
+            label for="name" Keterangan
+            = form.text_field :description, required: true, class: "form-control md-form", id: "nominal", disabled:"disabled"
+            
+
+        .row
+          .col-6.text-center
+            = button_to "Hapus", @fix_cost, :method=>:delete, :class=>"btn btn-danger"
+          .col-6.text-center
+             a href='#{edit_fix_cost_path(id: @fix_cost.id)}'
+              button.btn.btn-warning type="button" 
+                | Edit

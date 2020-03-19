@@ -1,0 +1,22 @@
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Edit Pengeluaran - #{@fix_cost.invoice}
+      .card-body
+        = form_for :fix_cost, url: fix_cost_path(id: @fix_cost.id), method: "PUT" do |form|
+          .form-group
+            label for="nominal" Nominal
+            = form.number_field :nominal, required: true, class: "form-control md-form", id: "nominal"
+
+          .form-group
+            label for="type" Tanggal Pembayaran
+            input class="form-control md-form" type="date" name="fix_cost[date]" id="invoice" value="#{@fix_cost.date.strftime('%Y-%m-%d')}"
+
+          .form-group
+            label for="nominal" Keterangan
+            = form.text_field :description, class: "form-control md-form", id: "nominal"
+            
+          .form-group.text-center
+              = form.submit "Edit", class: "btn btn-warning"

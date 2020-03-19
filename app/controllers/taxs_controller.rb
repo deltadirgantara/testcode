@@ -6,7 +6,7 @@ class TaxsController < ApplicationController
   end
 
   def show
-  	return redirect_back_data_error taxs_path, "Date tidak ditemukan" if params[:id].nil?
+  	return redirect_back_data_error taxs_path, "Data tidak ditemukan" if params[:id].nil?
   	@tax = Tax.find_by(id: params[:id])
   	return redirect_back_data_error taxs_path, "Data tidak ditemukan" if @tax.nil?
   end
