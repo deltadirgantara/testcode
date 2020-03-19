@@ -3,7 +3,6 @@ class FixCostsController < ApplicationController
 
   def index
     @fix_costs = FixCost.page param_page
-    binding.pry
   end
 
   def show
@@ -19,7 +18,7 @@ class FixCostsController < ApplicationController
     fix_cost = FixCost.new fix_cost_params
     fix_cost.store = current_user.store
     fix_cost.user = current_user
-    return redirect_back_data_error new_fix_cost_path, "Data error" if fix_cost.nominal < 10000  || fix_cost.date > Date.today
+    return redirect_back_data_error new_fix_cost_path, "Data error" if fix_cost.nominal < 1000  || fix_cost.date > Date.today
     fix_cost.invoice = "FIX-" + DateTime.now.to_i.to_s + current_user.store.id.to_s
     return redirect_back_data_error new_fix_cost_path, "Data error" if fix_cost.invalid?  
     fix_cost.save!
@@ -54,7 +53,7 @@ class FixCostsController < ApplicationController
       @fix_cost.save! 
       @fix_cost.create_activity :edit, owner: current_user, parameters: changes
     end
-    return redirect_success fix_cost_path(id: fix_cost.id), "Data Pajak - " + @fix_cost.invoice + " - Berhasil Diubah"
+    return redirect_success fix_costs_path(id: @fix_cost.id), "Data Pajak - " + @fix_cost.invoice + " - Berhasil Diubah"
   end
 
   private
