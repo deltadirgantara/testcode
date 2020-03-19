@@ -16,7 +16,7 @@ tr
 	- elsif cash_flow.type_cash == CashFlow::BANK
 		- data = BankFlow.find_by(id: cash_flow.ref_id)
 		- url = bank_flow_path(id: data.id)
-	 elsif cash_flow.type_cash == CashFlow::OTHEROUTCOME
+	- elsif cash_flow.type_cash == CashFlow::OTHEROUTCOME
 		- data = OtherOutcome.find_by(id: cash_flow.ref_id)
 		- url = other_outcome_path(id: data.id)
 

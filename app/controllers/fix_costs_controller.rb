@@ -7,7 +7,7 @@ class FixCostsController < ApplicationController
     store = current_user.store
     start_day = DateTime.now - 90.days
     end_day = DateTime.now + 1.day
-    graphs = graph start_day, end_day
+    graphs = graph start_day, end_day, store
     gon.label = graphs[0]
     gon.data = graphs[1]
   end
