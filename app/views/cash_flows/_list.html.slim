@@ -10,18 +10,23 @@ tr
 	- elsif cash_flow.type_cash == CashFlow::FIX_COST
 		- data = Operational.find_by(id: cash_flow.ref_id)
 		- url = fix_cost_path(id: data.id)
+	- elsif cash_flow.type_cash == CashFlow::MODAL
+		- data = Modal.find_by(id: cash_flow.ref_id)
+		- url = modal_path(id: data.id)
 
 	td #{data.invoice}
 	td #{data.store.name}
 	- if cash_flow.type_flow == "IN"
+		- @saldo += data.nominal
 		td #{number_with_delimiter(data.nominal, delimiter: ".")}
 		td
 	- else
+		- @saldo -= data.nominal
 		td
 		td #{number_with_delimiter(data.nominal, delimiter: ".")}
 
-	td #{cash_flow.type_cash.gsub("_", " ")}
-	td #{data.description}
+	td #{cash_flow.type_cash.gsub("_", " ").upcase} ( #{data.description} )
+	td #{number_with_delimiter(@saldo, delimiter: ".")}
 
 	td
 		a href='#{url}'

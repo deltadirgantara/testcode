@@ -37,6 +37,8 @@ class OperationalsController < ApplicationController
   	return redirect_back_data_error operationals_path, "Data tidak ditemukan" if params[:id].nil?
   	operational = Operational.find_by(id: params[:id])
   	return redirect_back_data_error operationals_path, "Data tidak ditemukan" if operational.nil?
+    cf = CashFlow.find_by(ref_id: operational.id, type_cash: CashFlow::OPERATIONAL)
+    cf.destroy
   	operational.destroy
   	return redirect_success operationals_path, "Data " + operational.invoice + " dihapus"
   end
@@ -59,7 +61,7 @@ class OperationalsController < ApplicationController
       @operational.save! 
       @operational.create_activity :edit, owner: current_user, parameters: changes
     end
-    return redirect_success operational_path(id: operational.id), "Data Operasional - " + @operational.invoice + " - Berhasil Diubah"
+    return redirect_success operational_path(id: @operational.id), "Data Operasional - " + @operational.invoice + " - Berhasil Diubah"
   end
 
   private

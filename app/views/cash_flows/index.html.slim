@@ -3,6 +3,7 @@
     h5
       | Daftar Arus Kas
 br
+- @saldo = StoreCash.where(store: current_user.store).find_by("date = ?", Date.today.beginning_of_month).cash
 .container-fluid
   .col-lg-12.col-md-12
     .card.mb-4
@@ -10,13 +11,16 @@ br
         h5.font-weight-500.my-1
           | Data
       .card-body.table-responsive.text-nowrap
+        h5
+          | Saldo : #{number_with_delimiter(@saldo, delimiter: ".")}
         table class="table"
           thead
             th Nomor Invoice
+            th Toko
             th Debit
             th Kredit
-            th Jenis
             th Keterangan
+            th Saldo
             th Aksi
           tbody
             = render partial: 'list', collection: @cash_flows, as: :cash_flow

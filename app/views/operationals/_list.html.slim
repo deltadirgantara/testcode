@@ -2,7 +2,7 @@ tr
 	td #{operational.invoice}
 	td #{operational.store.name}
 	td #{operational.date.strftime("%d/%m/%Y")}
-	td #{operational.nominal}
+	td #{number_with_delimiter(operational.nominal, delimiter: ".")}
 	td #{operational.description}
 	td
 		a href='#{operational_path(id: operational.id)}'

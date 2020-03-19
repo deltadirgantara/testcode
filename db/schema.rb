@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_19_003009) do
+ActiveRecord::Schema.define(version: 2020_03_19_021222) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,19 @@ ActiveRecord::Schema.define(version: 2020_03_19_003009) do
     t.index ["recipient_type", "recipient_id"], name: "index_activities_on_recipient_type_and_recipient_id"
     t.index ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type"
     t.index ["trackable_type", "trackable_id"], name: "index_activities_on_trackable_type_and_trackable_id"
+  end
+
+  create_table "bank_flows", force: :cascade do |t|
+    t.integer "bank_id", null: false
+    t.bigint "nominal", null: false
+    t.integer "flow_type", null: false
+    t.bigint "store_id", null: false
+    t.bigint "user_id", null: false
+    t.string "invoice", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_bank_flows_on_store_id"
+    t.index ["user_id"], name: "index_bank_flows_on_user_id"
   end
 
   create_table "buckets", force: :cascade do |t|
@@ -147,6 +160,20 @@ ActiveRecord::Schema.define(version: 2020_03_19_003009) do
     t.index ["sub_category_id"], name: "index_items_on_sub_category_id"
   end
 
+  create_table "modals", force: :cascade do |t|
+    t.datetime "date", null: false
+    t.integer "type_modal", default: 1, null: false
+    t.bigint "store_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "nominal", null: false
+    t.string "invoice", null: false
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_modals_on_store_id"
+    t.index ["user_id"], name: "index_modals_on_user_id"
+  end
+
   create_table "notifications", force: :cascade do |t|
     t.datetime "date_created", null: false
     t.integer "read", default: 0, null: false
@@ -172,6 +199,17 @@ ActiveRecord::Schema.define(version: 2020_03_19_003009) do
     t.datetime "updated_at", null: false
     t.index ["store_id"], name: "index_operationals_on_store_id"
     t.index ["user_id"], name: "index_operationals_on_user_id"
+  end
+
+  create_table "store_cashes", force: :cascade do |t|
+    t.datetime "date", null: false
+    t.bigint "store_id", null: false
+    t.bigint "cash", null: false
+    t.bigint "modal", null: false
+    t.bigint "bank", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_store_cashes_on_store_id"
   end
 
   create_table "stores", force: :cascade do |t|
@@ -243,6 +281,8 @@ ActiveRecord::Schema.define(version: 2020_03_19_003009) do
     t.index ["store_id"], name: "index_users_on_store_id"
   end
 
+  add_foreign_key "bank_flows", "stores"
+  add_foreign_key "bank_flows", "users"
   add_foreign_key "custom_order_items", "custom_orders"
   add_foreign_key "custom_order_items", "gold_types"
   add_foreign_key "custom_orders", "customers"
@@ -257,10 +297,13 @@ ActiveRecord::Schema.define(version: 2020_03_19_003009) do
   add_foreign_key "items", "gold_types"
   add_foreign_key "items", "stores"
   add_foreign_key "items", "sub_categories"
+  add_foreign_key "modals", "stores"
+  add_foreign_key "modals", "users"
   add_foreign_key "notifications", "users", column: "from_user_id"
   add_foreign_key "notifications", "users", column: "to_user_id"
   add_foreign_key "operationals", "stores"
   add_foreign_key "operationals", "users"
+  add_foreign_key "store_cashes", "stores"
   add_foreign_key "sub_categories", "categories"
   add_foreign_key "taxes", "stores"
   add_foreign_key "taxes", "users"

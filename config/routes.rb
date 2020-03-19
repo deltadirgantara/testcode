@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     resources :operationals
     resources :fix_costs
     resources :cash_flows
+    resources :modals
 
     resources :custom_orders
 end

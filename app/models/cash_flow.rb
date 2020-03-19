@@ -9,10 +9,12 @@ class CashFlow < ApplicationRecord
   enum type_cash: {
     Pajak: 1,
     Operasional: 2,
-    Biaya_Pasti: 3
+    Biaya_Pasti: 3,
+    Modal: 4
   }
 
   TAX = 'Pajak'
+  MODAL = 'Modal'
   OPERATIONAL= 'Operasional'
   FIX_COST = 'Biaya_Pasti'
 

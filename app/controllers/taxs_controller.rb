@@ -53,7 +53,7 @@ class TaxsController < ApplicationController
       @tax.save! 
       @tax.create_activity :edit, owner: current_user, parameters: changes
     end
-    return redirect_success tax_path(id: tax.id), "Data Pajak - " + @tax.invoice + " - Berhasil Diubah"
+    return redirect_success tax_path(id: @tax.id), "Data Pajak - " + @tax.invoice + " - Berhasil Diubah"
   end
 
   private
