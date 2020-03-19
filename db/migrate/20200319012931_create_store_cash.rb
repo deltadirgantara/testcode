@@ -5,7 +5,6 @@ class CreateStoreCash < ActiveRecord::Migration[5.2]
     	t.references :store, foreign_key: true, null: false
     	t.bigint :cash, null: false
     	t.bigint :modal, null: false
-    	t.bigint :bank, null: false
         
     	t.timestamps
     end

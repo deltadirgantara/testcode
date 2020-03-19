@@ -1,0 +1,14 @@
+tr 
+	td #{bank_flow.invoice}
+	td #{bank_flow.store.name}
+	td #{bank_flow.date.strftime("%d/%m/%Y")}
+	- tipe = "Setor"
+	- tipe = "Tarik" if bank_flow.type_flow == "OUT"
+	td #{bank_flow.type_bank}
+	td #{tipe}
+	td #{number_with_delimiter(bank_flow.nominal, delimiter: ".")}
+	td #{bank_flow.description}
+	td
+		a href='#{bank_flow_path(id: bank_flow.id)}'
+	      	button.btn.btn-info type="button" 
+	  	       	| Detil
