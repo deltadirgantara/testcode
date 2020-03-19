@@ -35,5 +35,9 @@ Rails.application.routes.draw do
     resources :bank_flows
 
     resources :custom_orders
+
+
+
+    resources :activities, only: %i[index show]
     
 end
