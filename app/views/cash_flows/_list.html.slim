@@ -1,2 +1,29 @@
 tr
-	
+	- data = nil
+	- url = nil
+	- if cash_flow.type_cash == CashFlow::TAX
+		- data = Tax.find_by(id: cash_flow.ref_id)
+		- url = tax_path(id: data.id)
+	- elsif cash_flow.type_cash == CashFlow::OPERATIONAL
+		- data = Operational.find_by(id: cash_flow.ref_id)
+		- url = operational_path(id: data.id)
+	- elsif cash_flow.type_cash == CashFlow::FIX_COST
+		- data = Operational.find_by(id: cash_flow.ref_id)
+		- url = fix_cost_path(id: data.id)
+
+	td #{data.invoice}
+	td #{data.store.name}
+	- if cash_flow.type_flow == "IN"
+		td #{number_with_delimiter(data.nominal, delimiter: ".")}
+		td
+	- else
+		td
+		td #{number_with_delimiter(data.nominal, delimiter: ".")}
+
+	td #{cash_flow.type_cash.gsub("_", " ")}
+	td #{data.description}
+
+	td
+		a href='#{url}'
+          button.btn.btn-info type="button" 
+              | Detil
