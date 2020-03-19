@@ -22,7 +22,7 @@ class FixCostsController < ApplicationController
     fix_cost.invoice = "FIX-" + DateTime.now.to_i.to_s + current_user.store.id.to_s
     return redirect_back_data_error new_fix_cost_path, "Data error" if fix_cost.invalid?  
     fix_cost.save!
-    CashFlow.create ref_id: fix_cost.id, type_cash: 1, type_flow: 2
+    CashFlow.create ref_id: fix_cost.id, type_cash: 3, type_flow: 2
     fix_cost.create_activity :create, owner: current_user
     return redirect_success fix_cost_path(id: fix_cost.id), "Data disimpan"
   end
@@ -31,6 +31,8 @@ class FixCostsController < ApplicationController
     return redirect_back_data_error fix_costs_path, "Data tidak ditemukan" if params[:id].nil?
     fix_cost = FixCost.find_by(id: params[:id])
     return redirect_back_data_error fix_costs_path, "Data tidak ditemukan" if fix_cost.nil?
+    cf = CashFlow.find_by(ref_id: fix_cost.id, type_cash: CashFlow::FIX_COST)
+    cf.destroy
     fix_cost.destroy
     return redirect_success fix_costs_path, "Data " + fix_cost.invoice + " dihapus"
   end
