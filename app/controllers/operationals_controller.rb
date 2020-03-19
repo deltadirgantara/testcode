@@ -4,9 +4,10 @@ class OperationalsController < ApplicationController
   def index
   	@operationals = Operational.page param_page
 
+    store = current_user.store
     start_day = DateTime.now - 90.days
     end_day = DateTime.now + 1.day
-    graphs = graph start_day, end_day
+    graphs = graph start_day, end_day, store
     gon.label = graphs[0]
     gon.data = graphs[1]
   end
@@ -65,8 +66,8 @@ class OperationalsController < ApplicationController
   end
 
   private
-    def graph start_day, end_day
-      operationals_data = Operational.where("date >= ? AND date <= ?", start_day, end_day).order("date ASC").group_by{ |m| m.date.beginning_of_day}
+    def graph start_day, end_day, store
+      operationals_data = Operational.where(store: store).where("date >= ? AND date <= ?", start_day, end_day).order("date ASC").group_by{ |m| m.date.beginning_of_day}
       
       graphs = {}
 
@@ -81,7 +82,7 @@ class OperationalsController < ApplicationController
       vals = graphs.values
       days = graphs.keys
       days.each_with_index do |day, idx|
-        days[idx] = day.to_date.to_s
+        days[idx] = day.strftime("%d-%m-%Y")
       end
 
       return days, vals
