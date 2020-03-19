@@ -1,0 +1,13 @@
+tr 
+	td #{modal.invoice}
+	td #{modal.store.name}
+	td #{modal.date.strftime("%d/%m/%Y")}
+	- tipe = "Penambahan"
+	- tipe = "Penarikan" if modal.type_modal == "OUT"
+	td #{tipe}
+	td #{number_with_delimiter(modal.nominal, delimiter: ".")}
+	td #{modal.description}
+	td
+		a href='#{modal_path(id: modal.id)}'
+	      	button.btn.btn-info type="button" 
+	  	       	| Detil

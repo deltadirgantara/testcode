@@ -1,0 +1,42 @@
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Detil Modal - #{@modal.invoice}
+      .card-body
+        = form_for :modal, url: modal_path(id: @modal.id), method: "PUT" do |form|
+          .form-group
+            label for="store" Toko
+            input class= "form-control md-form" disabled= "disabled" value="#{@modal.store.name}"
+
+          .form-group
+            label for="store" Dibuat Oleh
+            input class= "form-control md-form" disabled= "disabled" value="#{@modal.user.name}"
+
+          .form-group
+            label for="store" Jenis
+            - jenis = "Penambahan"
+            - jenis = "Penarikan" if @modal.type_modal == "OUT"
+            input class= "form-control md-form" disabled= "disabled" value="#{jenis}"
+
+          .form-group
+            label for="name" Nominal
+            = form.text_field :nominal, required: true, class: "form-control md-form", id: "nominal", disabled:"disabled", value:"#{number_with_delimiter(@modal.nominal, delimiter: ".")}"
+          
+          .form-group
+            label for="name" Tanggal Pembayaran
+            input class= "form-control md-form" disabled= "disabled" value="#{@modal.date.strftime("%d/%m/%Y")}"
+
+          .form-group
+            label for="name" Keterangan
+            = form.text_field :description, required: true, class: "form-control md-form", id: "nominal", disabled:"disabled"
+            
+
+        .row
+          .col-6.text-center
+            = button_to "Hapus", @modal, :method=>:delete, :class=>"btn btn-danger"
+          .col-6.text-center
+             a href='#{edit_modal_path(id: @modal.id)}'
+              button.btn.btn-warning type="button" 
+                | Edit
