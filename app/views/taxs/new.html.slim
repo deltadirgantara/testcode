@@ -8,7 +8,7 @@
         = form_for :tax, url: taxs_path, method: "POST" do |form|
           .form-group
             label for="nominal" Nominal
-            = form.number_field :nominal, required: true, class: "form-control md-form", id: "nominal"
+            = form.number_field :nominal, required: true, class: "form-control md-form", id: "nominal", value:"#{number_with_delimiter(@tax.nominal, delimiter: ".")}"
           
           .form-group
             label for="type" Tanggal Pembayaran
