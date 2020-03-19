@@ -9,6 +9,7 @@
           .form-group
             label for="nominal" Nominal
             = form.number_field :nominal, required: true, class: "form-control md-form", id: "nominal"
+
             label.text-danger for="type" (*Nominal tidak boleh kurang dari Rp.1.000,-)
           
           .form-group

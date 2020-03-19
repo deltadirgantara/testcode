@@ -18,6 +18,7 @@ class TaxsController < ApplicationController
     tax = Tax.new tax_params
     tax.store = current_user.store
     tax.user = current_user
+    binding.pry
     return redirect_back_data_error new_tax_path, "Data error" if tax.nominal < 10000  || tax.date > Date.today
     tax.invoice = "TAX-" + DateTime.now.to_i.to_s + current_user.store.id.to_s
     return redirect_back_data_error new_tax_path, "Data error" if tax.invalid?  
