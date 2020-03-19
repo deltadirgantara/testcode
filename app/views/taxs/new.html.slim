@@ -9,7 +9,8 @@
           .form-group
             label for="nominal" Nominal
             = form.number_field :nominal, required: true, class: "form-control md-form", id: "nominal"
-          
+            label.text-danger for="type" (*Nominal tidak boleh kurang dari Rp.10.000,-)
+
           .form-group
             label for="type" Tanggal Pembayaran
             input class="form-control md-form" type="date" name="tax[date]" id="invoice" value="#{Date.today.strftime('%Y-%m-%d')}"

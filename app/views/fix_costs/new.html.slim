@@ -3,15 +3,16 @@
     .card.mb-4
       .card-header.white-text.info-color
         h5.font-weight-500.my-1
-          | Tambah Pengeluaran
+          | Tambah Pengeluaran Biaya Pasti
       .card-body
         = form_for :fix_cost, url: fix_costs_path, method: "POST" do |form|
           .form-group
             label for="nominal" Nominal
             = form.number_field :nominal, required: true, class: "form-control md-form", id: "nominal"
+            label.text-danger for="type" (*Nominal tidak boleh kurang dari Rp.1.000,-)
           
           .form-group
-            label for="type" Tanggal Pembayaran
+            label for="type" Tanggal Pengeluaran
             input class="form-control md-form" type="date" name="fix_cost[date]" id="invoice" value="#{Date.today.strftime('%Y-%m-%d')}"
 
           .form-group
