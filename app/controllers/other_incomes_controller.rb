@@ -10,6 +10,7 @@ class OtherIncomesController < ApplicationController
     graphs = graph start_day, end_day, store
     gon.label = graphs[0]
     gon.data = graphs[1]
+    gon.graph_name = "Pemasukkan Lainnya"
   end
 
   def show
