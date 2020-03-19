@@ -31,6 +31,8 @@ class TaxsController < ApplicationController
   	return redirect_back_data_error taxs_path, "Data tidak ditemukan" if params[:id].nil?
   	tax = Tax.find_by(id: params[:id])
   	return redirect_back_data_error taxs_path, "Data tidak ditemukan" if tax.nil?
+    cf = CashFlow.find_by(ref_id: tax.id, type_cash: CashFlow::TAX)
+    cf.destroy
   	tax.destroy
   	return redirect_success taxs_path, "Data " + tax.invoice + " dihapus"
   end
