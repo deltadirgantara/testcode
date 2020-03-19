@@ -1,0 +1,10 @@
+tr 
+	td #{fix_cost.invoice}
+	td #{fix_cost.store.name}
+	td #{fix_cost.date.strftime("%d/%m/%Y")}
+	td #{fix_cost.nominal}
+	td #{fix_cost.description}
+	td
+		a href='#{fix_cost_path(id: fix_cost.id)}'
+	      	button.btn.btn-info type="button" 
+	  	       	| Detil
