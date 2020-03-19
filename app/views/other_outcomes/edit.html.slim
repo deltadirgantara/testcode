@@ -1,0 +1,22 @@
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Edit Pengeluaran - #{@other_outcome.invoice}
+      .card-body
+        = form_for :other_outcome, url: other_outcome_path(id: @other_outcome.id), method: "PUT" do |form|
+          .form-group
+            label for="nominal" Nominal
+            = form.number_field :nominal, required: true, class: "form-control md-form", id: "nominal"
+
+          .form-group
+            label for="type" Tanggal Pembayaran
+            input class="form-control md-form" type="date" name="other_outcome[date]" id="invoice" value="#{@other_outcome.date.strftime('%Y-%m-%d')}"
+
+          .form-group
+            label for="nominal" Keterangan
+            = form.text_field :description, class: "form-control md-form", id: "nominal"
+            
+          .form-group.text-center
+              = form.submit "Edit", class: "btn btn-warning"

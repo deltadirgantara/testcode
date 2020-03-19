@@ -1,0 +1,10 @@
+tr 
+	td #{other_outcome.invoice}
+	td #{other_outcome.store.name}
+	td #{other_outcome.date.strftime("%d/%m/%Y")}
+	td #{other_outcome.nominal}
+	td #{other_outcome.description}
+	td
+		a href='#{other_outcome_path(id: other_outcome.id)}'
+	      	button.btn.btn-info type="button" 
+	  	       	| Detil

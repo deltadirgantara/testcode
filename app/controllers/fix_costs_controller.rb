@@ -3,10 +3,6 @@ class FixCostsController < ApplicationController
 
   def index
     @fix_costs = FixCost.page param_page
-    if params[:search].present?
-      @search = params[:search].downcase
-      search = "%"+@search+"%"
-      @items = @items.where("lower(name) like ? OR lower(code) invoice ?", search, search)
   end
 
   def show
