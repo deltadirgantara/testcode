@@ -3,6 +3,12 @@
     h5
       | Baki Barang
   .col.text-right
+    a href="#{fix_costs_path(format: :pdf)}"
+      button.btn.btn-warning. type="button" 
+        i.fas.fa-download
+        |   PDF Daftar Biaya Pasti 
+        
+  .col.text-right
     a href="#{new_bucket_path}"
       button.btn.btn-success. type="button" 
         i.fas.fa-plus 

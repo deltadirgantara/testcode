@@ -27,9 +27,10 @@ table#items
     th No.Invoice
     th Tanggal
     th Nominal
+    th Dibuat Oleh
     th Keterangan
 
-  - @items.each do |item|
+  - @fix_costs.each do |fix_cost|
     tr.item-row
       td #{fix_cost.invoice}
       td #{fix_cost.date.strftime("%d/%m/%Y")}
