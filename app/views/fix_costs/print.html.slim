@@ -1,19 +1,21 @@
 #customer
   table#meta
     tr
-      td.meta-head Biaya Pasti
+      td.meta-head Jenis
       td
-        textarea #{@fix_cost.invoice}
-     tr 
+        textarea 
+          | Biaya Pasti
+    tr 
       td.meta-head Tanggal Dibuat
       td
         textarea #{DateTime.now.strftime("%d/%m/%Y")}
     tr
       td.meta-head Toko 
       td
-        textarea #{@fix_cost.store.name}
-    tr
-      td.meta-head 
+        - if @store.present?
+          textarea #{@store.name}
+        - else
+          textarea Semua Toko
    
     tr
       td.meta-head Kriteria

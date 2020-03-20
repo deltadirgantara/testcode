@@ -4,12 +4,6 @@
       | Daftar Barang
 
   .col.text-right
-    a href="#{items_path(format: :pdf)}"
-      button.btn.btn-warning. type="button" 
-        i.fas.fa-download
-        |   PDF Daftar Barang
-
-  .col.text-right
     a href="#{new_item_path}"
       button.btn.btn-success. type="button" 
         i.fas.fa-plus 
@@ -29,7 +23,7 @@ br
             - if ["owner", "super_admin"].include? current_user.level
               .col
                 select name="store_id" class="mdb-select md-form md-outline colorful-select dropdown-primary" id="store" searchable="Cari..."
-                  option value=""
+                  option value="-"
                     | Semua Toko
                   - Store.all.each do |store|
                     option value="#{store.id}"

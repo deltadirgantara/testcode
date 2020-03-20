@@ -3,11 +3,6 @@
     h5
       | Daftar Biaya Pasti
   .col.text-right
-    a href="#{fix_costs_path(format: :pdf)}"
-      button.btn.btn-warning. type="button" 
-        i.fas.fa-download
-        |   PDF Daftar Biaya Pasti
-  .col.text-right
       a href="#{new_fix_cost_path}"
         button.btn.btn-success type="button" 
           i.fas.fa-plus 
@@ -22,10 +17,9 @@ br
         .card-body.table-responsive.text-nowrap
           canvas id="graph"
   .col-lg-12.col-md-12
-    .card.mb-4
-      .card-header.white-text.info-color
-        h5.font-weight-500.my-1
-          | Pencarian
+    .card-header.white-text.info-color
+      h5.font-weight-500.my-1
+        | Pencarian
     .card.mb-4
       .card-body
         = form_for :bucket, url: fix_costs_path, method: 'GET' do |form|
@@ -35,7 +29,7 @@ br
             - if ["owner", "super_admin"].include? current_user.level
               .col
                 select name="store_id" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" id="store" searchable="Cari..."
-                  option value=""
+                  option value="-"
                     | Semua Toko
                   - Store.all.each do |store|
                     option value="#{store.id}"
@@ -43,9 +37,14 @@ br
             .col-md-12.text-center
               button class="btn btn-primary"
                 | Cari
+
         .col-md-12.text-center.grey-text
-          b
-            | #{@search}
+          a href="#{fix_costs_path(option: @params.to_s, format: :pdf)}"
+            b
+              - if @search == "" || @search.nil?
+                | Pencarian Semua Toko
+              - else
+                | #{@search}
 
 .container-fluid
   .col-lg-12.col-md-12

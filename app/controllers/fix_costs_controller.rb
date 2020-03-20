@@ -12,14 +12,29 @@ class FixCostsController < ApplicationController
     gon.data = graphs[1]
     gon.graph_name = "Biaya Pasti"
 
-    search = filter_search params
+    new_params = eval(params[:option]) if params[:option].present?
+
+    search = nil
+    if new_params.present? 
+      search = filter_search new_params
+    else
+      search = filter_search params
+    end 
 
     @search = search[0]
     @fix_costs = search[1]
+    @store = search[2]
+    @params = params.to_s
 
     respond_to do |format|
       format.html do
         @fix_costs = search[1].page param_page
+      end
+      format.pdf do
+        @recap_type = "fix_cost"
+        render pdf: DateTime.now.to_i.to_s,
+          layout: 'pdf_layout.html.erb',
+          template: "fix_costs/print.html.slim"
       end
     end
   end
@@ -31,13 +46,6 @@ class FixCostsController < ApplicationController
 
     respond_to do |format|
       format.html do
-      end
-      format.pdf do
-        @fix_costs = @fix_costs.invoice("code ASC")
-        @recap_type = "fix cost"
-        render pdf: DateTime.now.to_i.to_s,
-          layout: 'pdf_layout.html.erb',
-          template: "fix_costs/print.html.slim"
       end
     end
   end
@@ -100,6 +108,7 @@ class FixCostsController < ApplicationController
         fix_costs = fix_costs.where("lower(invoice) like ?", "%"+ search+"%")
       end
 
+      store = nil
       if params["store_id"].present?
         store = Store.find_by(id: params["store_id"])
         if store.present?
@@ -109,7 +118,7 @@ class FixCostsController < ApplicationController
       end
 
       search_text = "Pencarian" + search_text if search_text != ""
-      return search_text, fix_costs
+      return search_text, fix_costs, store
     end
 
   private

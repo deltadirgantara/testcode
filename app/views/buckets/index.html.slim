@@ -2,11 +2,6 @@
   .col.text-left
     h5
       | Baki Barang
-  .col.text-right
-    a href="#{fix_costs_path(format: :pdf)}"
-      button.btn.btn-warning. type="button" 
-        i.fas.fa-download
-        |   PDF Daftar Biaya Pasti 
         
   .col.text-right
     a href="#{new_bucket_path}"
@@ -28,7 +23,7 @@ br
             - if ["owner", "super_admin"].include? current_user.level
               .col
                 select name="store_id" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" id="store" searchable="Cari..."
-                  option value=""
+                  option value="-"
                     | Semua Toko
                   - Store.all.each do |store|
                     option value="#{store.id}"
