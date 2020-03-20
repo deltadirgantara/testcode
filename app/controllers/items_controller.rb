@@ -2,7 +2,26 @@ class ItemsController < ApplicationController
   before_action :require_login
 
   def index
-  	@items = Item.page param_page
+  	search = filter_search params
+
+    @search = search[0]
+    @items = search[1]
+    @params = params.to_s
+    respond_to do |format|
+      format.html do
+        @items = search[1].page param_page
+      end
+      format.pdf do 
+        new_params = eval(params[:option])
+        filter = filter_search new_params
+        @search = filter[0]
+        @items = filter[1].order("code ASC")
+        @store = filter[2]
+        render pdf: DateTime.now.to_i.to_s,
+          layout: 'pdf_layout.html.erb',
+          template: "items/print.html.slim"
+      end
+    end
   end
 
   def show
@@ -79,6 +98,45 @@ class ItemsController < ApplicationController
   end
 
   private
+    def filter_search params
+      results = []
+      items = Item.all
+      search_text = ""
+      if params["search"].present?
+        search_text += " '"+params["search"]+"'"
+        search = params["search"].downcase
+        items = items.where("lower(name) like ?", "%"+ search+"%")
+      end
+
+      store = nil
+      if params["store_id"].present?
+        store = Store.find_by(id: params["store_id"])
+        items = items.where(store: store)
+        if store.present?
+          search_text += " - Toko '" + store.name + "'"
+        end
+      end
+
+      if params["gold_type_id"].present?
+        gold_type = GoldType.find_by(id: params["gold_type_id"])
+        if gold_type.present?
+          items = items.where(gold_type: gold_type)
+          search_text += " - Jenis Emas '" + gold_type.name + "'"
+        end
+      end
+
+      if params["sub_category_id"].present?
+        sub_category = SubCategory.find_by(id: params["sub_category_id"])
+        if sub_category.present?
+          items = items.where(sub_category: sub_category)
+          search_text += " - Kategori '" + sub_category.name + "'"
+        end
+      end
+
+      search_text = "Pencarian" + search_text if search_text != ""
+      return search_text, items, store
+    end
+
     def item_params
       params.require(:item).permit(
         :code, :weight, :sub_category_id, :gold_type_id, :bucket_id, :buy, :image

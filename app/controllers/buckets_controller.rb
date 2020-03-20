@@ -2,7 +2,7 @@ class BucketsController < ApplicationController
   before_action :require_login
 
   def index
-  	search = filter_search 
+  	search = filter_search params
 
     @search = search[0]
     @buckets = search[1]
@@ -24,7 +24,7 @@ class BucketsController < ApplicationController
       format.html do
       end
       format.pdf do
-        @items = @bucket.items
+        @items = @bucket.items.order("code ASC")
         @recap_type = "bucket"
         render pdf: DateTime.now.to_i.to_s,
           layout: 'pdf_layout.html.erb',
@@ -73,7 +73,7 @@ class BucketsController < ApplicationController
   end
 
   private
-    def filter_search 
+    def filter_search params
       results = []
       buckets = Bucket.all
       search_text = ""
@@ -86,6 +86,7 @@ class BucketsController < ApplicationController
       if params["store_id"].present?
         store = Store.find_by(id: params["store_id"])
         if store.present?
+          buckets = buckets.where(store: store)
           search_text += " pada Toko '" + store.name + "'"
         end
       end

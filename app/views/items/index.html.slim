@@ -17,11 +17,40 @@ br
       .card-body
         = form_for :item, url: items_path, method: 'GET' do |form|
           .row.align-middle
-            .col-md-12
-              input type="text" class="form-control md-form" id="search" name="search"
+            .col
+              input type="text" class="form-control md-form" id="search" name="search" placeholder="Kode Barang ..."
+            - if ["owner", "super_admin"].include? current_user.level
+              .col
+                select name="store_id" class="mdb-select md-form md-outline colorful-select dropdown-primary" id="store" searchable="Cari..."
+                  option value=""
+                    | Semua Toko
+                  - Store.all.each do |store|
+                    option value="#{store.id}"
+                      | #{store.name}
+          .row.align-middle
+            .col-6
+              select name="gold_type_id" class="mdb-select md-form md-outline colorful-select dropdown-primary" id="store" searchable="Cari..."
+                  option value=""
+                    | Semua Jenis Emas
+                  - GoldType.all.each do |gold_type|
+                    option value="#{gold_type.id}"
+                      | #{gold_type.name}
+            .col-6
+              select name="sub_category_id" class="mdb-select md-form md-outline colorful-select dropdown-primary" id="store" searchable="Cari..."
+                  option value=""
+                    | Semua Kategori
+                  - Category.all.each do |category|
+                    - category.sub_categories.each do |sub_category|
+                      option value="#{sub_category.id}"
+                        | #{sub_category.name}
+
             .col-md-12.text-center
               button class="btn btn-primary"
                 | Cari
+        .col-md-12.text-center.grey-text
+          a href="#{items_path(option: @params.to_s, format: :pdf)}"
+            b
+              | #{@search}
 
 .container-fluid
   .col-lg-12.col-md-12
@@ -33,9 +62,10 @@ br
         table class="table" 
           thead
             th Kode
+            th Jenis Emas
+            th Berat
             th Kategori
             th Sub-kategori
-            th Berat
             th Status
             th Aksi
           tbody

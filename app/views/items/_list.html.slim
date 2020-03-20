@@ -1,8 +1,9 @@
 tr
 	td #{item.code}
+	td #{item.gold_type.name}
+	td #{item.weight}
 	td #{item.sub_category.category.name}
 	td #{item.sub_category.name}
-	td #{item.weight}
 	td
 		- if item.stock == 1
 			.text-success
