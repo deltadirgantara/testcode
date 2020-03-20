@@ -19,7 +19,17 @@ container-fluid
             input class="form-control md-form" value="#{@sub_category.items.count}"  readonly=true
 
           .row
-            .col-12.text-center
+            - if @sub_category.items.count > 0
+              .col.text-left
+                = button_to "Hapus", @sub_category, :method=>:delete, :class=>"btn btn-danger"
+
+            .col.text-center
+              a href='#{sub_category_path(id: @sub_category.id, format: :pdf)}'
+                  button.btn.btn-info type="button" 
+                      | Daftar Item
+                      
+            .col.text-center
               a href='#{edit_sub_category_path(id: @sub_category.id)}' 
                 button.btn.btn-warning.black-text type="button" 
                   | Ubah
+

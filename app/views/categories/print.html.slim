@@ -1,0 +1,43 @@
+#customer
+  table#meta
+    tr
+      td.meta-head Kategori
+      td
+        textarea #{@category.name}
+    tr
+      td.meta-head Toko 
+      td
+        textarea #{current_user.store.name}
+    tr 
+      td.meta-head Tanggal Dibuat
+      td
+        textarea #{DateTime.now.strftime("%d/%m/%Y")}
+    tr
+      td.meta-head Kriteria
+      td
+        b  
+          | #{@search}
+
+br
+- @category.sub_categories.each do |sub_category|
+  
+  h3.text-left
+    | #{sub_category.name}
+  table#items
+    tr colspan="5"
+
+
+    tr
+      th Kode
+      th Jenis Emas
+      th Berat
+      th Kategori
+      th Sub-kategori
+
+    - sub_category.items.where(store: current_user.store).each do |item|
+      tr.item-row
+        td #{item.code}
+        td #{item.gold_type.name}
+        td #{item.weight}
+        td #{item.sub_category.category.name}
+        td #{item.sub_category.name}
