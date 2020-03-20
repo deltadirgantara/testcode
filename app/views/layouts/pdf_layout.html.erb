@@ -71,7 +71,7 @@
   <div id="page-wrap">
     <% if @recap_type.present? %>
         <% recap_type = @recap_type %>
-        <% if recap_type == "bucket" %>
+        <% if ["bucket", "category", "sub_category"].include? recap_type %>
             <textarea id="header" class="text-danger">DAFTAR ITEM</textarea>
         <% else %>
             <textarea id="header" class="text-danger">LAPORAN</textarea>
@@ -81,9 +81,9 @@
     <% end %>
     
     <div id="identity">
-        <textarea id="address">CANTIK MART
-Jl. Raya Plered,Purwakarta No.17
-Kec. Plered, Kabupaten Purwakarta, Jawa Barat 
+        <textarea id="address"><%= current_user.store.name %>
+<%= current_user.store.address %>
+<%= current_user.store.phone %>
         </textarea>
     </div>
     
