@@ -16,6 +16,10 @@ container-fluid
 
           .row
             .col.text-center
+              a href='#{bucket_path(id: @bucket.id, format: :pdf)}'
+                  button.btn.btn-info type="button" 
+                      | Daftar Item
+            .col.text-center
               a href='#{edit_bucket_path(id: @bucket.id)}' 
                 button.btn.btn-warning.black-text type="button" 
                   | Ubah

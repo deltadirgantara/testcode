@@ -1,0 +1,39 @@
+#customer
+  table#meta
+    tr
+      td.meta-head Baki
+      td
+        textarea #{@bucket.name}
+    tr
+      td.meta-head Toko 
+      td
+        textarea #{@bucket.store.name}
+    tr 
+      td.meta-head Tanggal Dibuat
+      td
+        textarea #{DateTime.now.strftime("%d/%m/%Y")}
+    tr
+      td.meta-head Kriteria
+      td
+        b  
+          | #{@search}
+
+
+table#items
+  tr colspan="5"
+
+
+  tr
+    th Kode
+    th Jenis Emas
+    th Berat
+    th Kategori
+    th Sub-kategori
+
+  - @items.each do |item|
+    tr.item-row
+      td #{item.code}
+      td #{item.gold_type.name}
+      td #{item.weight}
+      td #{item.sub_category.category.name}
+      td #{item.sub_category.name}

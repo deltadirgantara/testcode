@@ -17,11 +17,19 @@ br
       .card-body
         = form_for :bucket, url: buckets_path, method: 'GET' do |form|
           .row.align-middle
-            .col-md-12
-              input type="text" class="form-control md-form" id="search" name="search"
+            .col
+              input type="text" class="form-control md-form" id="search" name="search" placeholder="Nama baki ..."
+            .col
+              select name="store_id" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" id="store" searchable="Cari..."
+                - Store.all.each do |store|
+                  option value="#{store.id}"
+                    | #{store.name}
             .col-md-12.text-center
               button class="btn btn-primary"
                 | Cari
+        .col-md-12.text-center.grey-text
+          b
+            | #{@search}
 
 .container-fluid
   .col-lg-12.col-md-12

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_19_074725) do
+ActiveRecord::Schema.define(version: 2020_03_20_034219) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,6 +54,8 @@ ActiveRecord::Schema.define(version: 2020_03_19_074725) do
     t.float "weight", default: 0.0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "store_id"
+    t.index ["store_id"], name: "index_buckets_on_store_id"
   end
 
   create_table "cash_flows", force: :cascade do |t|
@@ -320,6 +322,7 @@ ActiveRecord::Schema.define(version: 2020_03_19_074725) do
 
   add_foreign_key "bank_flows", "stores"
   add_foreign_key "bank_flows", "users"
+  add_foreign_key "buckets", "stores"
   add_foreign_key "custom_order_items", "custom_orders"
   add_foreign_key "custom_order_items", "gold_types"
   add_foreign_key "custom_orders", "customers"

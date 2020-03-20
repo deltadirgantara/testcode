@@ -2,13 +2,35 @@ class BucketsController < ApplicationController
   before_action :require_login
 
   def index
-  	@buckets = Bucket.page param_page
+  	search = filter_search 
+
+    @search = search[0]
+    @buckets = search[1]
+
+    respond_to do |format|
+      format.html do
+        @buckets = search[1].page param_page
+      end
+    end
+
   end
 
   def show
   	return redirect_back_data_error buckets_path, "Data tidak ditemukan" if params[:id].nil?
   	@bucket = Bucket.find_by(id: params[:id])
   	return redirect_back_data_error buckets_path, "Data tidak ditemukan" if @bucket.nil?
+    
+    respond_to do |format|
+      format.html do
+      end
+      format.pdf do
+        @items = @bucket.items
+        @recap_type = "bucket"
+        render pdf: DateTime.now.to_i.to_s,
+          layout: 'pdf_layout.html.erb',
+          template: "buckets/print.html.slim"
+      end
+    end
   end
 
   def new
@@ -51,6 +73,27 @@ class BucketsController < ApplicationController
   end
 
   private
+    def filter_search 
+      results = []
+      buckets = Bucket.all
+      search_text = ""
+      if params["search"].present?
+        search_text += " '"+params["search"]+"'"
+        search = params["search"].downcase
+        buckets = buckets.where("lower(name) like ?", "%"+ search+"%")
+      end
+
+      if params["store_id"].present?
+        store = Store.find_by(id: params["store_id"])
+        if store.present?
+          search_text += " pada Toko '" + store.name + "'"
+        end
+      end
+
+      search_text = "Pencarian" + search_text if search_text != ""
+      return search_text, buckets
+    end
+
     def bucket_params
       params.require(:bucket).permit(
         :name
