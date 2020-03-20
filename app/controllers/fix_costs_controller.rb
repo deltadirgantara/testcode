@@ -18,8 +18,7 @@ class FixCostsController < ApplicationController
     @fix_costs = search[1]
 
     respond_to do |format|
-      format.html 
-      format.pdf do
+      format.html do
         @fix_costs = search[1].page param_page
       end
     end
