@@ -1,0 +1,37 @@
+#customer
+  table#meta
+    tr
+      td.meta-head Biaya Pasti
+      td
+        textarea #{@fix_cost.invoice}
+    tr
+      td.meta-head Toko 
+      td
+        textarea #{@fix_cost.store.name}
+    tr 
+      td.meta-head Tanggal Dibuat
+      td
+        textarea #{DateTime.now.strftime("%d/%m/%Y")}
+    tr
+      td.meta-head Kriteria
+      td
+        b  
+          | #{@search}
+
+
+table#items
+  tr colspan="5"
+
+
+  tr
+    th No.Invoice
+    th Tanggal
+    th Nominal
+    th Keterangan
+
+  - @items.each do |item|
+    tr.item-row
+      td #{fix_cost.invoice}
+      td #{fix_cost.date.strftime("%d/%m/%Y")}
+      td #{fix_cost.nominal}
+      td #{fix_cost.description}

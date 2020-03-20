@@ -21,20 +21,33 @@ br
       .card-header.white-text.info-color
         h5.font-weight-500.my-1
           | Pencarian
+    .card.mb-4
       .card-body
-        = form_for :fix_costs, url: fix_costs_path, method: 'GET' do |form|
-          .row
-            .col-12
-              input type="text" class="form-control md-form" id="search" name="search" placeholder="Nomor Invoice..."
-            .col-12.text-center
+        = form_for :bucket, url: fix_costs_path, method: 'GET' do |form|
+          .row.align-middle
+            .col
+              input type="text" class="form-control md-form" id="search" name="search" placeholder="Nomor Invoice ..."
+            - if ["owner", "super_admin"].include? current_user.level
+              .col
+                select name="store_id" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" id="store" searchable="Cari..."
+                  option value=""
+                    | Semua Toko
+                  - Store.all.each do |store|
+                    option value="#{store.id}"
+                      | #{store.name}
+            .col-md-12.text-center
               button class="btn btn-primary"
                 | Cari
+        .col-md-12.text-center.grey-text
+          b
+            | #{@search}
+
 .container-fluid
   .col-lg-12.col-md-12
-    .card.mb-4
-      .card-header.white-text.info-color
+    .card-header.white-text.info-color
         h5.font-weight-500.my-1
           | Data
+    .card.mb-4 
       .card-body.table-responsive.text-nowrap
         table class="table"
           thead

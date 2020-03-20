@@ -11,12 +11,35 @@ class FixCostsController < ApplicationController
     gon.label = graphs[0]
     gon.data = graphs[1]
     gon.graph_name = "Biaya Pasti"
+
+    search = filter_search params
+
+    @search = search[0]
+    @fix_costs = search[1]
+
+    respond_to do |format|
+      format.html do
+        @fix_costs = search[1].page param_page
+      end
+    end
   end
 
   def show
     return redirect_back_data_error fix_costs_path, "Data tidak ditemukan" if params[:id].nil?
     @fix_cost = FixCost.find_by(id: params[:id])
     return redirect_back_data_error fix_costs_path, "Data tidak ditemukan" if @fix_cost.nil?
+
+    respond_to do |format|
+      format.html do
+      end
+      format.pdf do
+        @fix_costs = @fix_costs.invoice("code ASC")
+        @recap_type = "fix cost"
+        render pdf: DateTime.now.to_i.to_s,
+          layout: 'pdf_layout.html.erb',
+          template: "fix_costs/print.html.slim"
+      end
+    end
   end
 
   def new
@@ -87,6 +110,29 @@ class FixCostsController < ApplicationController
       end
 
       return days, vals
+    end
+
+    private
+    def filter_search params
+      results = []
+      fix_costs = FixCost.all
+      search_text = ""
+      if params["search"].present?
+        search_text += " '"+params["search"]+"'"
+        search = params["search"].downcase
+        fix_costs = fix_costs.where("lower(invoice) like ?", "%"+ search+"%")
+      end
+
+      if params["store_id"].present?
+        store = Store.find_by(id: params["store_id"])
+        if store.present?
+          fix_costs = fix_costs.where(store: store)
+          search_text += " pada Toko '" + store.name + "'"
+        end
+      end
+
+      search_text = "Pencarian" + search_text if search_text != ""
+      return search_text, fix_costs
     end
 
     def fix_cost_params
