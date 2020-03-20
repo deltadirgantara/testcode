@@ -23,16 +23,22 @@ container-fluid
             input readonly=true value="#{total}" class="form-control md-form"
 
           .row
-            .col-4.text-center
+            .col.text-center
               = button_to "Hapus", @category, :method=>:delete, :class=>"btn btn-danger"
 
-            .col-4.text-center
-              a href='#{edit_category_path(id: @category.id)}' 
-                button.btn.btn-warning.black-text type="button" 
-                  | Ubah
-                  
-            .col-4.text-center
+            - if total > 0
+              .col.text-center
+                a href='#{category_path(id: @category.id, format: :pdf)}'
+                    button.btn.btn-info type="button" 
+                        | Daftar Item
+
+            .col.text-center
               a href='#{sub_categories_path(id: @category.id)}' 
                 button.btn.btn-primary type="button" 
                   | Sub-kategori
+
+            .col.text-center
+              a href='#{edit_category_path(id: @category.id)}' 
+                button.btn.btn-warning.black-text type="button" 
+                  | Ubah
 

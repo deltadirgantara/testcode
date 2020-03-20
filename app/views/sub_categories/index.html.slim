@@ -15,13 +15,18 @@ br
           | Pencarian
     .card.mb-4
       .card-body
-        = form_for :category, url: sub_categories_path, method: 'GET' do |form|
+        = form_for :category, url: sub_categories_path(id: @category.id), method: 'GET' do |form|
           .row.align-middle
             .col-md-12
+              input type="text" class="form-control md-form" name="id" style="display: none" value="#{@category.id}"
+             
               input type="text" class="form-control md-form" id="search" name="search"
             .col-md-12.text-center
               button class="btn btn-primary"
                 | Cari
+        .col-md-12.text-center.grey-text
+          b
+            | #{@search}
 
 .container-fluid
   .col-lg-12.col-md-12

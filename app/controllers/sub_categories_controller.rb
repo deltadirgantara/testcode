@@ -2,16 +2,39 @@ class SubCategoriesController < ApplicationController
   before_action :require_login
 
   def index
-    return redirect_back_data_error sub_categories_path, "Data tidak ditemukan" if params[:id].nil?
-    @category = Category.find_by(id: params[:id])
-    return redirect_back_data_error sub_categories_path, "Data tidak ditemukan" if @category.nil?
-    @sub_categories = SubCategory.where(category: @category).page param_page
-  end
+    search = filter_search params
+
+    @search = search[0]
+    @sub_categories = search[1]
+    @category = search[2]
+
+    return redirect_back_data_error sub_categories_path, "Data tidak ditemukan" if @search.nil?
+      
+
+    respond_to do |format|
+      format.html do
+        @sub_categories = @sub_categories.page param_page
+      end
+    end
+
+end
 
   def show
   	return redirect_back_data_error sub_categories_path, "Data tidak ditemukan" if params[:id].nil?
   	@sub_category = SubCategory.find_by(id: params[:id])
   	return redirect_back_data_error sub_categories_path, "Data tidak ditemukan" if @sub_category.nil?
+    @category = @sub_category.category
+    respond_to do |format|
+      format.html do
+      end
+      format.pdf do
+        @recap_type = "sub_category"
+        render pdf: DateTime.now.to_i.to_s,
+          layout: 'pdf_layout.html.erb',
+          template: "categories/print.html.slim"
+      end
+    end
+
   end
 
   def new
@@ -60,6 +83,24 @@ class SubCategoriesController < ApplicationController
   end
 
   private
+    def filter_search params
+      results = []
+      return nil, nil, nil if params["id"].nil?
+      category = Category.find_by(id: params["id"])
+      return nil, nil, nil if category.nil?
+      sub_categories = category.sub_categories
+
+      search_text = ""
+      if params["search"].present?
+        search_text += " '"+params["search"]+"'"
+        search = params["search"].downcase
+        sub_categories = sub_categories.where("lower(name) like ?", "%"+ search+"%")
+      end
+
+      search_text = "Pencarian" + search_text if search_text != ""
+      return search_text, sub_categories, category
+    end
+
     def sub_category_params
       params.require(:sub_category).permit(
         :name
