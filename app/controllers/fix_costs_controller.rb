@@ -18,7 +18,8 @@ class FixCostsController < ApplicationController
     @fix_costs = search[1]
 
     respond_to do |format|
-      format.html do
+      format.html 
+      format.pdf do
         @fix_costs = search[1].page param_page
       end
     end
@@ -90,29 +91,6 @@ class FixCostsController < ApplicationController
   end
 
   private
-    def graph start_day, end_day, store
-      fix_costs_data = FixCost.where(store: store).where("date >= ? AND date <= ?", start_day, end_day).order("date ASC").group_by{ |m| m.date.beginning_of_day}
-      
-      graphs = {}
-
-      fix_costs_data.each do |fix_costs|
-        total = 0
-        day_idx = fix_costs[0].day.to_i - 1
-        fix_costs[1].each do |fix_cost|
-          total += fix_cost.nominal
-        end
-        graphs[fix_costs[0].to_date] = total
-      end
-      vals = graphs.values
-      days = graphs.keys
-      days.each_with_index do |day, idx|
-        days[idx] = day.strftime("%d-%m-%Y")
-      end
-
-      return days, vals
-    end
-
-    private
     def filter_search params
       results = []
       fix_costs = FixCost.all
@@ -133,6 +111,29 @@ class FixCostsController < ApplicationController
 
       search_text = "Pencarian" + search_text if search_text != ""
       return search_text, fix_costs
+    end
+
+  private
+    def graph start_day, end_day, store
+      fix_costs_data = FixCost.where(store: store).where("date >= ? AND date <= ?", start_day, end_day).order("date ASC").group_by{ |m| m.date.beginning_of_day}
+      
+      graphs = {}
+
+      fix_costs_data.each do |fix_costs|
+        total = 0
+        day_idx = fix_costs[0].day.to_i - 1
+        fix_costs[1].each do |fix_cost|
+          total += fix_cost.nominal
+        end
+        graphs[fix_costs[0].to_date] = total
+      end
+      vals = graphs.values
+      days = graphs.keys
+      days.each_with_index do |day, idx|
+        days[idx] = day.strftime("%d-%m-%Y")
+      end
+
+      return days, vals
     end
 
     def fix_cost_params

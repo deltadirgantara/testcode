@@ -2,6 +2,13 @@
   .col.text-left
     h5
       | Daftar Barang
+
+  .col.text-right
+    a href="#{items_path(format: :pdf)}"
+      button.btn.btn-warning. type="button" 
+        i.fas.fa-download
+        |   PDF Daftar Barang
+
   .col.text-right
     a href="#{new_item_path}"
       button.btn.btn-success. type="button" 
