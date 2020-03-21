@@ -1,0 +1,36 @@
+#customer
+  table#meta
+    tr
+      td.meta-head Jenis
+      td
+        textarea 
+          | Biaya Pemasukkan Lainnya
+    tr 
+      td.meta-head Tanggal Cetak
+      td
+        textarea #{DateTime.now.strftime("%d/%m/%Y")}
+
+
+table#invoice
+  tr colspan="5"
+
+  tr#invoice
+    td
+      b
+        | Nomor Invoice
+    td #{@other_income.invoice}
+  tr#invoice
+    td
+      b
+        | Tanggal Bayar
+    td #{@other_income.date.strftime("%d/%m/%Y")}
+  tr#invoice
+    td
+      b
+        | Nominal
+    td #{number_with_delimiter(@other_income.nominal.to_i, delimiter: ".")}
+  tr#invoice
+    td
+      b
+        | Dibuat Oleh
+    td #{@other_income.user.name} - #{@other_income.store.name}

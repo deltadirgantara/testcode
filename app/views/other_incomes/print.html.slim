@@ -4,7 +4,7 @@
       td.meta-head Jenis
       td
         textarea 
-          | Biaya Pasti
+          | Biaya Pemasukkan Lainnya
     tr 
       td.meta-head Tanggal Dibuat
       td
@@ -33,9 +33,9 @@ table#items
     th Nominal
     th Keterangan
 
-  - @fix_costs.each do |fix_cost|
+  - @other_incomes.each do |other_income|
     tr.operational-row
-      td #{fix_cost.invoice}
-      td #{fix_cost.date.strftime("%d/%m/%Y")}
-      td #{fix_cost.nominal}
-      td #{fix_cost.description}
+      td #{other_income.invoice}
+      td #{other_income.date.strftime("%d/%m/%Y")}
+      td #{other_income.nominal}
+      td #{other_income.description}

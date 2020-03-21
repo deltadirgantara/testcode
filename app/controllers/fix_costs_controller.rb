@@ -18,12 +18,12 @@ class FixCostsController < ApplicationController
         @fix_costs = search[1].page param_page
       end
       format.pdf do
+        @recap_type = "fix cost"
         new_params = eval(params[:option])
         filter = filter_search new_params
         @search = filter[0]
         @fix_costs = filter[1]
         @store = filter[2]
-        @recap_type = "fix_cost"
         render pdf: DateTime.now.to_i.to_s,
           layout: 'pdf_layout.html.erb',
           template: "fix_costs/print.html.slim"
@@ -102,7 +102,7 @@ class FixCostsController < ApplicationController
     def filter_search params
       results = []
       fix_costs = FixCost.all
-      fix_costs = fix_costs.where(store: current_user.store) if ["owner", "super_admin"].include? current_user.level?
+      fix_costs = fix_costs.where(store: current_user.store) if ["owner", "super_admin"].include? current_user.level
       search_text = ""
       if params["search"].present?
         search_text += " '"+params["search"]+"'"

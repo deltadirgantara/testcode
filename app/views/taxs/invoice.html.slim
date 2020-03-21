@@ -1,0 +1,36 @@
+#customer
+  table#meta
+    tr
+      td.meta-head Jenis
+      td
+        textarea 
+          | Pajak
+    tr 
+      td.meta-head Tanggal Cetak
+      td
+        textarea #{DateTime.now.strftime("%d/%m/%Y")}
+
+
+table#invoice
+  tr colspan="5"
+
+  tr#invoice
+    td
+      b
+        | Nomor Invoice
+    td #{@tax.invoice}
+  tr#invoice
+    td
+      b
+        | Tanggal Bayar
+    td #{@tax.date.strftime("%d/%m/%Y")}
+  tr#invoice
+    td
+      b
+        | Nominal
+    td #{number_with_delimiter(@tax.nominal.to_i, delimiter: ".")}
+  tr#invoice
+    td
+      b
+        | Dibuat Oleh
+    td #{@tax.user.name} - #{@tax.store.name}

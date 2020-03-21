@@ -2,21 +2,50 @@ class OtherIncomesController < ApplicationController
   before_action :require_login
 
   def index
-  	@other_incomes = OtherIncome.page param_page
-    
-    store = current_user.store
-    start_day = DateTime.now - 90.days
-    end_day = DateTime.now + 1.day
-    graphs = graph start_day, end_day, store
+  	search = filter_search params
+    @search = search[0]
+    @other_incomes = search[1]
+    @store = search[2]
+    @params = params.to_s
+
+    graphs = graph @other_incomes
     gon.label = graphs[0]
     gon.data = graphs[1]
-    gon.graph_name = "Pemasukkan Lainnya"
+    gon.graph_name = "Biaya Pemasukkan Lainnya"
+
+    respond_to do |format|
+      format.html do
+        @other_incomes = search[1].page param_page
+      end
+      format.pdf do
+        @recap_type = "other_income"
+        new_params = eval(params[:option])
+        filter = filter_search new_params
+        @search = filter[0]
+        @other_incomes = filter[1]
+        @store = filter[2]
+        render pdf: DateTime.now.to_i.to_s,
+          layout: 'pdf_layout.html.erb',
+          template: "other_incomes/print.html.slim"
+      end
+    end
   end
 
   def show
   	return redirect_back_data_error other_incomes_path, "Data tidak ditemukan" if params[:id].nil?
   	@other_income = OtherIncome.find_by(id: params[:id])
   	return redirect_back_data_error other_incomes_path, "Data tidak ditemukan" if @other_income.nil?
+
+    respond_to do |format|
+      format.html do
+      end
+      format.pdf do
+        @recap_type = "invoice"
+        render pdf: DateTime.now.to_i.to_s,
+          layout: 'pdf_layout.html.erb',
+          template: "other_incomes/invoice.html.slim"
+      end
+    end
   end
 
   def new
@@ -69,18 +98,55 @@ class OtherIncomesController < ApplicationController
   end
 
   private
-    def graph start_day, end_day, store
-      other_incomes_data = OtherIncome.where(store: store).where("date >= ? AND date <= ?", start_day, end_day).order("date ASC").group_by{ |m| m.date.beginning_of_day}
+    def filter_search params
+      results = []
+      other_incomes = OtherIncome.all
+      other_incomes = other_incomes.where(store: current_user.store) if ["owner", "super_admin"].include? current_user.level
+      search_text = ""
+      if params["search"].present?
+        search_text += " '"+params["search"]+"'"
+        search = params["search"].downcase
+        other_incomes = other_incomes.where("lower(invoice) like ?", "%"+ search+"%")
+      end
+
+      store = nil
+      if params["store_id"].present?
+        store = Store.find_by(id: params["store_id"])
+        if store.present?
+          other_incomes = other_incomes.where(store: store)
+          search_text += " - Toko '" + store.name + "'"
+        end
+      end
+
+      if params["start_date"].present?
+        start_date = params["start_date"].to_date
+        other_incomes = other_incomes.where("date >= ?", start_date)
+        search_text += " - Dari '" + start_date.strftime("%d/%m/%Y").to_s + "'"
+      end
+
+      if params["end_date"].present?
+        end_date = params["end_date"].to_date
+        other_incomes = other_incomes.where("date <= ?", end_date)
+        search_text += " - Sampai '" + end_date.strftime("%d/%m/%Y").to_s + "'"
+      end
+
+      search_text = "Pencarian" + search_text if search_text != ""
+      return search_text, other_incomes, store
+    end
+
+    def graph data
+      
+      grouping_datas = data.order("date ASC").group_by{ |m| m.date.beginning_of_day}
       
       graphs = {}
 
-      other_incomes_data.each do |other_incomes|
+      grouping_datas.each do |datas|
         total = 0
-        day_idx = other_incomes[0].day.to_i - 1
-        other_incomes[1].each do |other_incomes|
-          total += other_incomes.nominal
+        day_idx = datas[0].day.to_i - 1
+        datas[1].each do |data|
+          total += data.nominal
         end
-        graphs[other_incomes[0].to_date] = total
+        graphs[datas[0].to_date] = total
       end
       vals = graphs.values
       days = graphs.keys

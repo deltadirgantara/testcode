@@ -2,7 +2,7 @@ tr
 	td #{tax.invoice}
 	td #{tax.store.name}
 	td #{tax.date.strftime("%d/%m/%Y")}
-	td #{tax.nominal}
+	td #{number_with_delimiter(tax.nominal, delimiter: ".")}
 	td #{tax.description}
 	td
 		a href='#{tax_path(id: tax.id)}'

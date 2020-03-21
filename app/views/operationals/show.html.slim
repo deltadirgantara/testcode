@@ -28,9 +28,13 @@
             = form.text_field :description, required: true, class: "form-control md-form", id: "nominal", disabled:"disabled"
 
         .row
-          .col-6.text-center
+          .col.text-center
             = button_to "Hapus", @operational, :method=>:delete, :class=>"btn btn-danger"
-          .col-6.text-center
+          .col.text-center
+            a href='#{operational_path(id: @operational.id, format: :pdf)}'
+              button.btn.btn-info type="button" 
+                  | Cetak
+          .col.text-center
              a href='#{edit_operational_path(id: @operational.id)}'
               button.btn.btn-warning type="button" 
                 | Edit

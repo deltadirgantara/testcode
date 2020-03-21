@@ -2,21 +2,50 @@ class OperationalsController < ApplicationController
   before_action :require_login
 
   def index
-  	@operationals = Operational.page param_page
+  	search = filter_search params
+    @search = search[0]
+    @operationals = search[1]
+    @store = search[2]
+    @params = params.to_s
 
-    store = current_user.store
-    start_day = DateTime.now - 90.days
-    end_day = DateTime.now + 1.day
-    graphs = graph start_day, end_day, store
+    graphs = graph @operationals
     gon.label = graphs[0]
     gon.data = graphs[1]
-    gon.graph_name = "Operasional"
+    gon.graph_name = "Biaya Operasional"
+
+    respond_to do |format|
+      format.html do
+        @operationals = search[1].page param_page
+      end
+      format.pdf do
+        @recap_type = "operational"
+        new_params = eval(params[:option])
+        filter = filter_search new_params
+        @search = filter[0]
+        @operationals = filter[1]
+        @store = filter[2]
+        render pdf: DateTime.now.to_i.to_s,
+          layout: 'pdf_layout.html.erb',
+          template: "operationals/print.html.slim"
+      end
+    end
   end
 
   def show
   	return redirect_back_data_error operationals_path, "Date tidak ditemukan" if params[:id].nil?
   	@operational = Operational.find_by(id: params[:id])
   	return redirect_back_data_error operationals_path, "Data tidak ditemukan" if @operational.nil?
+    
+    respond_to do |format|
+      format.html do
+      end
+      format.pdf do
+        @recap_type = "invoice"
+        render pdf: DateTime.now.to_i.to_s,
+          layout: 'pdf_layout.html.erb',
+          template: "operationals/invoice.html.slim"
+      end
+    end
   end
 
   def new
@@ -70,18 +99,55 @@ class OperationalsController < ApplicationController
   end
 
   private
-    def graph start_day, end_day, store
-      operationals_data = Operational.where(store: store).where("date >= ? AND date <= ?", start_day, end_day).order("date ASC").group_by{ |m| m.date.beginning_of_day}
+    def filter_search params
+      results = []
+      operationals = Operational.all
+      operationals = operationals.where(store: current_user.store) if ["owner", "super_admin"].include? current_user.level
+      search_text = ""
+      if params["search"].present?
+        search_text += " '"+params["search"]+"'"
+        search = params["search"].downcase
+        operationals = operationals.where("lower(invoice) like ?", "%"+ search+"%")
+      end
+
+      store = nil
+      if params["store_id"].present?
+        store = Store.find_by(id: params["store_id"])
+        if store.present?
+          operationals = operationals.where(store: store)
+          search_text += " - Toko '" + store.name + "'"
+        end
+      end
+
+      if params["start_date"].present?
+        start_date = params["start_date"].to_date
+        operationals = operationals.where("date >= ?", start_date)
+        search_text += " - Dari '" + start_date.strftime("%d/%m/%Y").to_s + "'"
+      end
+
+      if params["end_date"].present?
+        end_date = params["end_date"].to_date
+        operationals = operationals.where("date <= ?", end_date)
+        search_text += " - Sampai '" + end_date.strftime("%d/%m/%Y").to_s + "'"
+      end
+
+      search_text = "Pencarian" + search_text if search_text != ""
+      return search_text, operationals, store
+    end
+
+    def graph data
+      
+      grouping_datas = data.order("date ASC").group_by{ |m| m.date.beginning_of_day}
       
       graphs = {}
 
-      operationals_data.each do |operationals|
+      grouping_datas.each do |datas|
         total = 0
-        day_idx = operationals[0].day.to_i - 1
-        operationals[1].each do |operational|
-          total += operational.nominal
+        day_idx = datas[0].day.to_i - 1
+        datas[1].each do |data|
+          total += data.nominal
         end
-        graphs[operationals[0].to_date] = total
+        graphs[datas[0].to_date] = total
       end
       vals = graphs.values
       days = graphs.keys

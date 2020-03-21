@@ -14,6 +14,8 @@
 
           .form-group
             label for="type" Tanggal Pembayaran
+            label.text-danger for="type" (*Tanggal harus diisi tanggal hari ini atau kurang dari hari ini)
+            
             input class="form-control md-form" type="date" name="other_income[date]" id="invoice" value="#{Date.today.strftime('%Y-%m-%d')}"
 
           .form-group
