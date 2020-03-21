@@ -99,7 +99,7 @@ private
     def filter_search params
       results = []
       other_outcomes = OtherOutcome.all
-      other_outcomes = other_outcomes.where(store: current_user.store) if ["owner", "super_admin"].include? current_user.level?
+      other_outcomes = other_outcomes.where(store: current_user.store) if ["owner", "super_admin"].include? current_user.level
       search_text = ""
       if params["search"].present?
         search_text += " '"+params["search"]+"'"
@@ -154,7 +154,7 @@ private
 
       return days, vals
     end
-    
+
     def other_outcome_params
       params.require(:other_outcome).permit(
         :nominal, :date, :description

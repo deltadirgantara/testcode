@@ -99,7 +99,7 @@ class FixCostsController < ApplicationController
     def filter_search params
       results = []
       fix_costs = FixCost.all
-      fix_costs = fix_costs.where(store: current_user.store) if ["owner", "super_admin"].include? current_user.level?
+      fix_costs = fix_costs.where(store: current_user.store) if ["owner", "super_admin"].include? current_user.level
       search_text = ""
       if params["search"].present?
         search_text += " '"+params["search"]+"'"

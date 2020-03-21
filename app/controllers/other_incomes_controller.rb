@@ -99,7 +99,7 @@ class OtherIncomesController < ApplicationController
     def filter_search params
       results = []
       other_incomes = OtherIncome.all
-      other_incomes = other_incomes.where(store: current_user.store) if ["owner", "super_admin"].include? current_user.level?
+      other_incomes = other_incomes.where(store: current_user.store) if ["owner", "super_admin"].include? current_user.level
       search_text = ""
       if params["search"].present?
         search_text += " '"+params["search"]+"'"

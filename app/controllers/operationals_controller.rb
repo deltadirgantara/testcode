@@ -99,7 +99,7 @@ class OperationalsController < ApplicationController
     def filter_search params
       results = []
       operationals = Operational.all
-      operationals = operationals.where(store: current_user.store) if ["owner", "super_admin"].include? current_user.level?
+      operationals = operationals.where(store: current_user.store) if ["owner", "super_admin"].include? current_user.level
       search_text = ""
       if params["search"].present?
         search_text += " '"+params["search"]+"'"
