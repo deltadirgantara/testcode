@@ -1,12 +1,12 @@
 .row
   .col
     h5
-      | Daftar Biaya Pasti
+      | Daftar Nilai Aset
   .col.text-right
-      a href="#{new_fix_cost_path}"
+      a href="#{refresh_asset_values_path}"
         button.btn.btn-success type="button" 
-          i.fas.fa-plus 
-          |   Tambah
+          i.fas.fa-refresh 
+          |   Perbarui
 br
 .container-fluid
   .col-xl-12.col-lg-12.col-md-12.pb-2
@@ -22,7 +22,7 @@ br
         | Pencarian
     .card.mb-4
       .card-body
-        = form_for :fix_cost, url: fix_costs_path, method: 'GET' do |form|
+        = form_for :asset_value, url: asset_values_path, method: 'GET' do |form|
           .row.align-middle
             .col
               label Nomor Invoice
@@ -50,7 +50,7 @@ br
                 | Cari
 
         .col-md-12.text-center.grey-text
-          a href="#{fix_costs_path(option: @params.to_s, format: :pdf)}"
+          a href="#{asset_values_path(option: @params.to_s, format: :pdf)}"
             b
               - if @search == "" || @search.nil?
                 | Pencarian Semua Toko
@@ -69,10 +69,8 @@ br
           thead
             th Nomor Invoice
             th Toko
-            th Tanggal Bayar
+            th Tanggal
             th Nominal
-            th Keterangan
-            th Aksi
           tbody
-            = render partial: 'list', collection: @fix_costs, as: :fix_cost
-        = paginate @fix_costs
+            = render partial: 'list', collection: @asset_values, as: :asset_value
+        = paginate @asset_values

@@ -3,21 +3,15 @@ class FixCostsController < ApplicationController
 
   def index
     search = filter_search params
-    
-    store = current_user.store
-    start_date = DateTime.now - 90.days
-    start_date = params["start_date"].to_date if params["start_date"].present?
-    end_date = DateTime.now + 1.day
-    end_date = params["end_date"].to_date if params["end_date"].present?
-    graphs = graph start_date, end_date, store
-    gon.label = graphs[0]
-    gon.data = graphs[1]
-    gon.graph_name = "Biaya Pasti"
-
     @search = search[0]
     @fix_costs = search[1]
     @store = search[2]
     @params = params.to_s
+
+    graphs = graph @fix_costs
+    gon.label = graphs[0]
+    gon.data = graphs[1]
+    gon.graph_name = "Biaya Pasti"
 
     respond_to do |format|
       format.html do
@@ -105,6 +99,7 @@ class FixCostsController < ApplicationController
     def filter_search params
       results = []
       fix_costs = FixCost.all
+      fix_costs = fix_costs.where(store: current_user.store) if ["owner", "super_admin"].include? current_user.level?
       search_text = ""
       if params["search"].present?
         search_text += " '"+params["search"]+"'"
@@ -137,19 +132,19 @@ class FixCostsController < ApplicationController
       return search_text, fix_costs, store
     end
 
-  private
-    def graph start_day, end_day, store
-      fix_costs_data = FixCost.where(store: store).where("date >= ? AND date <= ?", start_day, end_day).order("date ASC").group_by{ |m| m.date.beginning_of_day}
+    def graph data
+      
+      grouping_datas = data.order("date ASC").group_by{ |m| m.date.beginning_of_day}
       
       graphs = {}
 
-      fix_costs_data.each do |fix_costs|
+      grouping_datas.each do |datas|
         total = 0
-        day_idx = fix_costs[0].day.to_i - 1
-        fix_costs[1].each do |fix_cost|
-          total += fix_cost.nominal
+        day_idx = datas[0].day.to_i - 1
+        datas[1].each do |data|
+          total += data.nominal
         end
-        graphs[fix_costs[0].to_date] = total
+        graphs[datas[0].to_date] = total
       end
       vals = graphs.values
       days = graphs.keys

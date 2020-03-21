@@ -30,12 +30,15 @@ Rails.application.routes.draw do
     resources :modals
     resources :other_incomes
     resources :other_outcomes
+    resources :asset_values
 
     resources :cash_flows
     resources :bank_flows
 
     resources :custom_orders
 
+
+    get '/refresh/asset_values', to: 'asset_values#refresh', as: 'refresh_asset_values'
 
 
     resources :activities, only: %i[index show]

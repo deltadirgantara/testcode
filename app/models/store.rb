@@ -7,5 +7,6 @@ class Store < ApplicationRecord
   has_many :operationals
   has_many :taxs
   has_many :buckets
+  has_many :asset_values
 end
 
