@@ -38,7 +38,8 @@ class BucketsController < ApplicationController
 
   def create
   	bucket = Bucket.new bucket_params
-    return redirect_back_data_error new_user_path, "Data tidak valid!" if bucket.invalid?
+    binding.pry
+    return redirect_back_data_error new_bucket_path, "Data tidak valid!" if bucket.invalid?
     bucket.save!
     bucket.create_activity :create, owner: current_user
     return redirect_success bucket_path(id: bucket.id), "Jenis Emas berhasil ditambahkan"
