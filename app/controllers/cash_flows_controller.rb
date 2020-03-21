@@ -36,7 +36,7 @@ class CashFlowsController < ApplicationController
     def filter_search params
       results = []
       cash_flows = CashFlow.all
-      cash_flows = cash_flows.where(store: current_user.store) if ["owner", "super_admin"].include? current_user.level?
+      cash_flows = cash_flows.where(store: current_user.store) if !["owner", "super_admin"].include? current_user.level?
       search_text = ""
       if params["search"].present?
         search_text += " '"+params["search"]+"'"

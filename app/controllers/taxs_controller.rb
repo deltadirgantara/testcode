@@ -103,7 +103,7 @@ class TaxsController < ApplicationController
     def filter_search params
       results = []
       taxs = Tax.all
-      taxs = taxs.where(store: current_user.store) if ["owner", "super_admin"].include? current_user.level
+      taxs = taxs.where(store: current_user.store) if !["owner", "super_admin"].include? current_user.level
       search_text = ""
       if params["search"].present?
         search_text += " '"+params["search"]+"'"

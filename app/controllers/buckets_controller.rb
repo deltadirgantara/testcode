@@ -77,7 +77,7 @@ class BucketsController < ApplicationController
     def filter_search params
       results = []
       buckets = Bucket.all
-      buckets = buckets.where(store: current_user.store) if ["owner", "super_admin"].include? current_user.level
+      buckets = buckets.where(store: current_user.store) if !["owner", "super_admin"].include? current_user.level
       search_text = ""
       if params["search"].present?
         search_text += " '"+params["search"]+"'"

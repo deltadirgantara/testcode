@@ -97,7 +97,7 @@
     def filter_search params
       results = []
       modals = Modal.all
-      modals = modals.where(store: current_user.store) if ["owner", "super_admin"].include? current_user.level?
+      modals = modals.where(store: current_user.store) if !["owner", "super_admin"].include? current_user.level?
       search_text = ""
       if params["search"].present?
         search_text += " '"+params["search"]+"'"
