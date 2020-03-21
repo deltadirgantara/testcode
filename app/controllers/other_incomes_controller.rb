@@ -30,7 +30,7 @@ class OtherIncomesController < ApplicationController
     other_income.invoice = "IN-" + DateTime.now.to_i.to_s + current_user.store.id.to_s
     return redirect_back_data_error new_other_income_path, "Data error" if other_income.invalid?  
   	other_income.save!
-    CashFlow.create ref_id: other_income.id, type_cash: 7, type_flow: 1
+    CashFlow.create ref_id: other_income.id, type_cash: 7, type_flow: 1, nominal: other_income.nominal, date: other_income.date
   	other_income.create_activity :create, owner: current_user
   	return redirect_success other_income_path(id: other_income.id), "Data disimpan"
   end
@@ -61,6 +61,8 @@ class OtherIncomesController < ApplicationController
   	changes = @other_income.changes
     if @other_income.changed?
       @other_income.save! 
+      cf = CashFlow.find_by(ref_id: @other_income.id, type_cash: CashFlow::OTHERINCOME)
+      cf.nominal = @other_income.nominal
       @other_income.create_activity :edit, owner: current_user, parameters: changes
     end
     return redirect_success other_income_path(id: @other_income.id), "Data Pengeluaran Lain - " + @other_income.invoice + " - Berhasil Diubah"

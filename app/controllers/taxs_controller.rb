@@ -31,7 +31,7 @@ class TaxsController < ApplicationController
     tax.invoice = "TAX-" + DateTime.now.to_i.to_s + current_user.store.id.to_s
     return redirect_back_data_error new_tax_path, "Data error" if tax.invalid?  
   	tax.save!
-    CashFlow.create ref_id: tax.id, type_cash: 1, type_flow: 2
+    CashFlow.create ref_id: tax.id, type_cash: 1, type_flow: 2, nominal: tax.nominal, date: tax.date
   	tax.create_activity :create, owner: current_user
   	return redirect_success tax_path(id: tax.id), "Data disimpan"
   end
@@ -62,6 +62,9 @@ class TaxsController < ApplicationController
   	changes = @tax.changes
     if @tax.changed?
       @tax.save! 
+      cf = CashFlow.find_by(ref_id: tax.id, type_cash: CashFlow::TAX)
+      cf.nominal = @tax.nominal
+      cf.save!
       @tax.create_activity :edit, owner: current_user, parameters: changes
     end
     return redirect_success tax_path(id: @tax.id), "Data Pajak - " + @tax.invoice + " - Berhasil Diubah"

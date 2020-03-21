@@ -24,7 +24,7 @@
       }
     });
 
-- if ["bank_flows"].include? controller_name
+- if ["bank_flows", "cash_flows"].include? controller_name
       javascript:
         var ctxL = document.getElementById("graph").getContext('2d');
         var myLineChart = new Chart(ctxL, {
