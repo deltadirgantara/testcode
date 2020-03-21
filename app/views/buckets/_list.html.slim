@@ -1,6 +1,8 @@
 tr	
 	td #{bucket.name}
-	td #{bucket.items.count}
+	- total = bucket.items.count
+	- total = bucket.items.where(store: current_user.store).count if ["owner", "super_admin"].include? current_user.level
+	td #{total}
 	td #{bucket.items.sum(:weight)}
 	td
 		.row

@@ -14,9 +14,10 @@
           
           .form-group
             label for="type" Tanggal Pengeluaran
+            label.text-danger for="type" (*Tanggal harus diisi tanggal hari ini atau kurang dari hari ini)
+            
             input class="form-control md-form" type="date" name="fix_cost[date]" id="invoice" value="#{Date.today.strftime('%Y-%m-%d')}"
 
-            label.text-danger for="type" (*Tanggal harus diisi tanggal hari ini atau kurang dari hari ini)
 
           .form-group
             label for="nominal" Keterangan

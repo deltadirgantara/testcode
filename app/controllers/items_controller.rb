@@ -106,7 +106,7 @@ class ItemsController < ApplicationController
         if params["search"] != ""
           search_text += " '"+params["search"]+"'"
           search = params["search"].downcase
-          items = items.where("lower(name) like ?", "%"+ search+"%")
+          items = items.where("lower(code) like ?", "%"+ search+"%")
         end
       end
 

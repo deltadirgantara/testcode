@@ -15,16 +15,6 @@
 
     #header { height: 15px; width: 100%; margin: 20px 0; background: #222; text-align: center; color: white; font: bold 15px Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 20px; padding: 8px 0px; }
 
-    #header_order { height: 15px; width: 100%; margin: 20px 0; background: #FFC0CB; text-align: center; color: white; font: bold 15px Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 20px; padding: 8px 0px; }
-
-    #header_retur { height: 15px; width: 100%; margin: 20px 0; background: yellow; text-align: center; color: black; font: bold 15px Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 20px; padding: 8px 0px; }
-
-    #header_bs { height: 15px; width: 100%; margin: 20px 0; background: red; text-align: center; color: white; font: bold 15px Helvetica, Sans-Serif; text-decbisaoration: uppercase; letter-spacing: 20px; padding: 8px 0px; }
-
-    #header_transfer { height: 15px; width: 100%; margin: 20px 0; background: green; text-align: center; color: white; font: bold 15px Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 20px; padding: 8px 0px; }
-
-    #header_send { height: 15px; width: 100%; margin: 20px 0; background: blue; text-align: center; color: white; font: bold 15px Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 20px; padding: 8px 0px; }
-
     #address { width: 250px; height: 150px; float: left; }
     #customer { overflow: hidden; }
 
@@ -41,6 +31,8 @@
     #meta td { text-align: right;  }
     #meta td.meta-head { text-align: left; background: #eee; }
     #meta td textarea { width: 100%; height: 20px; text-align: right; }
+
+    #invoice { clear: both; width: 100%; margin: 30px 0 0 0; border: 2px solid white; }
 
     #items { clear: both; width: 100%; margin: 30px 0 0 0; border: 1px solid black; }
     #items th { background: #eee; }
@@ -71,8 +63,10 @@
   <div id="page-wrap">
     <% if @recap_type.present? %>
         <% recap_type = @recap_type %>
-        <% if ["bucket", "category", "sub_category"].include? recap_type %>
+        <% if ["bucket", "category", "sub_category", "items"].include? recap_type %>
             <textarea id="header" class="text-danger">DAFTAR ITEM</textarea>
+        <% elsif ["invoice"].include? recap_type %>
+            <textarea id="header" class="text-danger">INVOICE</textarea>
         <% else %>
             <textarea id="header" class="text-danger">LAPORAN</textarea>
         <% end %>

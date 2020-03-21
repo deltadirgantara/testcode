@@ -1,0 +1,36 @@
+#customer
+  table#meta
+    tr
+      td.meta-head Jenis
+      td
+        textarea 
+          | Biaya Pasti
+    tr 
+      td.meta-head Tanggal Cetak
+      td
+        textarea #{DateTime.now.strftime("%d/%m/%Y")}
+
+
+table#invoice
+  tr colspan="5"
+
+  tr#invoice
+    td
+      b
+        | Nomor Invoice
+    td #{@fix_cost.invoice}
+  tr#invoice
+    td
+      b
+        | Tanggal Bayar
+    td #{@fix_cost.date.strftime("%d/%m/%Y")}
+  tr#invoice
+    td
+      b
+        | Nominal
+    td #{number_with_delimiter(@fix_cost.nominal.to_i, delimiter: ".")}
+  tr#invoice
+    td
+      b
+        | Dibuat Oleh
+    td #{@fix_cost.user.name} - #{@fix_cost.store.name}

@@ -2,24 +2,17 @@ class FixCostsController < ApplicationController
   before_action :require_login
 
   def index
-    @fix_costs = FixCost.page param_page
+    search = filter_search params
     
     store = current_user.store
-    start_day = DateTime.now - 90.days
-    end_day = DateTime.now + 1.day
-    graphs = graph start_day, end_day, store
+    start_date = DateTime.now - 90.days
+    start_date = params["start_date"].to_date if params["start_date"].present?
+    end_date = DateTime.now + 1.day
+    end_date = params["end_date"].to_date if params["end_date"].present?
+    graphs = graph start_date, end_date, store
     gon.label = graphs[0]
     gon.data = graphs[1]
     gon.graph_name = "Biaya Pasti"
-
-    new_params = eval(params[:option]) if params[:option].present?
-
-    search = nil
-    if new_params.present? 
-      search = filter_search new_params
-    else
-      search = filter_search params
-    end 
 
     @search = search[0]
     @fix_costs = search[1]
@@ -31,6 +24,11 @@ class FixCostsController < ApplicationController
         @fix_costs = search[1].page param_page
       end
       format.pdf do
+        new_params = eval(params[:option])
+        filter = filter_search new_params
+        @search = filter[0]
+        @fix_costs = filter[1]
+        @store = filter[2]
         @recap_type = "fix_cost"
         render pdf: DateTime.now.to_i.to_s,
           layout: 'pdf_layout.html.erb',
@@ -46,6 +44,12 @@ class FixCostsController < ApplicationController
 
     respond_to do |format|
       format.html do
+      end
+      format.pdf do
+        @recap_type = "invoice"
+        render pdf: DateTime.now.to_i.to_s,
+          layout: 'pdf_layout.html.erb',
+          template: "fix_costs/invoice.html.slim"
       end
     end
   end
@@ -113,8 +117,20 @@ class FixCostsController < ApplicationController
         store = Store.find_by(id: params["store_id"])
         if store.present?
           fix_costs = fix_costs.where(store: store)
-          search_text += " pada Toko '" + store.name + "'"
+          search_text += " - Toko '" + store.name + "'"
         end
+      end
+
+      if params["start_date"].present?
+        start_date = params["start_date"].to_date
+        fix_costs = fix_costs.where("date >= ?", start_date)
+        search_text += " - Dari '" + start_date.strftime("%d/%m/%Y").to_s + "'"
+      end
+
+      if params["end_date"].present?
+        end_date = params["end_date"].to_date
+        fix_costs = fix_costs.where("date <= ?", end_date)
+        search_text += " - Sampai '" + end_date.strftime("%d/%m/%Y").to_s + "'"
       end
 
       search_text = "Pencarian" + search_text if search_text != ""

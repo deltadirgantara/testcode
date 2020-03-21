@@ -23,7 +23,7 @@ br
             - if ["owner", "super_admin"].include? current_user.level
               .col
                 select name="store_id" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" id="store" searchable="Cari..."
-                  option value="-"
+                  option value=" "
                     | Semua Toko
                   - Store.all.each do |store|
                     option value="#{store.id}"
