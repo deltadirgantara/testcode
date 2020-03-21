@@ -31,7 +31,7 @@ class FixCostsController < ApplicationController
         @fix_costs = search[1].page param_page
       end
       format.pdf do
-        @recap_type = "fix_cost"
+        @recap_type = "fix cost"
         render pdf: DateTime.now.to_i.to_s,
           layout: 'pdf_layout.html.erb',
           template: "fix_costs/print.html.slim"

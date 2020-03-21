@@ -11,12 +11,44 @@ class OperationalsController < ApplicationController
     gon.label = graphs[0]
     gon.data = graphs[1]
     gon.graph_name = "Operasional"
+
+    new_params = eval(params[:option]) if params[:option].present?
+
+    search = nil
+    if new_params.present? 
+      search = filter_search new_params
+    else
+      search = filter_search params
+    end 
+
+    @search = search[0]
+    @operationals = search[1]
+    @store = search[2]
+    @params = params.to_s
+
+    respond_to do |format|
+      format.html do
+        @operationals = search[1].page param_page
+      end
+      format.pdf do
+        @recap_type = "fix cost"
+        render pdf: DateTime.now.to_i.to_s,
+          layout: 'pdf_layout.html.erb',
+          template: "operationals/print.html.slim"
+      end
+    end
   end
 
   def show
   	return redirect_back_data_error operationals_path, "Date tidak ditemukan" if params[:id].nil?
   	@operational = Operational.find_by(id: params[:id])
   	return redirect_back_data_error operationals_path, "Data tidak ditemukan" if @operational.nil?
+    
+    respond_to do |format|
+      format.html do
+      end
+    end
+
   end
 
   def new
@@ -65,6 +97,30 @@ class OperationalsController < ApplicationController
     end
     return redirect_success operational_path(id: @operational.id), "Data Operasional - " + @operational.invoice + " - Berhasil Diubah"
   end
+
+  private
+    def filter_search params
+      results = []
+      operationals = Operational.all
+      search_text = ""
+      if params["search"].present?
+        search_text += " '"+params["search"]+"'"
+        search = params["search"].downcase
+        operationals = operationals.where("lower(invoice) like ?", "%"+ search+"%")
+      end
+
+      store = nil
+      if params["store_id"].present?
+        store = Store.find_by(id: params["store_id"])
+        if store.present?
+          operationals = operationals.where(store: store)
+          search_text += " pada Toko '" + store.name + "'"
+        end
+      end
+
+      search_text = "Pencarian" + search_text if search_text != ""
+      return search_text, operationals, store
+    end
 
   private
     def graph start_day, end_day, store
