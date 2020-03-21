@@ -1,0 +1,41 @@
+#customer
+  table#meta
+    tr
+      td.meta-head Jenis
+      td
+        textarea 
+          | Biaya Pengeluaran Lainnya
+    tr 
+      td.meta-head Tanggal Dibuat
+      td
+        textarea #{DateTime.now.strftime("%d/%m/%Y")}
+    tr
+      td.meta-head Toko 
+      td
+        - if @store.present?
+          textarea #{@store.name}
+        - else
+          textarea Semua Toko
+   
+    tr
+      td.meta-head Kriteria
+      td
+        b  
+          | #{@search}
+
+
+table#items
+  tr colspan="5"
+
+  tr
+    th Nomor Invoice
+    th Tanggal
+    th Nominal
+    th Keterangan
+
+  - @other_outcomes.each do |other_outcome|
+    tr.operational-row
+      td #{other_outcome.invoice}
+      td #{other_outcome.date.strftime("%d/%m/%Y")}
+      td #{other_outcome.nominal}
+      td #{other_outcome.description}

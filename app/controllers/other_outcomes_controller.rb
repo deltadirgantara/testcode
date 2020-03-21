@@ -2,21 +2,50 @@ class OtherOutcomesController < ApplicationController
   before_action :require_login
 
   def index
-  	@other_outcomes = OtherOutcome.page param_page
-    
-    store = current_user.store
-    start_day = DateTime.now - 90.days
-    end_day = DateTime.now + 1.day
-    graphs = graph start_day, end_day, store
+  	search = filter_search params
+    @search = search[0]
+    @other_outcomes = search[1]
+    @store = search[2]
+    @params = params.to_s
+
+    graphs = graph @other_outcomes
     gon.label = graphs[0]
     gon.data = graphs[1]
-    gon.graph_name = "Pengeluaran Lainnya"
+    gon.graph_name = "Biaya Pengeluaran Lainnya"
+
+    respond_to do |format|
+      format.html do
+        @other_outcomes = search[1].page param_page
+      end
+      format.pdf do
+        @recap_type = "other_outcome"
+        new_params = eval(params[:option])
+        filter = filter_search new_params
+        @search = filter[0]
+        @other_outcomes = filter[1]
+        @store = filter[2]
+        render pdf: DateTime.now.to_i.to_s,
+          layout: 'pdf_layout.html.erb',
+          template: "other_outcomes/print.html.slim"
+      end
+    end
   end
 
   def show
   	return redirect_back_data_error other_outcomes_path, "Data tidak ditemukan" if params[:id].nil?
   	@other_outcome = OtherOutcome.find_by(id: params[:id])
   	return redirect_back_data_error other_outcomes_path, "Data tidak ditemukan" if @other_outcome.nil?
+
+    respond_to do |format|
+      format.html do
+      end
+      format.pdf do
+        @recap_type = "invoice"
+        render pdf: DateTime.now.to_i.to_s,
+          layout: 'pdf_layout.html.erb',
+          template: "other_outcomes/invoice.html.slim"
+      end
+    end
   end
 
   def new
@@ -66,19 +95,56 @@ class OtherOutcomesController < ApplicationController
     return redirect_success other_outcome_path(id: @other_outcome.id), "Data Pengeluaran Lain - " + @other_outcome.invoice + " - Berhasil Diubah"
   end
 
-  private
-    def graph start_day, end_day, store
-      fix_costs_data = OtherOutcome.where(store: store).where("date >= ? AND date <= ?", start_day, end_day).order("date ASC").group_by{ |m| m.date.beginning_of_day}
+private
+    def filter_search params
+      results = []
+      other_outcomes = OtherOutcome.all
+      other_outcomes = other_outcomes.where(store: current_user.store) if ["owner", "super_admin"].include? current_user.level?
+      search_text = ""
+      if params["search"].present?
+        search_text += " '"+params["search"]+"'"
+        search = params["search"].downcase
+        other_outcomes = other_outcomes.where("lower(invoice) like ?", "%"+ search+"%")
+      end
+
+      store = nil
+      if params["store_id"].present?
+        store = Store.find_by(id: params["store_id"])
+        if store.present?
+          other_outcomes = other_outcomes.where(store: store)
+          search_text += " - Toko '" + store.name + "'"
+        end
+      end
+
+      if params["start_date"].present?
+        start_date = params["start_date"].to_date
+        other_outcomes = other_outcomes.where("date >= ?", start_date)
+        search_text += " - Dari '" + start_date.strftime("%d/%m/%Y").to_s + "'"
+      end
+
+      if params["end_date"].present?
+        end_date = params["end_date"].to_date
+        other_outcomes = other_outcomes.where("date <= ?", end_date)
+        search_text += " - Sampai '" + end_date.strftime("%d/%m/%Y").to_s + "'"
+      end
+
+      search_text = "Pencarian" + search_text if search_text != ""
+      return search_text, other_outcomes, store
+    end
+
+    def graph data
+      
+      grouping_datas = data.order("date ASC").group_by{ |m| m.date.beginning_of_day}
       
       graphs = {}
 
-      fix_costs_data.each do |fix_costs|
+      grouping_datas.each do |datas|
         total = 0
-        day_idx = fix_costs[0].day.to_i - 1
-        fix_costs[1].each do |fix_cost|
-          total += fix_cost.nominal
+        day_idx = datas[0].day.to_i - 1
+        datas[1].each do |data|
+          total += data.nominal
         end
-        graphs[fix_costs[0].to_date] = total
+        graphs[datas[0].to_date] = total
       end
       vals = graphs.values
       days = graphs.keys
@@ -88,7 +154,7 @@ class OtherOutcomesController < ApplicationController
 
       return days, vals
     end
-
+    
     def other_outcome_params
       params.require(:other_outcome).permit(
         :nominal, :date, :description

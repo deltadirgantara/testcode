@@ -29,9 +29,13 @@
             
 
         .row
-          .col-6.text-center
+          .col.text-center
             = button_to "Hapus", @other_outcome, :method=>:delete, :class=>"btn btn-danger"
-          .col-6.text-center
-             a href='#{edit_other_outcome_path(id: @other_outcome.id)}'
+          .col.text-center
+            a href='#{other_outcome_path(id: @other_outcome.id, format: :pdf)}'
+              button.btn.btn-info type="button" 
+                  | Cetak
+          .col.text-center
+            a href='#{edit_other_outcome_path(id: @other_outcome.id)}'
               button.btn.btn-warning type="button" 
                 | Edit
