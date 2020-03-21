@@ -102,21 +102,22 @@ class ItemsController < ApplicationController
       results = []
       items = Item.all
       search_text = ""
-      if params["search"].present?
-        search_text += " '"+params["search"]+"'"
-        search = params["search"].downcase
-        items = items.where("lower(name) like ?", "%"+ search+"%")
+      if params["search"].present? 
+        if params["search"] != ""
+          search_text += " '"+params["search"]+"'"
+          search = params["search"].downcase
+          items = items.where("lower(code) like ?", "%"+ search+"%")
+        end
       end
 
       store = nil
       if params["store_id"].present?
         store = Store.find_by(id: params["store_id"])
-        items = items.where(store: store)
         if store.present?
+          items = items.where(store: store)
           search_text += " - Toko '" + store.name + "'"
         end
       end
-
       if params["gold_type_id"].present?
         gold_type = GoldType.find_by(id: params["gold_type_id"])
         if gold_type.present?

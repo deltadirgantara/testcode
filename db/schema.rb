@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_20_034219) do
+ActiveRecord::Schema.define(version: 2020_03_21_073801) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,16 @@ ActiveRecord::Schema.define(version: 2020_03_20_034219) do
     t.index ["recipient_type", "recipient_id"], name: "index_activities_on_recipient_type_and_recipient_id"
     t.index ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type"
     t.index ["trackable_type", "trackable_id"], name: "index_activities_on_trackable_type_and_trackable_id"
+  end
+
+  create_table "asset_values", force: :cascade do |t|
+    t.datetime "date", null: false
+    t.bigint "store_id", null: false
+    t.bigint "nominal", null: false
+    t.string "invoice", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_asset_values_on_store_id"
   end
 
   create_table "bank_flows", force: :cascade do |t|
@@ -320,6 +330,7 @@ ActiveRecord::Schema.define(version: 2020_03_20_034219) do
     t.index ["store_id"], name: "index_users_on_store_id"
   end
 
+  add_foreign_key "asset_values", "stores"
   add_foreign_key "bank_flows", "stores"
   add_foreign_key "bank_flows", "users"
   add_foreign_key "buckets", "stores"

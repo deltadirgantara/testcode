@@ -51,7 +51,10 @@ br
         .col-md-12.text-center.grey-text
           a href="#{items_path(option: @params.to_s, format: :pdf)}"
             b
-              | #{@search}
+              - if @search == "" || @search.nil?
+                | Pencarian Semua Toko
+              - else
+                | #{@search}
 
 .container-fluid
   .col-lg-12.col-md-12

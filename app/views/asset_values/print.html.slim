@@ -1,0 +1,36 @@
+#customer
+  table#meta
+    tr
+      td.meta-head Toko
+      td
+        - if @store.nil?
+          textarea Semua Toko
+        - else
+          textarea #{@store.name}
+    tr 
+      td.meta-head Tanggal Dibuat
+      td
+        textarea #{DateTime.now.strftime("%d/%m/%Y")}
+    tr
+      td.meta-head Kriteria
+      td
+        b  
+          | #{@search}
+
+
+table#items
+  tr colspan="5"
+
+
+  tr
+    th Nomor Invoice
+    th Toko
+    th Tanggal
+    th Nominal
+
+  - @asset_values.each do |asset_value|
+    tr.item-row
+      td #{asset_value.invoice}
+      td #{asset_value.store.name}
+      td #{asset_value.date.strftime("%d/%m/%Y")}
+      td #{number_with_delimiter(asset_value.nominal.to_i, delimiter: ".")}

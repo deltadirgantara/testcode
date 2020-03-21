@@ -2,16 +2,34 @@
   before_action :require_login
 
   def index
-  	@modals = Modal.page param_page
-    
-    store = current_user.store
-    start_day = DateTime.now - 90.days
-    end_day = DateTime.now + 1.day
-    graphs = graph start_day, end_day, store
+    search = filter_search params
+    @search = search[0]
+    @modals = search[1]
+    @store = search[2]
+    @params = params.to_s
+
+    graphs = graph @modals
     gon.label = graphs[0]
     gon.debit = graphs[1]
     gon.kredit = graphs[2]
     gon.graph_name = "Modal"
+
+    respond_to do |format|
+      format.html do
+        @modals = search[1].page param_page
+      end
+      format.pdf do
+        new_params = eval(params[:option])
+        filter = filter_search new_params
+        @search = filter[0]
+        @modals = filter[1]
+        @store = filter[2]
+        @recap_type = "fix_cost"
+        render pdf: DateTime.now.to_i.to_s,
+          layout: 'pdf_layout.html.erb',
+          template: "modals/print.html.slim"
+      end
+    end
   end
 
   def show
@@ -76,8 +94,44 @@
   end
 
   private
-    def graph start_day, end_day, store
-      modals_data = Modal.where(store: store).where("date >= ? AND date <= ?", start_day, end_day).order("date ASC").group_by{ |m| m.date.beginning_of_day}
+    def filter_search params
+      results = []
+      modals = Modal.all
+      modals = modals.where(store: current_user.store) if ["owner", "super_admin"].include? current_user.level?
+      search_text = ""
+      if params["search"].present?
+        search_text += " '"+params["search"]+"'"
+        search = params["search"].downcase
+        modals = modals.where("lower(invoice) like ?", "%"+ search+"%")
+      end
+
+      store = nil
+      if params["store_id"].present?
+        store = Store.find_by(id: params["store_id"])
+        if store.present?
+          modals = modals.where(store: store)
+          search_text += " - Toko '" + store.name + "'"
+        end
+      end
+
+      if params["start_date"].present?
+        start_date = params["start_date"].to_date
+        modals = modals.where("date >= ?", start_date)
+        search_text += " - Dari '" + start_date.strftime("%d/%m/%Y").to_s + "'"
+      end
+
+      if params["end_date"].present?
+        end_date = params["end_date"].to_date
+        modals = modals.where("date <= ?", end_date)
+        search_text += " - Sampai '" + end_date.strftime("%d/%m/%Y").to_s + "'"
+      end
+
+      search_text = "Pencarian" + search_text if search_text != ""
+      return search_text, modals, store
+    end
+
+    def graph data
+      modals_data = data.group_by{ |m| m.date.beginning_of_day}
       graphs = {}
 
       modals_data.each do |modals|
