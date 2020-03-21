@@ -1,0 +1,41 @@
+#customer
+  table#meta
+    tr
+      td.meta-head Jenis
+      td
+        textarea 
+          | Biaya Pajak
+    tr 
+      td.meta-head Tanggal Dibuat
+      td
+        textarea #{DateTime.now.strftime("%d/%m/%Y")}
+    tr
+      td.meta-head Toko 
+      td
+        - if @store.present?
+          textarea #{@store.name}
+        - else
+          textarea Semua Toko
+   
+    tr
+      td.meta-head Kriteria
+      td
+        b  
+          | #{@search}
+
+
+table#items
+  tr colspan="5"
+
+  tr
+    th Nomor Invoice
+    th Tanggal
+    th Nominal
+    th Keterangan
+
+  - @taxs.each do |tax|
+    tr.operational-row
+      td #{tax.invoice}
+      td #{tax.date.strftime("%d/%m/%Y")}
+      td #{tax.nominal}
+      td #{tax.description}
