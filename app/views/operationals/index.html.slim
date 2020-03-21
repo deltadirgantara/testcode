@@ -7,27 +7,45 @@
         button.btn.btn-success type="button" 
           i.fas.fa-plus 
           |   Tambah
-br
 
+bbr
 .container-fluid
-.col-lg-12.col-md-12
+  .col-xl-12.col-lg-12.col-md-12.pb-2
+      .card-header.white-text.info-color 
+        h5.font-weight-500.my-1
+          | Grafik 
+      .card.mb-4 
+        .card-body.table-responsive.text-nowrap
+          canvas id="graph"
+  .col-lg-12.col-md-12
     .card-header.white-text.info-color
       h5.font-weight-500.my-1
         | Pencarian
     .card.mb-4
       .card-body
-        = form_for :bucket, url: operationals_path, method: 'GET' do |form|
+        = form_for :operational, url: operationals_path, method: 'GET' do |form|
           .row.align-middle
             .col
+              label Nomor Invoice
               input type="text" class="form-control md-form" id="search" name="search" placeholder="Nomor Invoice ..."
             - if ["owner", "super_admin"].include? current_user.level
               .col
+                label Toko
                 select name="store_id" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" id="store" searchable="Cari..."
                   option value="-"
                     | Semua Toko
                   - Store.all.each do |store|
                     option value="#{store.id}"
                       | #{store.name}
+          .row.align-middle
+            .col
+              label Dari Tanggal
+              input class="form-control md-form" type="date" name="start_date" id="invoice" value="#{Date.today.strftime('%Y-%m-%d')}"
+
+            .col
+              label Sampai Tanggal
+              input class="form-control md-form" type="date" name="end_date" id="invoice" value="#{Date.today.strftime('%Y-%m-%d')}"
+
             .col-md-12.text-center
               button class="btn btn-primary"
                 | Cari
