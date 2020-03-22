@@ -60,6 +60,15 @@ class StoresController < ApplicationController
     return redirect_back_data_error stores_path, "Data Toko Tidak Ditemukan" unless params[:id].present?
     @store = Store.find_by_id params[:id]
     return redirect_back_data_error stores_path, "Data Toko Tidak Ditemukan " unless @store.present?
+    respond_to do |format|
+      format.html do
+      end
+      format.pdf do
+        render pdf: DateTime.now.to_i.to_s,
+          layout: 'pdf_layout.html.erb',
+          template: "stores/print.html.slim"
+      end
+    end
   end
 
   private

@@ -1,11 +1,10 @@
 tr	
 	td #{gold_type.name}
+	td #{number_with_delimiter(gold_type.gold_price.buy.to_i, delimiter: ".")}
+	td #{number_with_delimiter(gold_type.gold_price.sell.to_i, delimiter: ".")}
 	td #{gold_type.items.count}
-	td
-		.row
-			.col.text-right
-		    	a href='#{gold_type_path(id: gold_type.id)}'
-		          button.btn.btn-info type="button" 
-		              | Detil
-		    .col.text-left
-		    	= button_to "Hapus", gold_type, :method=>:delete, :class=>"btn btn-danger"
+	td #{gold_type.gold_price.updated_at.strftime("%d-%m-%Y %H:%m:%S")}
+	td		
+    	a href='#{gold_type_path(id: gold_type.id)}'
+          button.btn.btn-info type="button" 
+              | Detil

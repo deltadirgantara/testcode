@@ -11,6 +11,7 @@ Rails.application.routes.draw do
 	resource :session, controller: 'sessions', only:  %i[create]
   	get '/sign_in', to: 'sessions#new', as: 'sign_in'
   	delete '/sign_out', to: 'sessions#destroy'
+    resources :system_informations
 
   	resources :users
   	resources :stores

@@ -37,5 +37,5 @@ table#items
     tr.operational-row
       td #{tax.invoice}
       td #{tax.date.strftime("%d/%m/%Y")}
-      td #{tax.nominal}
+      td #{number_with_delimiter(tax.nominal, delimiter: ".")}
       td #{tax.description}

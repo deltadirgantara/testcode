@@ -1,0 +1,34 @@
+#customer
+  table#meta
+    tr
+      td.meta-head Jenis
+      td
+        textarea 
+          | Daftar Pengguna
+    tr 
+      td.meta-head Tanggal Dibuat
+      td
+        textarea #{DateTime.now.strftime("%d/%m/%Y")}
+    tr
+      td.meta-head Toko 
+      td
+        textarea #{@store.name}
+
+
+table#items
+  tr colspan="5"
+
+  tr
+    th Nama
+    th Jabatan
+    th Alamat
+    th No. Telepon
+    th Jenis Kelamin
+
+  - @store.users.each do |user|
+    tr.items-row
+      td #{user.name}
+      td #{user.level}
+      td #{user.address}
+      td #{number_to_phone(user.phone, country_code: 62)}
+      td #{user.sex.gsub("_", " ").camelize}

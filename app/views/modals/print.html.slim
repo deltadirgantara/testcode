@@ -4,7 +4,7 @@
       td.meta-head Jenis
       td
         textarea 
-          | Biaya Pemasukkan Lainnya
+          | Modal
     tr 
       td.meta-head Tanggal Dibuat
       td
@@ -29,13 +29,19 @@ table#items
 
   tr
     th Nomor Invoice
+    th Toko
     th Tanggal
+    th Tipe
     th Nominal
     th Keterangan
 
-  - @other_incomes.each do |other_income|
+  - @modals.each do |modal|
     tr.operational-row
-      td #{other_income.invoice}
-      td #{other_income.date.strftime("%d/%m/%Y")}
-      td #{number_with_delimiter(other_income.nominal, delimiter: ".")}
-      td #{other_income.description}
+      td #{modal.invoice}
+      td #{modal.store.name}
+      td #{modal.date.strftime("%d/%m/%Y")}
+      - tipe = "Penambahan"
+      - tipe = "Penarikan" if modal.type_modal == "OUT"
+      td #{tipe}
+      td #{number_with_delimiter(modal.nominal, delimiter: ".")}
+      td #{modal.description}
