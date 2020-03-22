@@ -23,6 +23,14 @@ br
               button class="btn btn-primary"
                 | Cari
 
+        .col-md-12.text-center.grey-text
+          a href="#{gold_types_path(option: @params.to_s, format: :pdf)}"
+            b
+              - if @search == "" || @search.nil?
+                | Semua Jenis Emas
+              - else
+                | #{@search}
+
 .container-fluid
   .col-lg-12.col-md-12
     .card-header.white-text.info-color
@@ -35,6 +43,7 @@ br
             th Jenis Emas 
             th Jual
             th Beli
+            th Terakhir Diubah
             th Aksi
           tbody
             = render partial: 'list', collection: @gold_prices, as: :gold_price

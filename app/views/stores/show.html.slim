@@ -34,6 +34,12 @@
           - if @store.users.nil?
             .col.text-center
               = button_to "Hapus Toko", @store, :method=>:delete, :class=>"btn btn-danger"
+
+          .col.text-center
+            a href='#{store_path(id: @store.id, format: :pdf)}'
+              button.btn.btn-info type="button" 
+                | Daftar Pengguna
+
           .col.text-center
             a href='#{edit_store_path(id: @store.id)}'
               button.btn.btn-warning type="button" 

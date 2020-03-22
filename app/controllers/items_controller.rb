@@ -33,7 +33,7 @@ class ItemsController < ApplicationController
   def new
     @categories = Category.all.order("name ASC")
     @gold_types = GoldType.all.order("name ASC")
-    @buckets = Bucket.all.order("name ASC")
+    @buckets = Bucket.where(store: current_user.store).order("name ASC")
   end
 
   def create

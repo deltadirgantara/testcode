@@ -1,0 +1,33 @@
+#customer
+  table#meta
+    tr
+      td.meta-head Jenis 
+      td
+        textarea Harga Emas
+    tr 
+      td.meta-head Tanggal Dibuat
+      td
+        textarea #{DateTime.now.strftime("%d/%m/%Y")}
+    tr
+      td.meta-head Kriteria
+      td
+        b  
+          | #{@search}
+
+
+table#items
+  tr colspan="5"
+
+
+  tr
+    th Nama
+    th Beli
+    th Jual
+    th Terkahir Diubah
+
+  - @gold_types.each do |gold_type|
+    tr.item-row
+      td #{gold_type.name}
+      td #{number_with_delimiter(gold_type.gold_price.buy.to_i, delimiter: ".")}
+      td #{number_with_delimiter(gold_type.gold_price.sell.to_i, delimiter: ".")}
+      td #{gold_type.updated_at.strftime("%d-%m-%Y %H:%m:%S")}
