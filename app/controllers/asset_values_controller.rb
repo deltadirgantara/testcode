@@ -44,7 +44,7 @@ class AssetValuesController < ApplicationController
       results = []
       asset_values = AssetValue.all
 
-      asset_values = asset_values.where(store: current_user.store) if ["owner", "super_admin"].include? current_user.level
+      asset_values = asset_values.where(store: current_user.store) if !["owner", "super_admin"].include? current_user.level
 
       search_text = ""
       if params["search"].present?

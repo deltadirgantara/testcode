@@ -36,7 +36,7 @@ tr
 		td #{number_with_delimiter(data.nominal, delimiter: ".")}
 
 	td #{cash_flow.type_cash.gsub("_", " ").upcase} ( #{data.description} )
-	td #{number_with_delimiter(@saldo, delimiter: ".")}
+	/ td #{number_with_delimiter(@saldo, delimiter: ".")}
 
 	td
 		a href='#{url}'

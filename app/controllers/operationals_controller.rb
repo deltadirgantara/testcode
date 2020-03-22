@@ -59,7 +59,7 @@ class OperationalsController < ApplicationController
     operational.invoice = "OPR-" + DateTime.now.to_i.to_s + current_user.store.id.to_s
     return redirect_back_data_error new_operational_path, "Data error" if operational.invalid?  
   	operational.save!
-    CashFlow.create ref_id: operational.id, type_cash: 2, type_flow: 2
+    CashFlow.create ref_id: operational.id, type_cash: 2, type_flow: 2, nominal: other_income.nominal, date: other_income.date
   	operational.create_activity :create, owner: current_user
   	return redirect_success operational_path(id: operational.id), "Data disimpan"
   end
@@ -90,6 +90,9 @@ class OperationalsController < ApplicationController
   	changes = @operational.changes
     if @operational.changed?
       @operational.save! 
+      cf = CashFlow.find_by(ref_id: operational.id, type_cash: CashFlow::OPERATIONAL)
+      cf.nominal = @operational.nominal
+      cf.save!
       @operational.create_activity :edit, owner: current_user, parameters: changes
     end
     return redirect_success operational_path(id: @operational.id), "Data Operasional - " + @operational.invoice + " - Berhasil Diubah"
@@ -99,7 +102,7 @@ class OperationalsController < ApplicationController
     def filter_search params
       results = []
       operationals = Operational.all
-      operationals = operationals.where(store: current_user.store) if ["owner", "super_admin"].include? current_user.level
+      operationals = operationals.where(store: current_user.store) if !["owner", "super_admin"].include? current_user.level
       search_text = ""
       if params["search"].present?
         search_text += " '"+params["search"]+"'"

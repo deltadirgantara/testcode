@@ -59,7 +59,7 @@ class FixCostsController < ApplicationController
     fix_cost.invoice = "FIX-" + DateTime.now.to_i.to_s + current_user.store.id.to_s
     return redirect_back_data_error new_fix_cost_path, "Data error" if fix_cost.invalid?  
     fix_cost.save!
-    CashFlow.create ref_id: fix_cost.id, type_cash: 3, type_flow: 2
+    CashFlow.create ref_id: fix_cost.id, type_cash: 3, type_flow: 2, nominal: fix_cost.nominal, date: fix_costs.date
     fix_cost.create_activity :create, owner: current_user
     return redirect_success fix_cost_path(id: fix_cost.id), "Data disimpan"
   end
@@ -90,6 +90,9 @@ class FixCostsController < ApplicationController
     changes = @fix_cost.changes
     if @fix_cost.changed?
       @fix_cost.save! 
+      cf = CashFlow.find_by(ref_id: @fix_cost.id, type_cash: CashFlow::FIX_COST)
+      cf.nominal = @fix_cost.nominal
+      cf.save!
       @fix_cost.create_activity :edit, owner: current_user, parameters: changes
     end
     return redirect_success fix_costs_path(id: @fix_cost.id), "Data Pajak - " + @fix_cost.invoice + " - Berhasil Diubah"
@@ -99,7 +102,7 @@ class FixCostsController < ApplicationController
     def filter_search params
       results = []
       fix_costs = FixCost.all
-      fix_costs = fix_costs.where(store: current_user.store) if ["owner", "super_admin"].include? current_user.level
+      fix_costs = fix_costs.where(store: current_user.store) if !["owner", "super_admin"].include? current_user.level
       search_text = ""
       if params["search"].present?
         search_text += " '"+params["search"]+"'"
