@@ -11,30 +11,35 @@ br
 .container-fluid
   .col-lg-12.col-md-12
     .card-header.white-text.info-color
-        h5.font-weight-500.my-1
-          | Pencarian
+      h5.font-weight-500.my-1
+        | Pencarian
     .card.mb-4
       .card-body
         = form_for :customer, url: customers_path, method: 'GET' do |form|
-          .row
-            - if ["owner", "super_admin", "super_finance"].include? current_user.level
-              .col-md-12.text-center
-                select class="mdb-select md-form" id="months" name="store_id"
-                  option value="0"
+          .row.align-middle
+            .col
+              label Nama
+              input type="text" class="form-control md-form" id="search" name="search" 
+            - if ["owner", "super_admin"].include? current_user.level
+              .col
+                label Toko
+                select name="store_id" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" id="store" searchable="Cari..."
+                  option value="-"
                     | Semua Toko
                   - Store.all.each do |store|
                     option value="#{store.id}"
                       | #{store.name}
-            .col-12
-              input type="text" class="form-control md-form" id="search" name="search" placeholder="Nama / Nomor Telepon Member ..."
-            .col-12.text-center
+            .col-md-12.text-center
               button class="btn btn-primary"
                 | Cari
 
-          .col-md-12.text-center.grey-text
-            br
+        .col-md-12.text-center.grey-text
+          a href="#{customers_path(option: @params.to_s, format: :pdf)}"
             b
-              | #{@search}
+              - if @search == "" || @search.nil?
+                | Pencarian Semua Nama
+              - else
+                | #{@search}
 .container-fluid
   .col-lg-12.col-md-12
     .card-header.white-text.info-color

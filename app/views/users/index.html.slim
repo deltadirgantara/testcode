@@ -11,17 +11,35 @@ br
 .container-fluid
   .col-lg-12.col-md-12
     .card-header.white-text.info-color
-        h5.font-weight-500.my-1
-          | Pencarian
+      h5.font-weight-500.my-1
+        | Pencarian
     .card.mb-4
       .card-body
         = form_for :user, url: users_path, method: 'GET' do |form|
           .row.align-middle
-            .col-md-12
-              input type="text" class="form-control md-form" id="search" name="search"
+            .col
+              label Nama
+              input type="text" class="form-control md-form" id="search" name="search" 
+            - if ["owner", "super_admin"].include? current_user.level
+              .col
+                label Toko
+                select name="store_id" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" id="store" searchable="Cari..."
+                  option value="-"
+                    | Semua Toko
+                  - Store.all.each do |store|
+                    option value="#{store.id}"
+                      | #{store.name}
             .col-md-12.text-center
               button class="btn btn-primary"
                 | Cari
+
+        .col-md-12.text-center.grey-text
+          a href="#{users_path(option: @params.to_s, format: :pdf)}"
+            b
+              - if @search == "" || @search.nil?
+                | Pencarian Semua Nama
+              - else
+                | #{@search}
 
 .container-fluid
   .col-lg-12.col-md-12

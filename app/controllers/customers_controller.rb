@@ -2,7 +2,28 @@ class CustomersController < ApplicationController
   before_action :require_login
 
   def index
-  	@customers = Customer.page param_page
+  	search = filter_search params
+    @search = search[0]
+    @customers = search[1]
+    @store = search[2]
+    @params = params.to_s
+
+    respond_to do |format|
+      format.html do
+        @customers = search[1].page param_page
+      end
+      format.pdf do
+        @recap_type = "customer"
+        new_params = eval(params[:option])
+        filter = filter_search new_params
+        @search = filter[0]
+        @customers = filter[1]
+        @store = filter[2]
+        render pdf: DateTime.now.to_i.to_s,
+          layout: 'pdf_layout.html.erb',
+          template: "customers/print.html.slim"
+      end
+    end
   end
 
   def show
@@ -52,6 +73,30 @@ class CustomersController < ApplicationController
   end
 
   private
+    def filter_search params
+      results = []
+      customers = Customer.all
+      customers = customers.where(store: current.customer.store) if !["owner", "super_admin"].include? current_user.level
+      search_text = ""
+      if params["search"].present?
+        search_text += " '"+params["search"]+"'"
+        search = params["search"].downcase
+        customers = customers.where("lower(name) like ?", "%"+ search+"%")
+      end
+
+      store = nil
+      if params["store_id"].present?
+        store = Store.find_by(id: params["store_id"])
+        if store.present?
+          customers = customers.where(store: current.customer.store) if !["owner", "super_admin"].include? current_user.level
+          search_text += " di Toko '" + store.name + "'"
+        end
+      end
+
+      search_text = "Pencarian" + search_text if search_text != ""
+      return search_text, customers , store
+    end
+
     def customer_params
       params.require(:customer).permit(
         :name, :phone, :email, :address

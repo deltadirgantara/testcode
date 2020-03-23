@@ -1,9 +1,12 @@
 #customer
   table#meta
     tr
-      td.meta-head Daftar Pengguna 
+      td.meta-head Daftar Pengguna
       td
-        textarea SEMUA
+        - if @user.present?
+          textarea #{@user.name}
+        - else
+          textarea SEMUA
     tr
       td.meta-head Kriteria
       td
@@ -13,13 +16,13 @@
 table#items
   tr colspan="5"
 
-
   tr
     th Nama
     th Email
+    th Toko
 
   - @users.each do |user|
     tr.item-row
       td #{user.name}
       td #{user.email}
-   
+      td #{user.store.name}

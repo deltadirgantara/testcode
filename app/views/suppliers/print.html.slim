@@ -1,0 +1,28 @@
+#customer
+  table#meta
+    tr
+      td.meta-head Daftar Supplier
+      td
+        - if @supplier.present?
+          textarea #{@supplier.name}
+        - else
+          textarea SEMUA
+    tr
+      td.meta-head Kriteria
+      td
+        | -
+
+
+table#items
+  tr colspan="5"
+
+  tr
+    th Nama
+    th Alamat
+    th Nomor Telepon
+
+  - @suppliers.each do |supplier|
+    tr.item-row
+      td #{supplier.name}
+      td #{supplier.address}
+      td #{supplier.phone}

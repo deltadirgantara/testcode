@@ -2,11 +2,25 @@ class SuppliersController < ApplicationController
   before_action :require_login
 
   def index
-    @suppliers = Supplier.page param_page
-    if params[:search].present?
-      @search = "Pencarian '"+params[:search].upcase+"'"
-      search = "%"+params[:search].downcase+"%"
-      @suppliers = @suppliers.where("lower(name) like ?", search)
+    search = filter_search params
+    @search = search[0]
+    @suppliers = search[1]
+    @params = params.to_s
+
+    respond_to do |format|
+      format.html do
+        @suppliers = search[1].page param_page
+      end
+      format.pdf do
+        @recap_type = "customer"
+        new_params = eval(params[:option])
+        filter = filter_search new_params
+        @search = filter[0]
+        @suppliers = filter[1]
+        render pdf: DateTime.now.to_i.to_s,
+          layout: 'pdf_layout.html.erb',
+          template: "suppliers/print.html.slim"
+      end
     end
   end
 
@@ -57,6 +71,21 @@ class SuppliersController < ApplicationController
   end
 
   private
+    def filter_search params
+      results = []
+      suppliers = Supplier.all
+      suppliers = suppliers.where(store: current_user.store) if !["owner", "super_admin"].include? current_user.level
+      search_text = ""
+      if params["search"].present?
+        search_text += " '"+params["search"]+"'"
+        search = params["search"].downcase
+        suppliers = suppliers.where("lower(name) like ?", "%"+ search+"%")
+      end
+
+      search_text = "Pencarian Supplier -" + search_text if search_text != ""
+      return search_text, suppliers
+    end
+
     def supplier_params
       params.require(:supplier).permit(
         :name, :address, :phone

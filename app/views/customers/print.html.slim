@@ -1,0 +1,29 @@
+#customer
+  table#meta
+    tr
+      td.meta-head Daftar Pelanggan
+      td
+        - if @customer.present?
+          textarea #{@customer.name}
+        - else
+          textarea SEMUA
+    tr
+      td.meta-head Kriteria
+      td
+        | -
+
+
+table#items
+  tr colspan="5"
+
+  tr
+    th Nama
+    th Email
+    th Toko
+
+  - @customers.each do |customer|
+    tr.item-row
+      td #{customer.name}
+      td #{customer.email}
+      td #{customer.user.store.name}
+   
