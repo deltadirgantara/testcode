@@ -24,6 +24,7 @@ Rails.application.routes.draw do
     resources :gold_prices
     resources :buckets
     resources :suppliers
+    resources :banks
     
     resources :taxs
     resources :operationals

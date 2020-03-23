@@ -17,7 +17,7 @@ tr
       - if @activity.trackable.present?
         - class_name = @activity.trackable.class.name 
 
-        - if ["Modal", "Tax", "Operational", "BankFlow", "FixCost"].include? class_name
+        - if ["Modal", "Tax", "Operational", "BankFlow", "FixCost", "OtherIncome", "OtherOutcome"].include? class_name
           = link_to @activity.trackable.invoice, @activity.trackable
         
         - elsif ["GoldPrice"].include? class_name

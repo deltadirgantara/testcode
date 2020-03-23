@@ -68,17 +68,18 @@ li
 li
   a.collapsible-header.waves-effect.arrow-r
     i.w-fa.fas.fa-cogs
-    | Pengaturan
+    | Administrate
     i.fas.fa-angle-down.rotate-icon
   .collapsible-body
       ul
           li
+            a.waves-effect href="#{banks_path}"  Bank
+          li
             a.waves-effect href="#{gold_prices_path}"  Harga Emas
           li
             a.waves-effect href="#{}"  Hak Akses
+          li
+            a.waves-effect href="#{activities_path}"  Aktivitas Pengguna
+          li
+            a.waves-effect href="#{system_informations_path}"  Informasi Sistem
           
-
-li
-  a.collapsible-header.waves-effect.arrow-r href="#{system_informations_path}"
-    i.w-fa.fas.fa-info
-    | Informasi Sistem

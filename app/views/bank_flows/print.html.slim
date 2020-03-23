@@ -1,0 +1,59 @@
+#customer
+  table#meta
+    tr
+      td.meta-head Jenis
+      td
+        textarea 
+          | Arus Bank
+    tr 
+      td.meta-head Tanggal Dibuat
+      td
+        textarea #{DateTime.now.strftime("%d/%m/%Y")}
+    tr
+      td.meta-head Toko 
+      td
+        - if @store.present?
+          textarea #{@store.name}
+        - else
+          textarea Semua Toko
+    tr
+      td.meta-head Bank 
+      td
+        - if @bank.present?
+          textarea #{@bank.name}
+        - else
+          textarea Semua Bank
+   
+    tr
+      td.meta-head Kriteria
+      td
+        b  
+          | #{@search}
+
+
+table#items
+  tr colspan="5"
+
+  tr
+    th Nomor Invoice
+    th Toko
+    th Tanggal
+    th Bank
+    th Debit
+    th Kredit
+    th Keterangan
+
+  - @bank_flows.each do |bank_flow|
+    tr.operational-row
+      td #{bank_flow.invoice}
+      td #{bank_flow.store.name}
+      td #{bank_flow.date.strftime("%d/%m/%Y")}
+      td #{bank_flow.bank.name} 
+      - if bank_flow.type_flow == "IN"
+        td #{number_with_delimiter(bank_flow.nominal, delimiter: ".")}
+        td
+        td Setor ( #{bank_flow.description} )
+      - else
+        td
+        td #{number_with_delimiter(bank_flow.nominal, delimiter: ".")}
+        td Tarik ( #{bank_flow.description} )

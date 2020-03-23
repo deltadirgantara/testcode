@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_21_083208) do
+ActiveRecord::Schema.define(version: 2020_03_23_021309) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,7 +45,6 @@ ActiveRecord::Schema.define(version: 2020_03_21_083208) do
   end
 
   create_table "bank_flows", force: :cascade do |t|
-    t.integer "type_bank", null: false
     t.bigint "nominal", null: false
     t.integer "type_flow", null: false
     t.bigint "store_id", null: false
@@ -55,8 +54,16 @@ ActiveRecord::Schema.define(version: 2020_03_21_083208) do
     t.datetime "date", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "bank_id"
+    t.index ["bank_id"], name: "index_bank_flows_on_bank_id"
     t.index ["store_id"], name: "index_bank_flows_on_store_id"
     t.index ["user_id"], name: "index_bank_flows_on_user_id"
+  end
+
+  create_table "banks", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "buckets", force: :cascade do |t|
@@ -246,10 +253,11 @@ ActiveRecord::Schema.define(version: 2020_03_21_083208) do
   create_table "store_banks", force: :cascade do |t|
     t.datetime "date", null: false
     t.bigint "store_id", null: false
-    t.integer "type_bank", null: false
     t.bigint "nominal", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "bank_id"
+    t.index ["bank_id"], name: "index_store_banks_on_bank_id"
     t.index ["store_id"], name: "index_store_banks_on_store_id"
   end
 
@@ -333,6 +341,7 @@ ActiveRecord::Schema.define(version: 2020_03_21_083208) do
   end
 
   add_foreign_key "asset_values", "stores"
+  add_foreign_key "bank_flows", "banks"
   add_foreign_key "bank_flows", "stores"
   add_foreign_key "bank_flows", "users"
   add_foreign_key "buckets", "stores"
@@ -360,6 +369,7 @@ ActiveRecord::Schema.define(version: 2020_03_21_083208) do
   add_foreign_key "other_incomes", "users"
   add_foreign_key "other_outcomes", "stores"
   add_foreign_key "other_outcomes", "users"
+  add_foreign_key "store_banks", "banks"
   add_foreign_key "store_banks", "stores"
   add_foreign_key "store_cashes", "stores"
   add_foreign_key "sub_categories", "categories"
