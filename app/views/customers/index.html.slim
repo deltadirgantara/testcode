@@ -18,17 +18,8 @@ br
         = form_for :customer, url: customers_path, method: 'GET' do |form|
           .row.align-middle
             .col
-              label Nama
-              input type="text" class="form-control md-form" id="search" name="search" 
+              input type="text" class="form-control md-form" id="search" name="search" placeholder="Nama Pelanggan ..."
             - if ["owner", "super_admin"].include? current_user.level
-              .col
-                label Toko
-                select name="store_id" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" id="store" searchable="Cari..."
-                  option value="-"
-                    | Semua Toko
-                  - Store.all.each do |store|
-                    option value="#{store.id}"
-                      | #{store.name}
             .col-md-12.text-center
               button class="btn btn-primary"
                 | Cari

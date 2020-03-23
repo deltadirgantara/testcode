@@ -5,7 +5,6 @@ class CustomersController < ApplicationController
   	search = filter_search params
     @search = search[0]
     @customers = search[1]
-    @store = search[2]
     @params = params.to_s
 
     respond_to do |format|
@@ -18,7 +17,6 @@ class CustomersController < ApplicationController
         filter = filter_search new_params
         @search = filter[0]
         @customers = filter[1]
-        @store = filter[2]
         render pdf: DateTime.now.to_i.to_s,
           layout: 'pdf_layout.html.erb',
           template: "customers/print.html.slim"

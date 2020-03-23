@@ -18,8 +18,7 @@ bbr
         = form_for :supplier, url: suppliers_path, method: 'GET' do |form|
           .row.align-middle
             .col
-              label Nama
-              input type="text" class="form-control md-form" id="search" name="search" 
+              input type="text" class="form-control md-form" id="search" name="search" placeholder="Nama Supplier ..."
             - if ["owner", "super_admin"].include? current_user.level
             .col-md-12.text-center
               button class="btn btn-primary"
