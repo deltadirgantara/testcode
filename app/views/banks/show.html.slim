@@ -9,8 +9,33 @@ container-fluid
           .form-group
             label for="name" Nama
             = form.text_field :name, required: true, class: "form-control md-form", id: "name", readonly: "true"
+
+          .form-group
+            label for="name" Aktivitas Terakhir
+            table.table
+              tr
+                - if ["owner", "super_admin"].include? current_user.level
+                  th Toko
+                th Tipe
+                th Tanggal
+                th Nominal
+                th Keterangan
+              - bank_flows = @bank.bank_flows.order("date DESC").limit(10)
+              - bank_flows = bank_flows.where(store: current_user.store) if !["owner", "super_admin"].include? current_user.level
+              - bank_flows.each do |bank_flow|
+                tr
+                  - if ["owner", "super_admin"].include? current_user.level
+                    td #{bank_flow.store.name}
+                  - flow_type = "SETOR"
+                  - flow_type = "TARIK" if bank_flow.type_flow == "OUT"
+                  td #{flow_type}
+                  td #{bank_flow.date.strftime("%d-%m-%Y")}
+                  td #{number_with_delimiter(bank_flow.nominal, delimiter: ".")}
+                  td #{bank_flow.description}
+
+
         .row
-          - if @bank.store_banks.empty?
+          - if @bank.bank_flows.nil?
             .col.text-center
               = button_to "Hapus", @bank, :method=>:delete, :class=>"btn btn-danger"
 

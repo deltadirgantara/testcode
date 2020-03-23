@@ -102,7 +102,7 @@ class BankFlowsController < ApplicationController
       results = []
       bank_flows = BankFlow.all
       bank_flows = bank_flows.where(store: current_user.store) if !["owner", "super_admin"].include? current_user.level?
-      bank_flows = bank_flows.order("created_at DESC")
+      bank_flows = bank_flows.order("date DESC")
       search_text = ""
       if params["search"].present?
         search_text += " '"+params["search"]+"'"
@@ -168,7 +168,7 @@ class BankFlowsController < ApplicationController
       days.each_with_index do |day, idx|
         days[idx] = day.strftime("%d-%m-%Y")
       end
-      return days, debit, kredit
+      return days.reverse, debit.reverse, kredit.reverse
     end
 
 
