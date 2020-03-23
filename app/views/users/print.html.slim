@@ -18,11 +18,13 @@ table#items
 
   tr
     th Nama
-    th Email
+    th Alamat
+    th Nomor Telepon
     th Toko
 
   - @users.each do |user|
     tr.item-row
       td #{user.name}
-      td #{user.email}
+      td #{user.address}
+      td #{user.phone}
       td #{user.store.name}
