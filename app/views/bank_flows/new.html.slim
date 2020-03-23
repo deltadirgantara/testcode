@@ -15,11 +15,11 @@
                 | Tarik
 
           .form-group
-            label for="type" Jenis
-            select name="bank_flow[type_bank]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" 
-              - @banks.each do |bank|
-                option value="#{bank}"
-                  | #{bank}
+            label for="type" Bank
+            select name="bank_flow[bank_id]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" 
+              - Bank.all.each do |bank|
+                option value="#{bank.id}"
+                  | #{bank.name}
 
           .form-group
             label for="nominal" Nominal

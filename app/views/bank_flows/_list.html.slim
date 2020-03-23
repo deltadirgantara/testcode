@@ -2,7 +2,7 @@ tr
 	td #{bank_flow.invoice}
 	td #{bank_flow.store.name}
 	td #{bank_flow.date.strftime("%d/%m/%Y")}
-	td #{bank_flow.type_bank} 
+	td #{bank_flow.bank.name} 
 	- if bank_flow.type_flow == "IN"
 		td #{number_with_delimiter(bank_flow.nominal, delimiter: ".")}
 		td
