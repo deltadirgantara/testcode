@@ -1,0 +1,65 @@
+#customer
+  table#meta
+    tr
+      td.meta-head Jenis
+      td
+        textarea 
+          | Hutang
+    tr 
+      td.meta-head Tanggal Cetak
+      td
+        textarea #{DateTime.now.strftime("%d/%m/%Y")}
+
+
+table#invoice
+  tr colspan="5"
+  - target = ""
+  - type = ""
+  - if @debt.type_debt == "BANK"
+    - type = "Pinjaman Bank"
+    - target = Bank.find_by(id: @debt.target).name
+  tr#invoice
+    td
+      b
+        | Nomor Invoice
+    td #{@debt.invoice}
+  tr#invoice
+    td
+      b
+        | Tanggal Dibuat
+    td #{@debt.created_at.strftime("%d/%m/%Y")}
+  tr#invoice
+    td
+      b
+        | Tanggal Jatuh Tempo
+    td #{@debt.due_date.strftime("%d/%m/%Y")}
+  tr#invoice
+    td
+      b
+        | Tipe
+    td #{type}
+  tr#invoice
+    td
+      b
+        | Kepada
+    td #{target}
+  tr#invoice
+    td
+      b
+        | Nominal
+    td #{number_with_delimiter(@debt.nominal.to_i, delimiter: ".")}
+  tr#invoice
+    td
+      b
+        | Kekurangan
+    td #{number_with_delimiter(@debt.deficiency.to_i, delimiter: ".")}
+  tr#invoice
+    td
+      b
+        | Keterangan
+    td #{@debt.description}
+  tr#invoice
+    td
+      b
+        | Dibuat Oleh
+    td #{@debt.user.name} - #{@debt.store.name}

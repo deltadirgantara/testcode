@@ -1,6 +1,7 @@
 class CreateReceivable < ActiveRecord::Migration[5.2]
   def change
     create_table :receivables do |t|
+        t.timestamp :due_date, null: false
         t.string :invoice, null: false
     	t.references :user, null: false, foreign_key: true
     	t.references :store, null: false, foreign_key: true

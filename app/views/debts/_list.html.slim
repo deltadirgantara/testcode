@@ -10,7 +10,7 @@ tr
 	td #{target}
 	td #{number_with_delimiter(debt.nominal, delimiter: ".")}
 	td #{number_with_delimiter(debt.deficiency, delimiter: ".")}
-	td #{debt.description}
+	td #{debt.due_date.strftime("%d-%m-%Y") }
 	td
 		a href='#{debt_path(id: debt.id)}'
 	      	button.btn.btn-info type="button" 

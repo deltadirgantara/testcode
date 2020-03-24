@@ -57,7 +57,7 @@ class DebtsController < ApplicationController
     debt.store = current_user.store
     debt.user = current_user
     debt.deficiency = debt.nominal
-    return redirect_back_data_error new_debt_path, "Data error" if debt.nominal < 10000 
+    return redirect_back_data_error new_debt_path, "Data error" if debt.nominal < 10000 || debt.due_date <= DateTime.now.beginning_of_day 
     debt.invoice = "DEBT-" + DateTime.now.to_i.to_s + current_user.store.id.to_s
     return redirect_back_data_error new_debt_path, "Data error" if debt.invalid?  
   	debt.save!
@@ -123,13 +123,13 @@ class DebtsController < ApplicationController
 
       if params["start_date"].present?
         start_date = params["start_date"].to_date
-        debts = debts.where("date >= ?", start_date)
+        debts = debts.where("created_at >= ?", start_date)
         search_text += " - Dari '" + start_date.strftime("%d/%m/%Y").to_s + "'"
       end
 
       if params["end_date"].present?
         end_date = params["end_date"].to_date
-        debts = debts.where("date <= ?", end_date)
+        debts = debts.where("created_at <= ?", end_date.end_of_day)
         search_text += " - Sampai '" + end_date.strftime("%d/%m/%Y").to_s + "'"
       end
 
@@ -139,7 +139,7 @@ class DebtsController < ApplicationController
 
     def graph data
       
-      grouping_datas = data.order("date ASC").group_by{ |m| m.date.beginning_of_day}
+      grouping_datas = data.order("created_at ASC").group_by{ |m| m.date.beginning_of_day}
       
       graphs = {}
 
@@ -162,7 +162,7 @@ class DebtsController < ApplicationController
 
     def debt_params
       params.require(:debt).permit(
-        :nominal, :type_debt, :target, :description, :target
+        :due_date, :nominal, :type_debt, :target, :description, :target
       )
     end
 

@@ -26,6 +26,13 @@
                   | #{bank.name}
 
           .form-group
+            label for="type" Tanggal Pembayaran
+            br
+            label.text-danger for="type" (*Tanggal harus diisi lebih dari hari ini)
+
+            input class="form-control md-form" type="date" name="debt[due_date]" id="invoice" value="#{(Date.today+1.day).strftime('%Y-%m-%d')}"
+
+          .form-group
             label for="nominal" Keterangan
             = form.text_field :description, class: "form-control md-form", id: "nominal"
 

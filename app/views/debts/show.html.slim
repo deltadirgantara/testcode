@@ -35,6 +35,10 @@
             input class="form-control md-form" value="#{target}"
 
           .form-group
+            label for="type" Jatuh Tempo
+            input class="form-control md-form" value="#{@debt.due_date.strftime("%d-%m-%Y")}"
+
+          .form-group
             label for="nominal" Keterangan
             = form.text_field :description, class: "form-control md-form"
 
@@ -52,6 +56,12 @@
                   th Nominal
                   th Oleh
                 
+      .row
+        .col.text-center
+          a href='#{debt_path(id: @debt.id, format: :pdf)}'
+            button.btn.btn-info type="button" 
+                | Cetak Invoice
 
-          .form-group.text-center
-            = form.submit "Tambah", class: "btn btn-primary"
+        .col.text-center
+          a href="new_payment_path(type: 'debt'. id: @debt.name)" class="button btn btn-primary"
+            | Bayar

@@ -140,6 +140,7 @@ ActiveRecord::Schema.define(version: 2020_03_24_063714) do
   end
 
   create_table "debts", force: :cascade do |t|
+    t.datetime "due_date", null: false
     t.string "invoice", null: false
     t.bigint "user_id", null: false
     t.bigint "store_id", null: false
@@ -202,6 +203,7 @@ ActiveRecord::Schema.define(version: 2020_03_24_063714) do
   end
 
   create_table "kasbons", force: :cascade do |t|
+    t.datetime "due_date", null: false
     t.string "invoice", null: false
     t.bigint "user_id", null: false
     t.bigint "store_id", null: false
@@ -285,6 +287,7 @@ ActiveRecord::Schema.define(version: 2020_03_24_063714) do
   end
 
   create_table "payments", force: :cascade do |t|
+    t.datetime "date", null: false
     t.string "invoice", null: false
     t.integer "nominal", null: false
     t.bigint "store_id", null: false
@@ -298,6 +301,7 @@ ActiveRecord::Schema.define(version: 2020_03_24_063714) do
   end
 
   create_table "receivables", force: :cascade do |t|
+    t.datetime "due_date", null: false
     t.string "invoice", null: false
     t.bigint "user_id", null: false
     t.bigint "store_id", null: false

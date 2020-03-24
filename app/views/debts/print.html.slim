@@ -1,0 +1,52 @@
+#customer
+  table#meta
+    tr
+      td.meta-head Jenis
+      td
+        textarea 
+          | Hutang
+    tr 
+      td.meta-head Tanggal Dibuat
+      td
+        textarea #{DateTime.now.strftime("%d/%m/%Y")}
+    tr
+      td.meta-head Toko 
+      td
+        - if @store.present?
+          textarea #{@store.name}
+        - else
+          textarea Semua Toko
+   
+    tr
+      td.meta-head Kriteria
+      td
+        b  
+          | #{@search}
+
+
+table#items
+  tr colspan="5"
+
+  tr
+    th Nomor Invoice
+    th Toko
+    th Tipe
+    th Kepada
+    th Nominal
+    th Kekurangan
+    th Keterangan
+
+  - @debts.each do |debt|
+    tr.operational-row
+      td #{debt.invoice}
+      td #{debt.store.name}
+      - target = ""
+      - type = ""
+      - if debt.type_debt == "BANK"
+        - type = "Pinjaman Bank"
+        - target = Bank.find_by(id: debt.target).name
+      td #{type}
+      td #{target}
+      td #{number_with_delimiter(debt.nominal, delimiter: ".")}
+      td #{number_with_delimiter(debt.deficiency, delimiter: ".")}
+      td #{debt.description}
