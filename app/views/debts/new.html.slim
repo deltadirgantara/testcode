@@ -3,9 +3,9 @@
     .card.mb-4
       .card-header.white-text.info-color
         h5.font-weight-500.my-1
-          | Tambah Pengeluaran Lainnya
+          | Tambah Hutang
       .card-body
-        = form_for :other_outcome, url: other_outcomes_path, method: "POST" do |form|
+        = form_for :debt, url: debts_path, method: "POST" do |form|
           .form-group
             label for="nominal" Nominal
             = form.number_field :nominal, required: true, class: "form-control md-form", id: "nominal"
@@ -13,10 +13,17 @@
             label.text-danger for="type" (*Nominal tidak boleh kurang dari Rp.10.000,-)
 
           .form-group
-            label for="type" Tanggal Pembayaran
-            label.text-danger for="type" (*Tanggal harus diisi tanggal hari ini atau kurang dari hari ini)
-            
-            input class="form-control md-form" type="date" name="other_outcome[date]" id="invoice" value="#{Date.today.strftime('%Y-%m-%d')}"
+            label for="type" Jenis Hutang
+            select name="debt[type_debt]" required=true class="mdb-select md-form colorful-select dropdown-primary" 
+              option value='BANK'
+                | Pinjaman Bank
+
+          .form-group
+            label for="type" Kepada
+            select name="debt[target]" required=true class="mdb-select md-form colorful-select dropdown-primary" 
+              - Bank.all.each do |bank|
+                option value='#{bank.id}'
+                  | #{bank.name}
 
           .form-group
             label for="nominal" Keterangan

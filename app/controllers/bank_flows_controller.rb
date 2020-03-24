@@ -53,9 +53,9 @@ class BankFlowsController < ApplicationController
     return redirect_back_data_error new_bank_flow_path, "Data error" if bank_flow.invalid?  
   	bank_flow.save!
     if bank_flow.type_flow == "OUT"
-      CashFlow.create ref_id: bank_flow.id, type_cash: 5, type_flow: 1
+      CashFlow.create store: current_user.store, ref_id: bank_flow.id, type_cash: 5, type_flow: 1
     else
-      CashFlow.create ref_id: bank_flow.id, type_cash: 5, type_flow: 2
+      CashFlow.create store: current_user.store, ref_id: bank_flow.id, type_cash: 5, type_flow: 2
     end
     bank_flow.create_activity :create, owner: current_user
   	return redirect_success bank_flow_path(id: bank_flow.id), "Data disimpan"

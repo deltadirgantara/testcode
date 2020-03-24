@@ -59,7 +59,7 @@ class FixCostsController < ApplicationController
     fix_cost.invoice = "FIX-" + DateTime.now.to_i.to_s + current_user.store.id.to_s
     return redirect_back_data_error new_fix_cost_path, "Data error" if fix_cost.invalid?  
     fix_cost.save!
-    CashFlow.create ref_id: fix_cost.id, type_cash: 3, type_flow: 2, nominal: fix_cost.nominal, date: fix_costs.date
+    CashFlow.create store: current_user.store, ref_id: fix_cost.id, type_cash: 3, type_flow: 2, nominal: fix_cost.nominal, date: fix_costs.date
     fix_cost.create_activity :create, owner: current_user
     return redirect_success fix_cost_path(id: fix_cost.id), "Data disimpan"
   end

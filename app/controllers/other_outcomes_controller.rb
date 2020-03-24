@@ -59,7 +59,7 @@ class OtherOutcomesController < ApplicationController
     other_outcome.invoice = "OUT-" + DateTime.now.to_i.to_s + current_user.store.id.to_s
     return redirect_back_data_error new_other_outcome_path, "Data error" if other_outcome.invalid?  
   	other_outcome.save!
-    CashFlow.create ref_id: other_outcome.id, type_cash: 6, type_flow: 2, nominal: other_outcome.nominal, date: other_outcome.date
+    CashFlow.create store: current_user.store, ref_id: other_outcome.id, type_cash: 6, type_flow: 2, nominal: other_outcome.nominal, date: other_outcome.date
   	other_outcome.create_activity :create, owner: current_user
   	return redirect_success other_outcome_path(id: other_outcome.id), "Data disimpan"
   end

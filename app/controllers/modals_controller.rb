@@ -50,9 +50,9 @@
     return redirect_back_data_error new_modal_path, "Data error" if modal.invalid?  
   	modal.save!
     if modal.type_modal == "OUT"
-      CashFlow.create ref_id: modal.id, type_cash: 4, type_flow: 2
+      CashFlow.create store: current_user.store, ref_id: modal.id, type_cash: 4, type_flow: 2
   	else
-      CashFlow.create ref_id: modal.id, type_cash: 4, type_flow: 1
+      CashFlow.create store: current_user.store, ref_id: modal.id, type_cash: 4, type_flow: 1
     end
     modal.create_activity :create, owner: current_user
   	return redirect_success modal_path(id: modal.id), "Data disimpan"

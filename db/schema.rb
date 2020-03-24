@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_23_021309) do
+ActiveRecord::Schema.define(version: 2020_03_24_063714) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,6 +83,8 @@ ActiveRecord::Schema.define(version: 2020_03_23_021309) do
     t.datetime "updated_at", null: false
     t.float "nominal"
     t.datetime "date"
+    t.bigint "store_id"
+    t.index ["store_id"], name: "index_cash_flows_on_store_id"
   end
 
   create_table "categories", force: :cascade do |t|
@@ -137,6 +139,22 @@ ActiveRecord::Schema.define(version: 2020_03_23_021309) do
     t.index ["user_id"], name: "index_customers_on_user_id"
   end
 
+  create_table "debts", force: :cascade do |t|
+    t.string "invoice", null: false
+    t.bigint "user_id", null: false
+    t.bigint "store_id", null: false
+    t.bigint "nominal", null: false
+    t.bigint "deficiency", null: false
+    t.datetime "date_complete"
+    t.integer "type_debt", null: false
+    t.integer "target", null: false
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_debts_on_store_id"
+    t.index ["user_id"], name: "index_debts_on_user_id"
+  end
+
   create_table "fix_costs", force: :cascade do |t|
     t.datetime "date", null: false
     t.bigint "store_id", null: false
@@ -181,6 +199,22 @@ ActiveRecord::Schema.define(version: 2020_03_23_021309) do
     t.index ["gold_type_id"], name: "index_items_on_gold_type_id"
     t.index ["store_id"], name: "index_items_on_store_id"
     t.index ["sub_category_id"], name: "index_items_on_sub_category_id"
+  end
+
+  create_table "kasbons", force: :cascade do |t|
+    t.string "invoice", null: false
+    t.bigint "user_id", null: false
+    t.bigint "store_id", null: false
+    t.bigint "nominal", null: false
+    t.bigint "deficiency", null: false
+    t.datetime "date_complete"
+    t.integer "type_kasbon", null: false
+    t.integer "target", null: false
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_kasbons_on_store_id"
+    t.index ["user_id"], name: "index_kasbons_on_user_id"
   end
 
   create_table "modals", force: :cascade do |t|
@@ -248,6 +282,35 @@ ActiveRecord::Schema.define(version: 2020_03_23_021309) do
     t.datetime "updated_at", null: false
     t.index ["store_id"], name: "index_other_outcomes_on_store_id"
     t.index ["user_id"], name: "index_other_outcomes_on_user_id"
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.string "invoice", null: false
+    t.integer "nominal", null: false
+    t.bigint "store_id", null: false
+    t.bigint "user_id", null: false
+    t.integer "target", null: false
+    t.integer "type_payment", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_payments_on_store_id"
+    t.index ["user_id"], name: "index_payments_on_user_id"
+  end
+
+  create_table "receivables", force: :cascade do |t|
+    t.string "invoice", null: false
+    t.bigint "user_id", null: false
+    t.bigint "store_id", null: false
+    t.bigint "nominal", null: false
+    t.bigint "deficiency", null: false
+    t.datetime "date_complete"
+    t.integer "type_receivable", null: false
+    t.integer "target", null: false
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_receivables_on_store_id"
+    t.index ["user_id"], name: "index_receivables_on_user_id"
   end
 
   create_table "store_banks", force: :cascade do |t|
@@ -345,6 +408,7 @@ ActiveRecord::Schema.define(version: 2020_03_23_021309) do
   add_foreign_key "bank_flows", "stores"
   add_foreign_key "bank_flows", "users"
   add_foreign_key "buckets", "stores"
+  add_foreign_key "cash_flows", "stores"
   add_foreign_key "custom_order_items", "custom_orders"
   add_foreign_key "custom_order_items", "gold_types"
   add_foreign_key "custom_orders", "customers"
@@ -352,6 +416,8 @@ ActiveRecord::Schema.define(version: 2020_03_23_021309) do
   add_foreign_key "custom_orders", "suppliers"
   add_foreign_key "custom_orders", "users"
   add_foreign_key "customers", "users"
+  add_foreign_key "debts", "stores"
+  add_foreign_key "debts", "users"
   add_foreign_key "fix_costs", "stores"
   add_foreign_key "fix_costs", "users"
   add_foreign_key "gold_prices", "gold_types"
@@ -359,6 +425,8 @@ ActiveRecord::Schema.define(version: 2020_03_23_021309) do
   add_foreign_key "items", "gold_types"
   add_foreign_key "items", "stores"
   add_foreign_key "items", "sub_categories"
+  add_foreign_key "kasbons", "stores"
+  add_foreign_key "kasbons", "users"
   add_foreign_key "modals", "stores"
   add_foreign_key "modals", "users"
   add_foreign_key "notifications", "users", column: "from_user_id"
@@ -369,6 +437,10 @@ ActiveRecord::Schema.define(version: 2020_03_23_021309) do
   add_foreign_key "other_incomes", "users"
   add_foreign_key "other_outcomes", "stores"
   add_foreign_key "other_outcomes", "users"
+  add_foreign_key "payments", "stores"
+  add_foreign_key "payments", "users"
+  add_foreign_key "receivables", "stores"
+  add_foreign_key "receivables", "users"
   add_foreign_key "store_banks", "banks"
   add_foreign_key "store_banks", "stores"
   add_foreign_key "store_cashes", "stores"

@@ -8,11 +8,10 @@ class CashFlowsController < ApplicationController
     @store = search[2]
     @params = params.to_s
 
-    graphs = graph @cash_flows
-    gon.label = graphs[0]
-    gon.debit = graphs[1]
-    gon.kredit = graphs[2]
-
+    # graphs = graph @cash_flows
+    # gon.label = graphs[0]
+    # gon.debit = graphs[1]
+    # gon.kredit = graphs[2]
     respond_to do |format|
       format.html do
         @cash_flows = search[1].page param_page

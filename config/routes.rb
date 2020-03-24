@@ -33,6 +33,9 @@ Rails.application.routes.draw do
     resources :other_incomes
     resources :other_outcomes
     resources :asset_values
+    resources :debts
+    resources :receivables
+    resources :kasbons
 
     resources :cash_flows
     resources :bank_flows

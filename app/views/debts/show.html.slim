@@ -1,0 +1,57 @@
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Detil Hutang - #{@debt.invoice}
+      .card-body
+        = form_for :debt, url: "", method: "" do |form|
+          .form-group
+            label for="type" Toko
+            input class="form-control md-form" value="#{@debt.store.name}"
+
+          .form-group
+            label for="nominal" Nominal
+            input class="form-control md-form" value="#{number_with_delimiter(@debt.nominal, delimiter: ".")}"
+            
+
+          .form-group
+            label for="nominal" Kekurangan
+            input class="form-control md-form" value="#{number_with_delimiter(@debt.deficiency, delimiter: ".")}"
+
+          - jenis = ""
+          - target = ""
+
+          - if @debt.type_debt == "BANK"
+            - jenis = "Pinjaman Bank"
+            - target = Bank.find_by(id: @debt.target).name
+
+          .form-group
+            label for="type" Jenis Hutang
+            input class="form-control md-form" value="#{jenis}"
+
+          .form-group
+            label for="type" Kepada
+            input class="form-control md-form" value="#{target}"
+
+          .form-group
+            label for="nominal" Keterangan
+            = form.text_field :description, class: "form-control md-form"
+
+          .form-group
+            label for="type" Dibuat
+            input class="form-control md-form" value="#{@debt.user.name + ' (' + @debt.created_at.strftime("%d-%m-%Y") + ')' }"
+
+          - if @debt.nominal != @debt.deficiency
+            .form-group
+              label Pembayaran
+              table.table
+                tr
+                  th Invoice
+                  th Tanggal
+                  th Nominal
+                  th Oleh
+                
+
+          .form-group.text-center
+            = form.submit "Tambah", class: "btn btn-primary"

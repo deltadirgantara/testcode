@@ -1,0 +1,17 @@
+tr
+	td #{debt.invoice}
+	td #{debt.store.name}
+	- target = ""
+	- type = ""
+	- if debt.type_debt == "BANK"
+		- type = "Pinjaman Bank"
+		- target = Bank.find_by(id: debt.target).name
+	td #{type}
+	td #{target}
+	td #{number_with_delimiter(debt.nominal, delimiter: ".")}
+	td #{number_with_delimiter(debt.deficiency, delimiter: ".")}
+	td #{debt.description}
+	td
+		a href='#{debt_path(id: debt.id)}'
+	      	button.btn.btn-info type="button" 
+	  	       	| Detil

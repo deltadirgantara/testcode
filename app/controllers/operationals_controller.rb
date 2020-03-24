@@ -59,7 +59,7 @@ class OperationalsController < ApplicationController
     operational.invoice = "OPR-" + DateTime.now.to_i.to_s + current_user.store.id.to_s
     return redirect_back_data_error new_operational_path, "Data error" if operational.invalid?  
   	operational.save!
-    CashFlow.create ref_id: operational.id, type_cash: 2, type_flow: 2, nominal: other_income.nominal, date: other_income.date
+    CashFlow.create store: current_user.store, ref_id: operational.id, type_cash: 2, type_flow: 2, nominal: other_income.nominal, date: other_income.date
   	operational.create_activity :create, owner: current_user
   	return redirect_success operational_path(id: operational.id), "Data disimpan"
   end
