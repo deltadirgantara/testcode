@@ -10,9 +10,18 @@
             label for="type" Jenis
             select name="bank_flow[type_flow]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" 
               option value="IN"
-                | Setor
+                | Masuk
               option value="OUT"
-                | Tarik
+                | Keluar
+              option value="TRANSFER"
+                | Transfer
+
+          .form-group
+            label for="type" Jenis
+            select name="bank_flow[type_in_out]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" 
+              - BankFlow.type_in_outs.each do |type_in_out|
+                option value="#{type_in_out[0]}"
+                  | #{type_in_out[0].gsub("_", " ").camelize}
 
           .form-group
             label for="type" Bank
@@ -22,8 +31,22 @@
                   | #{bank.name}
 
           .form-group
+            label for="type" Dari Bank
+            select name="bank_flow[bank_from]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" 
+              - Bank.all.each do |bank|
+                option value="#{bank.id}"
+                  | #{bank.name}
+
+          .form-group
+            label for="type" Ke Bank
+            select name="bank_flow[bank_to]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" 
+              - Bank.all.each do |bank|
+                option value="#{bank.id}"
+                  | #{bank.name}
+
+          .form-group
             label for="nominal" Nominal
-            = form.number_field :nominal, required: true, class: "form-control md-form", id: "nominal"
+            = form.number_field :nominal, required: true, class: "form-control md-form", id: "nominal", min: "100", value:""
           
           .form-group
             label for="type" Tanggal

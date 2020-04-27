@@ -6,11 +6,14 @@ tr
 	- if bank_flow.type_flow == "IN"
 		td #{number_with_delimiter(bank_flow.nominal, delimiter: ".")}
 		td
-		td Setor ( #{bank_flow.description} )
+		- tipe = "Setor"
 	- else
 		td
 		td #{number_with_delimiter(bank_flow.nominal, delimiter: ".")}
-		td Tarik ( #{bank_flow.description} )
+		- tipe = "Tarik"
+	- if bank_flow.invoice.include? "TRFS-"
+		- tipe = "Transfer"
+	td #{tipe} ( #{bank_flow.description} )	
 	td
 		a href='#{bank_flow_path(id: bank_flow.id)}'
 	      	button.btn.btn-info type="button" 

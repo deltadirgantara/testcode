@@ -46,16 +46,35 @@ class BankFlowsController < ApplicationController
 
   def create
     bank_flow = BankFlow.new bank_flow_params
+    return redirect_back_data_error new_bank_flow_path, "Data error" if bank_flow.nominal < 100  || bank_flow.date > Date.today
     bank_flow.store = current_user.store
     bank_flow.user = current_user
-    return redirect_back_data_error new_bank_flow_path, "Data error" if bank_flow.nominal < 10000  || bank_flow.date > Date.today
     bank_flow.invoice = "BF-" + DateTime.now.to_i.to_s + current_user.store.id.to_s
     return redirect_back_data_error new_bank_flow_path, "Data error" if bank_flow.invalid?  
   	bank_flow.save!
-    if bank_flow.type_flow == "OUT"
-      CashFlow.create store: current_user.store, ref_id: bank_flow.id, type_cash: 5, type_flow: 1
+    if bank_flow.type_flow == "IN"
+      if bank_flow.type_in_out == "Setor_Tunai"
+        CashFlow.create store: current_user.store, ref_id: bank_flow.id, type_cash: 5, type_flow: 1
+      end
+    elsif bank_flow.type_flow == "OUT"
+      if bank_flow.type_in_out == "Tarik_Tunai"
+        CashFlow.create store: current_user.store, ref_id: bank_flow.id, type_cash: 5, type_flow: 2
+      end
     else
-      CashFlow.create store: current_user.store, ref_id: bank_flow.id, type_cash: 5, type_flow: 2
+      invoice =  "TRFS-" + DateTime.now.to_i.to_s + current_user.store.id.to_s
+      bank_flow.bank_id = params[:bank_flow][:bank_from]
+      bank_flow.type_flow = 2
+      bank_flow.invoice = invoice + "-1"
+      bank_flow.save!
+
+      bank_flow2 = BankFlow.new bank_flow_params
+      bank_flow2.type_flow = 1
+      bank_flow2.bank_id = params[:bank_flow][:bank_to]
+      bank_flow2.store = current_user.store
+      bank_flow2.user = current_user
+      bank_flow2.invoice = invoice + "-2"
+      bank_flow2.save!
+      bank_flow2.create_activity :create, owner: current_user
     end
     bank_flow.create_activity :create, owner: current_user
   	return redirect_success bank_flow_path(id: bank_flow.id), "Data disimpan"
@@ -65,8 +84,10 @@ class BankFlowsController < ApplicationController
   	return redirect_back_data_error bank_flows_path, "Data tidak ditemukan" if params[:id].nil?
   	bank_flow = BankFlow.find_by(id: params[:id])
   	return redirect_back_data_error bank_flows_path, "Data tidak ditemukan" if bank_flow.nil?
-    cf = CashFlow.find_by(ref_id: bank_flow.id, type_cash: CashFlow::BANK)
-    cf.destroy
+    if ["Setor_Tunai", "Tarik_Tunai"].include? bank_flow.type_in_out
+      cf = CashFlow.find_by(ref_id: bank_flow.id, type_cash: CashFlow::BANK)
+      cf.destroy
+    end
   	bank_flow.destroy
   	return redirect_success bank_flows_path, "Data " + bank_flow.invoice + " dihapus"
   end
@@ -88,10 +109,13 @@ class BankFlowsController < ApplicationController
   	changes = @bank_flow.changes
     if @bank_flow.changed?
       @bank_flow.save! 
-      cf = CashFlow.find_by(ref_id: @bank_flow.id, type_cash: CashFlow::BANK)
-      cf.type_flow = 2 
-      cf.type_flow = 1 if @bank_flow.type_flow == "OUT"
-      cf.save!
+      if ["Setor_Tunai", "Tarik_Tunai"].include? bank_flow.type_in_out
+        cf = CashFlow.find_by(ref_id: @bank_flow.id, type_cash: CashFlow::BANK)
+        cf.type_flow = 2 
+        cf.type_flow = 1 if @bank_flow.type_flow == "OUT"
+        cf.save!
+        cf.create_activity :edit, owner: current_user, parameters: cf.changes
+      end
       @bank_flow.create_activity :edit, owner: current_user, parameters: changes
     end
     return redirect_success bank_flow_path(id: @bank_flow.id), "Data - " + @bank_flow.invoice + " - Berhasil Diubah"
@@ -174,7 +198,7 @@ class BankFlowsController < ApplicationController
 
     def bank_flow_params
       params.require(:bank_flow).permit(
-        :bank_id, :type_flow, :nominal, :invoice, :date, :description
+        :bank_id, :type_flow, :nominal, :invoice, :date, :description, :type_in_out
       )
     end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_24_063714) do
+ActiveRecord::Schema.define(version: 2020_04_27_041556) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(version: 2020_03_24_063714) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "bank_id"
+    t.integer "type_in_out"
     t.index ["bank_id"], name: "index_bank_flows_on_bank_id"
     t.index ["store_id"], name: "index_bank_flows_on_store_id"
     t.index ["user_id"], name: "index_bank_flows_on_user_id"
