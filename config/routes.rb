@@ -48,5 +48,7 @@ Rails.application.routes.draw do
 
 
     resources :activities, only: %i[index show]
+
+    get '/api/:api_type', to: 'apis#index'
     
 end

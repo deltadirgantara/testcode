@@ -41,7 +41,7 @@ class ItemsController < ApplicationController
     item.store = current_user.store
     item.stock = 1
     if item.code == ""
-      item.code = item.gold_type.id.to_s+"/"+item.sub_category.id.to_s+"/"+item.bucket.id.to_s+"/"+DateTime.now.to_i.to_s
+      item.code = item.gold_type.id.to_s+item.sub_category.id.to_s+item.bucket.id.to_s+DateTime.now.to_i.to_s
     end
     file = params[:item][:image]
     upload_io = params[:item][:image]
