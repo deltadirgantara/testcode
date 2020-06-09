@@ -62,6 +62,7 @@ class ApisController < ApplicationController
     search = search.gsub(/\s+/, "")
     item = Item.where(store: current_user.store).find_by('lower(code) like ?', "%"+search.downcase+"%")
     return render :json => json_result unless item.present?
+    json_result["id"] = item.id
 	json_result["code"] = item.code
 	json_result["category"] = item.sub_category.category.name
 	json_result["sub_category"] = item.sub_category.name
