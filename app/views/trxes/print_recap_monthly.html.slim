@@ -1,0 +1,64 @@
+#customer
+  table#meta
+    tr
+      td.meta-head Tanggal Buat  
+      td
+        textarea #{DateTime.now.in_time_zone.to_s}
+    tr
+      td.meta-head Dibuat Oleh
+      td 
+        textarea #{current_user.name.to_s} ( #{current_user.store.name} )
+    tr
+      td.meta-head Keterangan
+      td
+        b  
+          | #{@desc}
+
+br
+br
+br
+
+table#items
+  - totals = 0
+  - hpp_totals = 0
+  - profit_totals = 0
+  tr
+    th Tanggal
+    th Total
+    th HPP
+    th Profit
+  - curr_month = @transaction_datas.first[0].to_date.month
+  - @transaction_datas.each do |trx_data|
+    - if trx_data[0].to_date.month == curr_month
+      tr
+        td #{trx_data[0].to_date.strftime("%d - %m - %Y")}
+        - total = 0
+        - hpp = 0
+        - trx_data[1].each do |trx|
+          - total += trx.nominal
+          - hpp += trx.trx_items.sum(:buy)
+        
+        td #{number_with_delimiter(total.to_i, delimiter: ".", separator: ",")}
+        td #{number_with_delimiter(hpp.to_i, delimiter: ".", separator: ",")}
+        td #{number_with_delimiter((total-hpp).to_i, delimiter: ".", separator: ",")}
+        - totals += total
+        - hpp_totals += hpp
+        - profit_totals += total - hpp
+
+  tr
+    td colspan="4"
+      |
+  tr
+    td 
+      b
+        | Total
+    td 
+      b
+        | #{number_with_delimiter((totals).to_i, delimiter: ".", separator: ",")}
+    td 
+      b
+        | #{number_with_delimiter((hpp_totals).to_i, delimiter: ".", separator: ",")}
+    td 
+      b
+        | #{number_with_delimiter((profit_totals).to_i, delimiter: ".", separator: ",")}
+          

@@ -25,7 +25,13 @@ Rails.application.routes.draw do
     resources :buckets
     resources :suppliers
     resources :banks
-    
+
+    resources :trxes
+    get '/transaction/daily/recap', to: 'trxes#daily_recap', as: "daily_trx_recap"
+    get '/transaction/daily/recap_item', to: 'trxes#daily_recap_item', as: "daily_trx_item_recap"
+    get '/transaction/monthly/recap', to: 'trxes#monthly_recap', as: "monthly_trx_recap"
+
+
     resources :taxs
     resources :operationals
     resources :fix_costs

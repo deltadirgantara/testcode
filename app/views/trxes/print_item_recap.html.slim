@@ -1,0 +1,61 @@
+#customer
+  table#meta
+    tr
+      td.meta-head Tanggal Buat  
+      td
+        textarea #{DateTime.now.in_time_zone.to_s}
+    tr
+      td.meta-head Dibuat Oleh
+      td 
+        textarea #{current_user.name.to_s} ( #{current_user.store.name} )
+    tr
+      td.meta-head Tanggal
+      td
+        b  
+          | Rekap Item Harian - #{@start_day.to_date}
+
+br
+br
+br
+- profits = 0
+- items = 0
+table#items
+  tr style="font-weight: bold"
+    th Kode
+    / th Nama
+    th Jenis Emas
+    th Berat
+    th Kategori
+    th Sub-kategori
+    th Terjual
+  - items = 0
+  - @transaction_items.each do |trx_item|
+      - item = Item.find_by(id: trx_item[0])
+      tr 
+        td #{item.code}
+        / td #{item.name}
+        td #{item.gold_type.name}
+        td #{item.weight}
+        td #{item.sub_category.category.name}
+        td #{item.sub_category.name}
+        td style="text-align: right;"
+          | #{trx_item[1]}
+        - items += trx_item[1]
+
+  tr style="font-weight: bold; text-align: right;"
+    td colspan=5
+      | TOTAL
+    td #{number_with_delimiter( items.to_i, delimiter: ".", separator: ",")}
+br
+- profits = 0
+- items = 0
+h1
+  | Rekap Sub-Kategori
+table#items
+  tr style="font-weight: bold"
+    td Kategori
+    td Jumlah
+  - @item_cats.each do |sub_cat|
+    tr
+      td #{sub_cat.first}
+      td #{sub_cat[1]}

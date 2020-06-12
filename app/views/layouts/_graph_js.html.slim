@@ -99,3 +99,52 @@
             responsive: true
           }
         });
+
+- if ["trxes"].include? controller_name
+      javascript:
+        var ctxL = document.getElementById("transactions").getContext('2d');
+        var myLineChart = new Chart(ctxL, {
+          type: 'line',
+          data: {
+            labels: gon.days,
+            datasets: [
+              {
+                label: "Profit",
+                data: gon.profits,
+                backgroundColor: [
+                'rgba(75, 192, 192, 0.2)',
+                ],
+                borderColor: [
+                "rgb(75, 192, 192)",
+                ],
+                borderWidth: 2
+              },
+              {
+                label: "Omzet",
+                data: gon.grand_totals,
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.1)',
+                ],
+                borderColor: [
+                'rgba(255, 99, 132, 1)',
+                ],
+                borderWidth: 2
+              },
+              {
+                label: "HPP",
+                data: gon.hpp_totals,
+                backgroundColor: [
+                'rgba(54, 162, 235, 0.1)',
+                ],
+                borderColor: [
+                'rgba(54, 162, 235, 1)',
+                ],
+                borderWidth: 2
+              }
+
+            ]
+          },
+          options: {
+            responsive: true
+          }
+        });

@@ -1,0 +1,43 @@
+w#customer
+  table#meta
+    tr
+      td.meta-head Toko 
+      td
+        textarea #{@store_name}
+    tr
+      td.meta-head Jenis
+      td 
+        textarea Penjualan
+    tr
+      td.meta-head Kriteria
+      td
+        b  
+          | #{@search}
+
+
+table#items
+  tr colspan="5"
+
+
+  tr
+    th Invoice
+    th Tanggal
+    th Toko
+    th Pelanggan
+    th Jumlah Item
+    th Total
+
+  - @transactions.each do |transaction|
+    tr.item-row
+      td #{transaction.invoice}
+      td #{transaction.date.to_date}
+      td #{transaction.user.store.name}
+      td 
+        - if transaction.customer.nil?
+          | -
+        - else 
+          | #{transaction.customer.name}
+      td #{transaction.n_item}
+      td style="text-align: right;"
+        | #{number_with_delimiter(transaction.nominal, delimiter: ".", separator:",", precision: 2)}
+

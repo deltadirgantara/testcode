@@ -1,0 +1,60 @@
+- customer_name = "-"
+- customer_name = @trx.customer.name if @trx.customer.present?
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Informasi Transaksi Penjualan
+      .card-body
+        .row
+          .col-3
+            label Invoice
+            input disabled="disabled" class="form-control md-form" value="#{@trx.invoice}"
+          .col-3
+            label Pelanggan
+            input disabled="disabled" class="form-control md-form" value="#{customer_name}"
+          .col-3
+            label Kasir
+            input disabled="disabled" class="form-control md-form" value="#{@trx.user.name}"
+          .col-3
+            label Tgl. Transaksi
+            input disabled="disabled" class="form-control md-form" value="#{@trx.date}"
+          .col
+            label Total 
+            input disabled="disabled" class="form-control md-form" value="#{number_with_delimiter(@trx.nominal, delimiter: ".")}"
+          .col 
+            label Profit
+            input disabled="disabled" class="form-control md-form" value="#{number_with_delimiter((@trx.trx_items.sum(:sell) - @trx.trx_items.sum(:buy)).to_i, delimiter: ".")}"
+          .col
+            label Pembayaran
+            input disabled="disabled" class="form-control md-form" value="#{@trx.payment_type}"
+          - if @trx.payment_type == "DEBIT" || @trx.payment_type == "CREDIT"
+            .col
+              label Bank
+              input disabled="disabled" class="form-control md-form" value="#{@trx.bank}"
+            .col
+              label No. EDC
+              input disabled="disabled" class="form-control md-form" value="#{@trx.edc_inv.to_i}"
+            .col
+              label No. Kartu
+              input disabled="disabled" class="form-control md-form" value="#{@trx.card_number.to_s}"
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Daftar Barang
+      .card-body.table-responsive.text-nowrap
+        table class="table"
+          thead
+            th Kode
+            th Jenis Emas
+            th Berat
+            th Baki
+            th Kategori
+            th Beli
+            th Jual
+            th Profit
+          tbody
+            = render partial: 'list_show', collection: @trx.trx_items, as: :trx_item

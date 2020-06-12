@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_27_041556) do
+ActiveRecord::Schema.define(version: 2020_06_01_181015) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -386,6 +386,63 @@ ActiveRecord::Schema.define(version: 2020_04_27_041556) do
     t.index ["user_id"], name: "index_taxes_on_user_id"
   end
 
+  create_table "trx_items", force: :cascade do |t|
+    t.bigint "item_id", null: false
+    t.bigint "trx_id", null: false
+    t.bigint "buy", null: false
+    t.bigint "sell", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_trx_items_on_item_id"
+    t.index ["trx_id"], name: "index_trx_items_on_trx_id"
+  end
+
+  create_table "trx_sell_items", force: :cascade do |t|
+    t.bigint "item_id", null: false
+    t.bigint "trx_id", null: false
+    t.bigint "buy", null: false
+    t.bigint "sell", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_trx_sell_items_on_item_id"
+    t.index ["trx_id"], name: "index_trx_sell_items_on_trx_id"
+  end
+
+  create_table "trx_sells", force: :cascade do |t|
+    t.datetime "date", null: false
+    t.bigint "store_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "customer_id"
+    t.bigint "nominal", null: false
+    t.string "invoice", null: false
+    t.integer "n_item", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_trx_sells_on_customer_id"
+    t.index ["store_id"], name: "index_trx_sells_on_store_id"
+    t.index ["user_id"], name: "index_trx_sells_on_user_id"
+  end
+
+  create_table "trxes", force: :cascade do |t|
+    t.datetime "date", null: false
+    t.bigint "store_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "bank_id"
+    t.bigint "customer_id"
+    t.bigint "nominal", null: false
+    t.string "invoice", null: false
+    t.integer "n_item", null: false
+    t.integer "payment_type", default: 1, null: false
+    t.bigint "edc_inv", default: 0
+    t.bigint "card_number", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bank_id"], name: "index_trxes_on_bank_id"
+    t.index ["customer_id"], name: "index_trxes_on_customer_id"
+    t.index ["store_id"], name: "index_trxes_on_store_id"
+    t.index ["user_id"], name: "index_trxes_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -452,4 +509,15 @@ ActiveRecord::Schema.define(version: 2020_04_27_041556) do
   add_foreign_key "sub_categories", "categories"
   add_foreign_key "taxes", "stores"
   add_foreign_key "taxes", "users"
+  add_foreign_key "trx_items", "items"
+  add_foreign_key "trx_items", "trxes"
+  add_foreign_key "trx_sell_items", "items"
+  add_foreign_key "trx_sell_items", "trxes"
+  add_foreign_key "trx_sells", "customers"
+  add_foreign_key "trx_sells", "stores"
+  add_foreign_key "trx_sells", "users"
+  add_foreign_key "trxes", "banks"
+  add_foreign_key "trxes", "customers"
+  add_foreign_key "trxes", "stores"
+  add_foreign_key "trxes", "users"
 end
