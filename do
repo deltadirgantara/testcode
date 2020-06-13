@@ -1,2 +1,7 @@
-- Dibank tambahin tipenya apa aja, misal:
-	- In-Out : Transfer --> tangain di index, new , JS , controller
+- New TRX
+- New TRXSELL
+- Change SS
+- Lebur
+- Stok Opname
+- Masukkin ke recap harian TRX
+- Balancing hrian

@@ -386,29 +386,18 @@ ActiveRecord::Schema.define(version: 2020_06_01_181015) do
     t.index ["user_id"], name: "index_taxes_on_user_id"
   end
 
-  create_table "trx_items", force: :cascade do |t|
+  create_table "trx_buy_items", force: :cascade do |t|
     t.bigint "item_id", null: false
     t.bigint "trx_id", null: false
     t.bigint "buy", null: false
     t.bigint "sell", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["item_id"], name: "index_trx_items_on_item_id"
-    t.index ["trx_id"], name: "index_trx_items_on_trx_id"
+    t.index ["item_id"], name: "index_trx_buy_items_on_item_id"
+    t.index ["trx_id"], name: "index_trx_buy_items_on_trx_id"
   end
 
-  create_table "trx_sell_items", force: :cascade do |t|
-    t.bigint "item_id", null: false
-    t.bigint "trx_id", null: false
-    t.bigint "buy", null: false
-    t.bigint "sell", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["item_id"], name: "index_trx_sell_items_on_item_id"
-    t.index ["trx_id"], name: "index_trx_sell_items_on_trx_id"
-  end
-
-  create_table "trx_sells", force: :cascade do |t|
+  create_table "trx_buys", force: :cascade do |t|
     t.datetime "date", null: false
     t.bigint "store_id", null: false
     t.bigint "user_id", null: false
@@ -418,9 +407,20 @@ ActiveRecord::Schema.define(version: 2020_06_01_181015) do
     t.integer "n_item", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["customer_id"], name: "index_trx_sells_on_customer_id"
-    t.index ["store_id"], name: "index_trx_sells_on_store_id"
-    t.index ["user_id"], name: "index_trx_sells_on_user_id"
+    t.index ["customer_id"], name: "index_trx_buys_on_customer_id"
+    t.index ["store_id"], name: "index_trx_buys_on_store_id"
+    t.index ["user_id"], name: "index_trx_buys_on_user_id"
+  end
+
+  create_table "trx_items", force: :cascade do |t|
+    t.bigint "item_id", null: false
+    t.bigint "trx_id", null: false
+    t.bigint "buy", null: false
+    t.bigint "sell", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_trx_items_on_item_id"
+    t.index ["trx_id"], name: "index_trx_items_on_trx_id"
   end
 
   create_table "trxes", force: :cascade do |t|
@@ -509,13 +509,13 @@ ActiveRecord::Schema.define(version: 2020_06_01_181015) do
   add_foreign_key "sub_categories", "categories"
   add_foreign_key "taxes", "stores"
   add_foreign_key "taxes", "users"
+  add_foreign_key "trx_buy_items", "items"
+  add_foreign_key "trx_buy_items", "trxes"
+  add_foreign_key "trx_buys", "customers"
+  add_foreign_key "trx_buys", "stores"
+  add_foreign_key "trx_buys", "users"
   add_foreign_key "trx_items", "items"
   add_foreign_key "trx_items", "trxes"
-  add_foreign_key "trx_sell_items", "items"
-  add_foreign_key "trx_sell_items", "trxes"
-  add_foreign_key "trx_sells", "customers"
-  add_foreign_key "trx_sells", "stores"
-  add_foreign_key "trx_sells", "users"
   add_foreign_key "trxes", "banks"
   add_foreign_key "trxes", "customers"
   add_foreign_key "trxes", "stores"

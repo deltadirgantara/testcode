@@ -31,6 +31,11 @@ Rails.application.routes.draw do
     get '/transaction/daily/recap_item', to: 'trxes#daily_recap_item', as: "daily_trx_item_recap"
     get '/transaction/monthly/recap', to: 'trxes#monthly_recap', as: "monthly_trx_recap"
 
+    resources :trx_buys
+    get '/transaction_sell/daily/recap', to: 'trx_buys#daily_recap', as: "daily_trx_buy_recap"
+    get '/transaction_sell/daily/recap_item', to: 'trx_buys#daily_recap_item', as: "daily_trx_buy_item_recap"
+    get '/transaction_sell/monthly/recap', to: 'trx_buys#monthly_recap', as: "monthly_trx_buy_recap"
+
 
     resources :taxs
     resources :operationals

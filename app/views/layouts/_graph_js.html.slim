@@ -100,7 +100,7 @@
           }
         });
 
-- if ["trxes"].include? controller_name
+- if ["trxes", "trx_buys"].include? controller_name
       javascript:
         var ctxL = document.getElementById("transactions").getContext('2d');
         var myLineChart = new Chart(ctxL, {
