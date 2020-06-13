@@ -163,7 +163,7 @@ class TrxBuysController < ApplicationController
         day_idx = trxs[0].day.to_i - 1
         trxs[1].each do |trx|
           grand_total += trx.nominal
-          hpp_total += trx.trx_items.sum(:buy)
+          hpp_total += trx.trx_buy_items.sum(:buy)
         end
         profit = grand_total - hpp_total
         graphs[trxs[0].to_date] = [grand_total, hpp_total, profit]

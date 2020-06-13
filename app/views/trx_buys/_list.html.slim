@@ -8,6 +8,6 @@ tr
 	td #{trx.n_item}
 	td #{number_with_delimiter(trx.nominal, delimiter: ".")}
 	td
-		a href='#{trx_path(id: trx.id)}'
+		a href='#{trx_buy_path(id: trx.id)}'
 	      	button.btn.btn-info type="button" 
 	  	       	| Detil

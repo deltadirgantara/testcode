@@ -388,13 +388,13 @@ ActiveRecord::Schema.define(version: 2020_06_01_181015) do
 
   create_table "trx_buy_items", force: :cascade do |t|
     t.bigint "item_id", null: false
-    t.bigint "trx_id", null: false
+    t.bigint "trx_buy_id", null: false
     t.bigint "buy", null: false
     t.bigint "sell", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["item_id"], name: "index_trx_buy_items_on_item_id"
-    t.index ["trx_id"], name: "index_trx_buy_items_on_trx_id"
+    t.index ["trx_buy_id"], name: "index_trx_buy_items_on_trx_buy_id"
   end
 
   create_table "trx_buys", force: :cascade do |t|
@@ -510,7 +510,7 @@ ActiveRecord::Schema.define(version: 2020_06_01_181015) do
   add_foreign_key "taxes", "stores"
   add_foreign_key "taxes", "users"
   add_foreign_key "trx_buy_items", "items"
-  add_foreign_key "trx_buy_items", "trxes"
+  add_foreign_key "trx_buy_items", "trx_buys"
   add_foreign_key "trx_buys", "customers"
   add_foreign_key "trx_buys", "stores"
   add_foreign_key "trx_buys", "users"
