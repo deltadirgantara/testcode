@@ -1,191 +1,4 @@
-setInterval(get_notification, 10000);
-
-function getUserSalary(user) {
-  var user_id = user.value
-  $.ajax({ 
-    type: 'GET', 
-    url: '/api/get_user_salary?id='+user_id, 
-    success: function (result) { 
-      $("#salary").html("GAJI : "+result[0]);
-      $("#debt").html("HUTANG : "+result[1]);
-      // alert(result)
-    }
-  });
-}
-
-function changePrice(id){
-  var ids = gon.ids
-  var receive = $("#"+id+"Receive").val();
-  var price = $("#"+id+"Price").val();
-  var disc_1 = $("#"+id+"Disc1").val();
-  var disc_2 = $("#"+id+"Disc2").val();
-  var margin = parseFloat($("#"+id+"Margins").html());
-  var ppn = $("#ppn").val();
-
-  price = price * receive
-
-  if(disc_1 <= 99){
-    disc_1 = parseFloat(price * disc_1 / 100);
-    price -= disc_1;
-  }else{
-    price -= disc_1;
-  }
-
-
-  if(disc_2 <= 99){
-    disc_2 = parseFloat(price * disc_2 / 100);
-    price -= disc_2;
-  }else{
-    price -= disc_2;
-  }
-
-  price += parseFloat(price*ppn/100);
-
-
-  $("#"+id+"Total").html(price);
-
-
-  sell_price = (price*1.0/receive*1.0) + ((price*1.0/receive*1.0) * margin / 100);
-
-  $("#"+id+"Sell").html(parseInt(sell_price));
-
-  g_total = 0
-  for (i = 0; i < ids.length; i++) {
-    g_total += parseInt($("#"+ids[i]+"Total").html());
-  } 
-
-  
-
-  $("#grand_total_all").html(parseInt(g_total));
-}
-
-function complain_check(index){
-  var qty = $("#quantity"+index).val();
-  var complain = $("#complain"+index).val();
-  var replace = $("#replace"+index).val();
-  if(complain > qty){
-    $("#complain"+index).val($("#quantity"+index).val());
-    complain = qty;
-  }
-  if(replace > complain){
-    $("#replace"+index).val($("#complain"+index).val());
-    replace = complain;
-  }
-
-  total_complain();
-}
-
-function total_complain(){
-  var item_total = $("#item_total").val();
-  var new_total = 0;
-
-  for (var i = 0; i < item_total; i++) {
-    var complain = $("#complain"+i).val();
-    var replace = $("#replace"+i).val();
-    var price = $("#price"+i).val();
-
-    new_total-= (complain - replace) * price
-  }
-
-  var table = document.getElementById("myTable");
-  var table_length = table.rows.length;
-  for (var i = 1; i < table_length; i++) {
-    var price = table.rows[i].cells[4].childNodes[0].value;
-    var qty = table.rows[i].cells[3].childNodes[0].value;
-    var discount = table.rows[i].cells[5].childNodes[0].value;
-    new_total+= (price * qty)-(discount*qty);
-  } 
-
-  var total_text = document.getElementById("total_text");
-  $("#total").val(new_total);
-  if(new_total > 0){
-    total_text.style.color = "green";
-    total_text.innerHTML = "TAMBAH : Rp. "+formatangka_titik(new_total)+",00";
-  }else if (new_total==0){
-    total_text.style.color = "black";
-    total_text.innerHTML = "TIDAK ADA TAMBAHAN";
-  }else{
-    total_text.style.color = "red";
-    total_text.innerHTML = "KURANG : Rp. "+formatangka_titik(new_total)+",00";
-  }
-
-  if(new_total>=0){
-    $("#submitButton").show();
-  }else{
-    $("#submitButton").hide();
-  }
-
-}
-
-function formatangka_titik(total) {
-  var a = (total+"").replace(/[^\d]/g, "");
-
-  var a = +a; // converts 'a' from a string to an int
-
-  return formatNum(a);
-}
-
-function formatNum(rawNum) {
-  rawNum = "" + rawNum; // converts the given number back to a string
-  var retNum = "";
-  var j = 0;
-  for (var i = rawNum.length; i > 0; i--) {
-    j++;
-    if (((j % 3) == 1) && (j != 1))
-      retNum = rawNum.substr(i - 1, 1) + "." + retNum;
-    else
-      retNum = rawNum.substr(i - 1, 1) + retNum;
-  }
-  return retNum;
-}
-
-
-function addNewRowComplain(result_arr, qty){
-   var table = document.getElementById("myTable");
-   var result = result_arr[0];
-   var total = parseFloat(qty) * (parseFloat(result[3]) - parseFloat(result[4]));
-   
-   var row = table.insertRow(1);
-   var cell1 = row.insertCell(0);
-   var cell2 = row.insertCell(1);
-   var cell3 = row.insertCell(2);
-   var cell4 = row.insertCell(3);
-   var cell5 = row.insertCell(4);
-   var cell6 = row.insertCell(5);
-   var cell7 = row.insertCell(6);
-
-   let id = "<input style='display: none;' type='text' class='md-form form-control' value='"+result[5]+"' readonly name='complain[new_complain_items]["+add_counter+"][item_id]'/>";
-   let code = id+"<input type='text' class='md-form form-control' value='"+result[0]+"' readonly />";
-   let name = "<input type='text' class='md-form form-control' value='"+result[1]+"' readonly />";
-   let cat = "<input type='text' class='md-form form-control' value='"+result[2]+"' readonly />";
-   let price = "<input readonly type='number' class='md-form form-control' value="+result[3]+"  name='complain[new_complain_items]["+add_counter+"][price]'/>";
-   let discount = "<input readonly type='number' class='md-form form-control' value="+result[4]+"  name='complain[new_complain_items]["+add_counter+"][discount]'/>";
-   let quantity = "<input step='0.05' type='number' readonly min=1 class='md-form form-control' value='"+qty+"' name='complain[new_complain_items]["+add_counter+"][quantity]'/>"
-   let remove = "<i class='fa fa-trash text-danger' onclick='removeRowComplain(this)'></i>"; 
-   cell1.innerHTML = code;
-   cell2.innerHTML = name;
-   cell3.innerHTML = cat;
-   cell4.innerHTML = quantity;
-   cell5.innerHTML = price;
-   cell6.innerHTML = discount;
-   cell7.innerHTML = remove;
-
-
-   add_counter++;
-   document.getElementById("itemId").value = "";
-
-   total_complain();
-}
-
-function removeRowComplain(params){
-  var row_idx = params.parentNode.parentNode.rowIndex;
-  var table = document.getElementById("myTable");
-  if(table.rows.length > 1){
-    table.deleteRow(row_idx);
-  }
-  total_complain();
-}
-
+// setInterval(get_notification, 10000);
 
 $(document).keypress(
   function(event){
@@ -212,6 +25,28 @@ function get_notification(){
       refresh_notification_list(result);
     }
   });
+}
+
+function formatangka_titik(total) {
+  var a = (total+"").replace(/[^\d]/g, "");
+
+  var a = +a; // converts 'a' from a string to an int
+
+  return formatNum(a);
+}
+
+function formatNum(rawNum) {
+  rawNum = "" + rawNum; // converts the given number back to a string
+  var retNum = "";
+  var j = 0;
+  for (var i = rawNum.length; i > 0; i--) {
+    j++;
+    if (((j % 3) == 1) && (j != 1))
+      retNum = rawNum.substr(i - 1, 1) + "." + retNum;
+    else
+      retNum = rawNum.substr(i - 1, 1) + retNum;
+  }
+  return retNum;
 }
 
 function refresh_notification_list(result){
@@ -269,6 +104,8 @@ function refresh_notification_list(result){
           time+= "just now"
         }
 
+        // alert(diffDays + " days, " + diffHrs + " hours, " + diffMins + " minutes, " + diffSecs + " seconds");
+
         element = "<a class='bq-"+m_type+" dropdown-item waves-effect waves-light' href='"+url+"'>"
         element+=   "<i class='fas fa-"+icon+" mr-2' aria-hidden='true'></i>"
         element+=     "<span>"+from+"</span>"
@@ -286,15 +123,7 @@ function refresh_notification_list(result){
     }
 }
 
-function removeThisRow(params){
-	var row_idx = params.parentNode.parentNode.rowIndex;
-	var table = document.getElementById("myTable");
-	if(table.rows.length > 1){
-		table.deleteRow(row_idx);
-	}
-}
-
-    // SideNav Initialization
+// SideNav Initialization
 $(".button-collapse").sideNav();
 
 var container = document.querySelector('.custom-scrollbar');
@@ -326,24 +155,40 @@ $(function () {
 
 var timeout = null;
 
+function removeRowBuy(params){
+  var row_idx = params.parentNode.parentNode.rowIndex;
+  var table = document.getElementById("buys_table");
+  if(table.rows.length > 1){
+    table.deleteRow(row_idx);
+  }
+  // total_complain();
+}
+
+function removeRowSell(params){
+  var row_idx = params.parentNode.parentNode.rowIndex;
+  var table = document.getElementById("sells_table");
+  if(table.rows.length > 1){
+    table.deleteRow(row_idx);
+  }
+  // total_complain();
+}
+
 function getData(table_types) {
    clearTimeout(timeout);
    timeout = setTimeout(function() {
      var item_id = document.getElementById("itemId").value;
-     var store_id = $("#storeId").val();
-     if(table_types=="complain"){
-        var item_qty = document.getElementById("searchqty").value;
+     if(table_types=="trx"){
         $.ajax({
          method: "GET",
          cache: false,
-         url: "/api/trx?search=" + item_id +"&qty=" + item_qty,
+         url: "/api/trx?search=" + item_id,
          success: function(result_arr) {
             if(result_arr == ""){
               document.getElementById("itemId").value = "";
               alert("Data Barang Tidak Ditemukan")
               return
             }else{
-              addNewRowComplain(result_arr, item_qty);
+              addNewRowTrxSell(result_arr);
             }
          },
          error: function(error) {
@@ -352,127 +197,17 @@ function getData(table_types) {
              document.getElementById("itemId").focus();
          }
        });
-     }else if (table_types == "transfer") {
-      $.ajax({
-         method: "GET",
-         cache: false,
-         url: "/api/transfer?search=" + item_id+"&target="+store_id,
-         success: function(result_arr) {
-            if(result_arr == ""){
-              document.getElementById("itemId").value = "";
-              alert("Data Barang Tidak Ditemukan / Barang merupakan barang lokal")
-              return
-            }else{
-                addNewRowTransfer(result_arr);
-             }
-         },
-         error: function(error) {
-             document.getElementById("itemId").value = "";
-             document.getElementById("item_qty").value = 1;
-             document.getElementById("itemId").focus();
-         }
-       });
      }else{
-      $.ajax({
-         method: "GET",
-         cache: false,
-         url: "/api/order?search=" + item_id,
-         success: function(result_arr) {
-            if(result_arr == ""){
-              document.getElementById("itemId").value = "";
-              alert("Data Barang Tidak Ditemukan / Barang merupakan barang lokal")
-              return
-            }else{
-               if (table_types == "order"){
-                addNewRowOrder(result_arr);
-               }
-               else if(table_types == "retur"){
-                addNewRowRetur(result_arr);
-               }
-             }
-         },
-         error: function(error) {
-             document.getElementById("itemId").value = "";
-             document.getElementById("item_qty").value = 1;
-             document.getElementById("itemId").focus();
-         }
-       });
+
     }
    }, 300);
 };
 
-function addNewRowOrder(result_arr){
-   var table = document.getElementById("myTable");
-   var result = result_arr[0];
-   var qty = 1;
-   var total = parseFloat(qty) * (parseFloat(result[3]) - parseFloat("100"));
+function addNewRowTrxSell(result_arr){
+   var table = document.getElementById("sells_table");
+   var result = result_arr;
    
-   var row = table.insertRow(1);
-   var cell1 = row.insertCell(0);
-   var cell2 = row.insertCell(1);
-   var cell3 = row.insertCell(2);
-   var cell4 = row.insertCell(3);
-   var cell5 = row.insertCell(4);
-   var cell6 = row.insertCell(5);
-
-
-   let id = "<input style='display: none;' type='text' class='md-form form-control' value='"+result[4]+"' readonly name='order[order_items]["+add_counter+"][item_id]'/>";
-   let code = id+result[0]+"<input style='display:none;' type='text' class='md-form form-control' value='"+result[0]+"' readonly name='order[order_items]["+add_counter+"][code]'/>";
-   let name = result[1]+"<input style='display: none;' type='text' class='md-form form-control' value='"+result[1]+"' readonly name='order[order_items]["+add_counter+"][name]'/>";
-   let cat = result[2]+"<input style='display: none;' type='text' class='md-form form-control' value='"+result[2]+"' readonly name='order[order_items]["+add_counter+"][item_cat]'/>";
-   let quantity = "<input type='number' min=1 class='md-form form-control' value='1' name='order[order_items]["+add_counter+"][quantity]'/>";
-   let price = "<input type='number' class='md-form form-control' value='"+result[3]+"' min=100 name='order[order_items]["+add_counter+"][price]'  step='0.05'/>";
-   let desc = "<input type='text' class='md-form form-control' value=''  name='order[order_items]["+add_counter+"][description]'/>";
-   let remove = "<i class='fa fa-trash text-danger' onclick='removeThisRow(this)'></i>"; 
-   cell1.innerHTML = code;
-   cell2.innerHTML = name;
-   cell3.innerHTML = cat;
-   cell4.innerHTML = quantity;
-   cell5.innerHTML = desc;
-   cell6.innerHTML = remove;
-   add_counter++;
-   document.getElementById("itemId").value = "";
-}
-
-function addNewRowRetur(result_arr){
-   var table = document.getElementById("myTable");
-   var result = result_arr[0];
-   var qty = 1;
-   var total = parseFloat(qty) * (parseFloat(result[3]) - parseFloat("100"));
-   
-   var row = table.insertRow(1);
-   var cell1 = row.insertCell(0);
-   var cell2 = row.insertCell(1);
-   var cell3 = row.insertCell(2);
-   var cell4 = row.insertCell(3);
-   var cell5 = row.insertCell(4);
-   var cell6 = row.insertCell(5);
-
-
-   let id = "<input style='display: none;' type='text' class='md-form form-control' value='"+result[4]+"' readonly name='retur[retur_items]["+add_counter+"][item_id]'/>";
-   let code = id+result[0]+"<input type='text' style='display:none;' class='md-form form-control' value='"+result[0]+"' readonly name='retur[retur_items]["+add_counter+"][code]'/>";
-   let name = result[1]+"<input type='text' style='display: none' class='md-form form-control' value='"+result[1]+"' readonly name='retur[retur_items]["+add_counter+"][name]'/>";
-   let cat = result[2]+"<input style='display: none;' type='text' class='md-form form-control' value='"+result[2]+"' readonly name='retur[retur_items]["+add_counter+"][item_cat]'/>";
-   let quantity = "<input type='number' min=1 class='md-form form-control' value='1' name='retur[retur_items]["+add_counter+"][quantity]'/>";
-   let desc = "<input type='text' class='md-form form-control' value=''  name='retur[retur_items]["+add_counter+"][description]'/>";
-   let remove = "<i class='fa fa-trash text-danger' onclick='removeThisRow(this)'></i>"; 
-   cell1.innerHTML = code;
-   cell2.innerHTML = name;
-   cell3.innerHTML = cat;
-   cell4.innerHTML = quantity;
-   cell5.innerHTML = desc;
-   cell6.innerHTML = remove;
-   add_counter++;
-   document.getElementById("itemId").value = "";
-}
-
-function addNewRowTransfer(result_arr){
-   var table = document.getElementById("myTable");
-   var result = result_arr[0];
-   var qty = 1;
-   var total = parseFloat(qty) * (parseFloat(result[3]) - parseFloat("100"));
-   
-   var row = table.insertRow(1);
+   var row = table.insertRow(-1);
    var cell1 = row.insertCell(0);
    var cell2 = row.insertCell(1);
    var cell3 = row.insertCell(2);
@@ -482,25 +217,59 @@ function addNewRowTransfer(result_arr){
    var cell7 = row.insertCell(6);
 
 
-   let id = "<input style='display: none;' type='text' class='md-form form-control' value='"+result[4]+"' readonly name='transfer[transfer_items]["+add_counter+"][item_id]'/>";
-   let code = id+result[0]+"<input style='display: none;' type='text' class='md-form form-control' value='"+result[0]+"' readonly />";
-   let name = result[1]+"<input style='display: none;' type='text' class='md-form form-control' value='"+result[1]+"' readonly />";
-   let cat = result[2]+"<input style='display: none;' type='text' class='md-form form-control' value='"+result[2]+"' readonly />";
-   let stock = result[6]+"<input style='display: none;' type='text' class='md-form form-control' value='"+result[6]+"' />";
-   let quantity = "<input type='number' min=1 class='md-form form-control' value='1' name='transfer[transfer_items]["+add_counter+"][quantity]'/>";
-   let desc = "<input type='text' class='md-form form-control' value=''  name='transfer[transfer_items]["+add_counter+"][description]'/>";
-   let remove = "<i class='fa fa-trash text-danger' onclick='removeThisRow(this)'></i>"; 
+   let id = "<input style='display: none;' type='text' class='md-form form-control' value='"+result[0]+"' readonly name='trxs[sell_item]["+add_counter+"][item_id]'/>";
+   let code = id+"<input type='text' class='md-form form-control' value='"+result[1]+"' readonly name='trxs[sell_item]["+add_counter+"][code]'/>";
+   let cat = "<input type='text' class='md-form form-control' value='"+result[2]+" - "+result[3]+"' readonly name='trxs[sell_item]["+add_counter+"][item_cat]'/>";
+   let gold = "<input type='text' class='md-form form-control' value='"+result[4]+"' readonly name='trxs[sell_item]["+add_counter+"][gold]'/>";
+   let weight = "<input type='number' class='md-form form-control' value='"+result[5]+"' readonly name='trxs[sell_item]["+add_counter+"][weight]'/>";
+   let buy = "<input type='number' class='md-form form-control' value='"+result[6]+"' readonly name='trxs[sell_item]["+add_counter+"][buy]'/>";
+   let total = "<input type='number' class='md-form form-control' value='"+result[7]+"' min="+result[6]+" name='trxs[sell_item]["+add_counter+"][sell]'/>";
+   let remove = "<i class='fa fa-trash text-danger' onclick='removeRowSell(this)'></i>"; 
    cell1.innerHTML = code;
-   cell2.innerHTML = name;
-   cell3.innerHTML = cat;
-   cell4.innerHTML = stock;
-   cell5.innerHTML = quantity;
-   cell6.innerHTML = desc;
+   cell2.innerHTML = cat;
+   cell3.innerHTML = gold;
+   cell4.innerHTML = weight;
+   cell5.innerHTML = buy;
+   cell6.innerHTML = total;
    cell7.innerHTML = remove;
    add_counter++;
    document.getElementById("itemId").value = "";
 }
-     
+function addNewRowTrxBuy(){
+   var gold_types = gon.gold_types;
+   var gold_prices = gon.gold_prices;
+   var table = document.getElementById("buys_table");
+   
+   var row = table.insertRow(-1);
+   var cell1 = row.insertCell(0);
+   var cell2 = row.insertCell(1);
+   var cell3 = row.insertCell(2);
+   var cell4 = row.insertCell(3);
+   var cell5 = row.insertCell(4);
+
+
+   let desc = "<input type='text' class='md-form form-control' value='' name='trxs[buy_item]["+add_counter+"][description]'/>";
+   let gold = '<select name="trxs[buy_item]['+add_counter+'][gold]" required=true class="browser-default mdb-select md-form colorful-select dropdown-primary" display="block !important">';
+   for (var i = 0; i < gold_types.length; i++) {
+     gold+= '<option value="'+gold_types[i][0]+'"> '+ gold_types[i][1] +'</option>';
+   }
+   gold+="</select>";
+   let weight = "<input type='number' class='md-form form-control' value='0' min=0 name='trxs[buy_item]["+add_counter+"][weight]'/>";
+   let total = "<input type='number' class='md-form form-control' value='0' min=0 name='trxs[buy_item]["+add_counter+"][total]'/>";
+   let remove = "<i class='fa fa-trash text-danger' onclick='removeRowBuy(this)'></i>"; 
+   cell1.innerHTML = desc;
+   cell2.innerHTML = gold;
+   cell3.innerHTML = weight;
+   cell4.innerHTML = total;
+   cell5.innerHTML = remove;
+   cell1.style.verticalAlign = "middle";
+   cell2.style.verticalAlign = "middle";
+   cell3.style.verticalAlign = "middle";
+   cell4.style.verticalAlign = "middle";
+   cell5.style.verticalAlign = "middle";
+   add_counter++;
+   return false;
+}
 
 $(function () {
   $('#dark-mode').on('click', function (e) {
@@ -525,7 +294,4 @@ $(function () {
 
 // var add_counter = gon.inv_count;
 var add_counter = 0
-
-
-
 

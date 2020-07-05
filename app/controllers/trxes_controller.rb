@@ -147,6 +147,18 @@ class TrxesController < ApplicationController
       template: "trxes/print_item_recap.html.slim"
   end
 
+  def new
+    gold_types = GoldType.all
+    types = []
+    prices = []
+    gold_types.each do |g_type|
+      types << [g_type.id,g_type.name]
+      prices << g_type.gold_price.buy
+    end
+    gon.gold_prices = prices
+    gon.gold_types = types
+  end
+
   private
    	def param_page	
    		params[:page]

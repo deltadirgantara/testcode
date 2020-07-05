@@ -1,0 +1,31 @@
+
+.container-fluid
+  .col-lg-12.col-md-12
+    label for="from" Kode Barang
+    input class="md-form form-control" placeholder="Barcode Barang..." id="itemId" onkeyup="getData('trx')"
+          
+.container-fluid
+  .col-lg-12.col-md-12
+    .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Daftar Barang
+    .card.mb-4
+      .card-body
+        .row
+          .col-md-12  
+            table.table id="sells_table"
+              tr
+                th style="display: none;"
+                th
+                  | Kode
+                th
+                  | Jenis Emas
+                th
+                  | Kategori
+                th
+                  | Beli
+                th 
+                  | Jual
+                th 
+                  | Total
+              

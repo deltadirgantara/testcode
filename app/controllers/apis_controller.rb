@@ -3,12 +3,8 @@ class ApisController < ApplicationController
 
   def index
     api_type = params[:api_type]
-    if api_type == "item"
+    if api_type == "trx"
       get_item params
-    elsif api_type == "voucher"
-      get_voucher params
-    elsif api_type == "get_user_salary"
-      get_user_salary params
     elsif api_type == "get_notification"
       get_notification params
     elsif api_type == "update_notification"
@@ -60,18 +56,18 @@ class ApisController < ApplicationController
     search = params[:search].squish
     return render :json => json_result unless search.present?
     search = search.gsub(/\s+/, "")
-    item = Item.where(store: current_user.store).find_by('lower(code) like ?', "%"+search.downcase+"%")
+    item = Item.where(store: current_user.store).find_by('lower(code) like ?', search.downcase)
     return render :json => json_result unless item.present?
     json_result["id"] = item.id
-	json_result["code"] = item.code
-	json_result["category"] = item.sub_category.category.name
-	json_result["sub_category"] = item.sub_category.name
-	json_result["gold_type"] = item.gold_type.name
-	json_result["weight"] = item.weight
-	json_result["buy"] = item.buy
-	json_result["sell"] = item.weight * item.gold_type.gold_price.sell
-	json_result["image_url"] = item.image
-    render :json => json_result
+    json_result["code"] = item.code
+    json_result["category"] = item.sub_category.category.name
+    json_result["sub_category"] = item.sub_category.name
+    json_result["gold_type"] = item.gold_type.name
+    json_result["weight"] = item.weight
+    json_result["buy"] = item.buy
+    json_result["sell"] = item.weight * item.gold_type.gold_price.sell
+    json_result["image_url"] = item.image
+    render :json => json_result.values
   end
 
 end
