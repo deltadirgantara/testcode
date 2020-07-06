@@ -159,6 +159,51 @@ class TrxesController < ApplicationController
     gon.gold_types = types
   end
 
+  def create
+    buy_items = params[:trxs][:buy_item]
+    sell_items = params[:trxs][:sell_item]
+
+    invoice = "TRX-"+DateTime.now.to_i.to_s+"-"+current_user.store.id.to_s+"-"+current_user.id.to_s
+    if buy_items.present?
+      trx_buy = TrxBuy.create invoice: invoice, nominal: 0, 
+                  user: current_user, store: current_user.store,
+                  date: DateTime.now
+      nominal = 0
+      buy_items.each do |buy_item|
+        buy_item_params = buy_item[1]
+        trx_buy_item = TrxBuyItem.create description: buy_item_params[:description],
+                          gold_type_id: buy_item_params[:gold],
+                          weight: buy_item_params[:weight],
+                          buy: buy_item_params[:total], 
+                          trx_buy: trx_buy
+
+        nominal += trx_buy_item.buy
+      end
+      trx_buy.nominal = nominal
+      trx_buy.save!
+    end
+
+    if sell_items.present?
+        nominal = 0
+        trx = Trx.create invoice: invoice, nominal: 0, 
+                    user: current_user, store: current_user.store,
+                    date: DateTime.now
+
+        sell_items.each do |sell_item|
+          sell_item_params = sell_item[1]
+          item = Item.find_by(id: sell_item_params[:item_id])
+          trx_sell_item = TrxItem.create trx: trx,
+                            buy: sell_item_params[:buy],
+                            sell: sell_item_params[:sell], 
+                            item: item
+          nominal += trx_sell_item.sell
+        end
+        trx.nominal = nominal
+        trx.save!
+    end
+
+  end
+
   private
    	def param_page	
    		params[:page]

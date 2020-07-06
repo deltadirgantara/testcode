@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_01_181015) do
+ActiveRecord::Schema.define(version: 2020_07_06_034210) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -387,13 +387,14 @@ ActiveRecord::Schema.define(version: 2020_06_01_181015) do
   end
 
   create_table "trx_buy_items", force: :cascade do |t|
-    t.bigint "item_id", null: false
     t.bigint "trx_buy_id", null: false
     t.bigint "buy", null: false
-    t.bigint "sell", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["item_id"], name: "index_trx_buy_items_on_item_id"
+    t.bigint "weight", default: 0, null: false
+    t.string "description", default: "DEFAULT", null: false
+    t.bigint "gold_type_id"
+    t.index ["gold_type_id"], name: "index_trx_buy_items_on_gold_type_id"
     t.index ["trx_buy_id"], name: "index_trx_buy_items_on_trx_buy_id"
   end
 
@@ -404,7 +405,6 @@ ActiveRecord::Schema.define(version: 2020_06_01_181015) do
     t.bigint "customer_id"
     t.bigint "nominal", null: false
     t.string "invoice", null: false
-    t.integer "n_item", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["customer_id"], name: "index_trx_buys_on_customer_id"
@@ -431,7 +431,6 @@ ActiveRecord::Schema.define(version: 2020_06_01_181015) do
     t.bigint "customer_id"
     t.bigint "nominal", null: false
     t.string "invoice", null: false
-    t.integer "n_item", null: false
     t.integer "payment_type", default: 1, null: false
     t.bigint "edc_inv", default: 0
     t.bigint "card_number", default: 0
@@ -509,7 +508,7 @@ ActiveRecord::Schema.define(version: 2020_06_01_181015) do
   add_foreign_key "sub_categories", "categories"
   add_foreign_key "taxes", "stores"
   add_foreign_key "taxes", "users"
-  add_foreign_key "trx_buy_items", "items"
+  add_foreign_key "trx_buy_items", "gold_types"
   add_foreign_key "trx_buy_items", "trx_buys"
   add_foreign_key "trx_buys", "customers"
   add_foreign_key "trx_buys", "stores"

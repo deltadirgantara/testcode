@@ -1,6 +1,7 @@
 class TrxBuyItem < ApplicationRecord
-	validates :item_id , :trx_buy_id, :buy, :sell, presence: true
+	validates :description , :trx_buy_id, :buy, :description, :weight, presence: true
 
-	belongs_to :item
 	belongs_to :trx_buy
+	belongs_to :gold_type
+	
 end

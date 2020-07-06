@@ -5,7 +5,6 @@ tr
 	- customer_name = "-"
 	- customer_name = trx.customer.name if trx.customer.present?
 	td #{customer_name}
-	td #{trx.n_item}
 	td #{number_with_delimiter(trx.nominal, delimiter: ".")}
 	td
 		a href='#{trx_path(id: trx.id)}'

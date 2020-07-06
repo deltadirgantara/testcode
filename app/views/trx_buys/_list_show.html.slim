@@ -1,9 +1,5 @@
 tr
-	td #{trx_item.item.code}
-    td #{trx_item.item.gold_type.name}
-    td #{trx_item.item.weight}
-    td #{trx_item.item.bucket.name}
-    td #{trx_item.item.sub_category.name}
+	td #{trx_item.description}
+    td #{trx_item.gold_type.name}
+    td #{trx_item.weight}
     td #{number_with_delimiter(trx_item.buy, delimiter: ".")}
-    td #{number_with_delimiter(trx_item.sell, delimiter: ".")}
-    td #{number_with_delimiter(trx_item.sell - trx_item.buy, delimiter: ".")}

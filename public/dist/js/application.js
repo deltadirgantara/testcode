@@ -193,7 +193,6 @@ function getData(table_types) {
          },
          error: function(error) {
              document.getElementById("itemId").value = "";
-             document.getElementById("searchqty").value = 1;
              document.getElementById("itemId").focus();
          }
        });
@@ -223,7 +222,7 @@ function addNewRowTrxSell(result_arr){
    let gold = "<input type='text' class='md-form form-control' value='"+result[4]+"' readonly name='trxs[sell_item]["+add_counter+"][gold]'/>";
    let weight = "<input type='number' class='md-form form-control' value='"+result[5]+"' readonly name='trxs[sell_item]["+add_counter+"][weight]'/>";
    let buy = "<input type='number' class='md-form form-control' value='"+result[6]+"' readonly name='trxs[sell_item]["+add_counter+"][buy]'/>";
-   let total = "<input type='number' class='md-form form-control' value='"+result[7]+"' min="+result[6]+" name='trxs[sell_item]["+add_counter+"][sell]'/>";
+   let total = "<input required type='number' class='md-form form-control' value='"+result[7]+"' min="+result[6]+" name='trxs[sell_item]["+add_counter+"][sell]'/>";
    let remove = "<i class='fa fa-trash text-danger' onclick='removeRowSell(this)'></i>"; 
    cell1.innerHTML = code;
    cell2.innerHTML = cat;
@@ -233,6 +232,13 @@ function addNewRowTrxSell(result_arr){
    cell6.innerHTML = total;
    cell7.innerHTML = remove;
    add_counter++;
+   cell1.style.verticalAlign = "middle";
+   cell2.style.verticalAlign = "middle";
+   cell3.style.verticalAlign = "middle";
+   cell4.style.verticalAlign = "middle";
+   cell5.style.verticalAlign = "middle";
+   cell6.style.verticalAlign = "middle";
+   cell7.style.verticalAlign = "middle";
    document.getElementById("itemId").value = "";
 }
 function addNewRowTrxBuy(){
@@ -248,14 +254,14 @@ function addNewRowTrxBuy(){
    var cell5 = row.insertCell(4);
 
 
-   let desc = "<input type='text' class='md-form form-control' value='' name='trxs[buy_item]["+add_counter+"][description]'/>";
-   let gold = '<select name="trxs[buy_item]['+add_counter+'][gold]" required=true class="browser-default mdb-select md-form colorful-select dropdown-primary" display="block !important">';
+   let desc = "<input type='text' required class='md-form form-control' value='' name='trxs[buy_item]["+add_counter+"][description]'/>";
+   let gold = '<select required name="trxs[buy_item]['+add_counter+'][gold]" required=true class="browser-default mdb-select md-form colorful-select dropdown-primary" display="block !important">';
    for (var i = 0; i < gold_types.length; i++) {
      gold+= '<option value="'+gold_types[i][0]+'"> '+ gold_types[i][1] +'</option>';
    }
    gold+="</select>";
-   let weight = "<input type='number' class='md-form form-control' value='0' min=0 name='trxs[buy_item]["+add_counter+"][weight]'/>";
-   let total = "<input type='number' class='md-form form-control' value='0' min=0 name='trxs[buy_item]["+add_counter+"][total]'/>";
+   let weight = "<input required type='number' step='0.01' class='md-form form-control' value='0' min=0 name='trxs[buy_item]["+add_counter+"][weight]'/>";
+   let total = "<input required type='number' class='md-form form-control' value='0' min=0 name='trxs[buy_item]["+add_counter+"][total]'/>";
    let remove = "<i class='fa fa-trash text-danger' onclick='removeRowBuy(this)'></i>"; 
    cell1.innerHTML = desc;
    cell2.innerHTML = gold;
