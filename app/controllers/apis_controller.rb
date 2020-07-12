@@ -5,6 +5,8 @@ class ApisController < ApplicationController
     api_type = params[:api_type]
     if api_type == "trx"
       get_item params
+    elsif api_type == "member"
+      get_member params
     elsif api_type == "get_notification"
       get_notification params
     elsif api_type == "update_notification"
@@ -68,6 +70,19 @@ class ApisController < ApplicationController
     json_result["sell"] = item.weight * item.gold_type.gold_price.sell
     json_result["image_url"] = item.image
     render :json => json_result.values
+  end
+
+  def get_member params
+    json_result = []
+    search = params[:search].squish
+    return render :json => json_result unless search.present?
+    search = search.gsub(/\s+/, "")
+    member = Customer.find_by(card_number: search)
+    return render :json => json_result unless member.present?
+    json_result << member.id
+    json_result << member.name
+    json_result << member.phone
+    render :json => json_result
   end
 
 end

@@ -176,14 +176,14 @@ function removeRowSell(params){
 function getData(table_types) {
    clearTimeout(timeout);
    timeout = setTimeout(function() {
-     var item_id = document.getElementById("itemId").value;
      if(table_types=="trx"){
+        var item_id = document.getElementById("itemId").value;
         $.ajax({
          method: "GET",
          cache: false,
          url: "/api/trx?search=" + item_id,
          success: function(result_arr) {
-            if(result_arr == ""){
+            if(result_arr[0] === undefined){
               document.getElementById("itemId").value = "";
               alert("Data Barang Tidak Ditemukan")
               return
@@ -196,11 +196,36 @@ function getData(table_types) {
              document.getElementById("itemId").focus();
          }
        });
-     }else{
-
-    }
+     }else if (table_types == "member") {
+      var member_id = document.getElementById("memberId").value;
+      $.ajax({
+         method: "GET",
+         cache: false,
+         url: "/api/member?search=" + member_id,
+         success: function(result_arr) {
+            if(result_arr[0] === undefined){
+              document.getElementById("memberId").value = "";
+              alert("Data Member Tidak Ditemukan")
+              return
+            }else{
+              changeMember(result_arr);
+            }
+         },
+         error: function(error) {
+             document.getElementById("memberId").value = "";
+             document.getElementById("memberId").focus();
+         }
+       });
+     }
    }, 300);
 };
+
+function changeMember(result_arr){
+  document.getElementById("cardNumberField").style.display = "block";
+  document.getElementById("customer_id").value = result_arr[0];
+  document.getElementById("memberName").value = result_arr[1];
+  document.getElementById("memberPhone").value = result_arr[2];
+}
 
 function addNewRowTrxSell(result_arr){
    var table = document.getElementById("sells_table");

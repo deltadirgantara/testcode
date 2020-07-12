@@ -23,9 +23,6 @@
           .col
             label Total 
             input disabled="disabled" class="form-control md-form" value="#{number_with_delimiter(@trx.nominal, delimiter: ".")}"
-          .col 
-            label Profit
-            input disabled="disabled" class="form-control md-form" value="#{number_with_delimiter((@trx.nominal - @trx.trx_buy_items.sum(:buy)).to_i, delimiter: ".")}"
 .container-fluid
   .col-lg-12.col-md-12
     .card.mb-4

@@ -162,12 +162,17 @@ class TrxesController < ApplicationController
   def create
     buy_items = params[:trxs][:buy_item]
     sell_items = params[:trxs][:sell_item]
-
+    customer_id = params[:trxs][:detail][:customer_id]
+    customer = Customer.find_by(id: customer_id)
     invoice = "TRX-"+DateTime.now.to_i.to_s+"-"+current_user.store.id.to_s+"-"+current_user.id.to_s
+
+    trx_buy = nil
+    trx = nil
+
     if buy_items.present?
       trx_buy = TrxBuy.create invoice: invoice, nominal: 0, 
                   user: current_user, store: current_user.store,
-                  date: DateTime.now
+                  date: DateTime.now, customer: customer
       nominal = 0
       buy_items.each do |buy_item|
         buy_item_params = buy_item[1]
@@ -187,7 +192,7 @@ class TrxesController < ApplicationController
         nominal = 0
         trx = Trx.create invoice: invoice, nominal: 0, 
                     user: current_user, store: current_user.store,
-                    date: DateTime.now
+                    date: DateTime.now, customer: customer
 
         sell_items.each do |sell_item|
           sell_item_params = sell_item[1]
@@ -197,9 +202,17 @@ class TrxesController < ApplicationController
                             sell: sell_item_params[:sell], 
                             item: item
           nominal += trx_sell_item.sell
+          item.stock -= 1
+          item.save!
         end
         trx.nominal = nominal
         trx.save!
+    end
+
+    if trx_buy.present?
+      redirect_success trx_buy_path(id: trx_buy.id), "Data berhasil disimpan"
+    else
+      redirect_success trx_path(id: trx.id), "Data berhasil disimpan"
     end
 
   end
