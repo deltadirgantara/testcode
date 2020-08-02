@@ -1,24 +1,9 @@
-# README
+# Cantik Jelita
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## DATABASE
+> Create database 'parfish' with username 'postgres' and password 'postgres'
+> Migrate
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## FIRST INITIALIZATION
+> Create 'Store' 
+> Create 'User'

@@ -1,9 +1,10 @@
-- New TRX
-- New TRXSELL
-- Change SS
-- Lebur
-- Stok Opname
-- Masukkin ke recap harian TRX
-- Balancing hrian
-
-- cetak receipt PDF di TRXES & TRXBUYS
+- Kustomisasi emas => ?
+- Lebur => ?
+- Stok Opname => route baru
+- Balancing harian => kas ++
+- View buat TrxG1 & TrxG2
+- Pembukuan Besar & Kecil => route baru
+- Pembukuan dibagi untuk setiap toko
+- tampilan di new TRX, input angka dikasi koma
+- cetak receipt PDF di TRXES & TRXBUYS => A5
+- sinkronisasi buat setiap trx, trx_g1, trx_g2, trx_g1_item, trx_g2_item, trx_g2_buy_item, trx_g1_buy, trx_g2_buy_item, trx_g1_buy_item

@@ -1,6 +1,6 @@
 class TrxesController < ApplicationController
   before_action :require_login
-  skip_before_action :verify_authenticity_token, :if => Proc.new { |c| c.request.format == 'application/json' }
+  # skip_before_action :verify_authenticity_token, :if => Proc.new { |c| c.request.format == 'application/json' }
 
   def index
     filter = filter_search params, "html"
@@ -167,7 +167,6 @@ class TrxesController < ApplicationController
     invoice = "TRX-"+DateTime.now.to_i.to_s+"-"+current_user.store.id.to_s+"-"+current_user.id.to_s
 
     trx_buy = nil
-    trx = nil
 
     if buy_items.present?
       trx_buy = TrxBuy.create invoice: invoice, nominal: 0, 
@@ -188,8 +187,14 @@ class TrxesController < ApplicationController
       trx_buy.save!
     end
 
+    trx = nil
+    trx_g1 = nil
+    trx_g2 = nil
+
     if sell_items.present?
         nominal = 0
+        nominal_g1 = 0
+        nominal_g2 = 0
         trx = Trx.create invoice: invoice, nominal: 0, 
                     user: current_user, store: current_user.store,
                     date: DateTime.now, customer: customer
@@ -201,9 +206,57 @@ class TrxesController < ApplicationController
                             buy: sell_item_params[:buy],
                             sell: sell_item_params[:sell], 
                             item: item
+          
+          if item.gold_type == GoldType.first
+            if trx_g1.present?
+              trx_sell_item = TrxG1Item.create trx: trx,
+                            buy: sell_item_params[:buy],
+                            sell: sell_item_params[:sell], 
+                            item: item
+              nominal_g1 += trx_sell_item.sell
+            else
+              trx_g1 = Trx.create invoice: invoice, nominal: 0, 
+                    user: current_user, store: current_user.store,
+                    date: DateTime.now, customer: customer
+              trx_sell_item = TrxG1Item.create trx: trx,
+                            buy: sell_item_params[:buy],
+                            sell: sell_item_params[:sell], 
+                            item: item
+              nominal_g1 += trx_sell_item.sell
+            end
+
+          else
+
+            if trx_g2.present?
+              trx_sell_item = TrxG2Item.create trx: trx,
+                            buy: sell_item_params[:buy],
+                            sell: sell_item_params[:sell], 
+                            item: item
+              nominal_g2 += trx_sell_item.sell
+            else
+              trx_g2 = Trx.create invoice: invoice, nominal: 0, 
+                    user: current_user, store: current_user.store,
+                    date: DateTime.now, customer: customer
+              trx_sell_item = TrxG1Item.create trx: trx,
+                            buy: sell_item_params[:buy],
+                            sell: sell_item_params[:sell], 
+                            item: item
+              nominal_g2 += trx_sell_item.sell            
+            end
+          end
+
           nominal += trx_sell_item.sell
           item.stock -= 1
           item.save!
+        end
+
+        if trx_g1.present?
+          trx_g1.nominal = nominal
+          trx_g1.save!
+        end
+        if trx_g2.present?
+          trx_g2.nominal = nominal
+          trx_g2.save!
         end
         trx.nominal = nominal
         trx.save!
