@@ -1,9 +1,9 @@
 # Cantik Jelita
 
 ## DATABASE
-> Create database 'parfish' with username 'postgres' and password 'postgres'
-> Migrate
+1. Create database 'parfish' with username 'postgres' and password 'postgres'
+2. Migrate
 
 ## FIRST INITIALIZATION
-> Create 'Store' 
-> Create 'User'
+1. Create 'Store' 
+2. Create 'User'
