@@ -167,12 +167,18 @@ class TrxesController < ApplicationController
     invoice = "TRX-"+DateTime.now.to_i.to_s+"-"+current_user.store.id.to_s+"-"+current_user.id.to_s
 
     trx_buy = nil
+    trx_buy_g1 = nil
+    trx_buy_g2 = nil
 
     if buy_items.present?
       trx_buy = TrxBuy.create invoice: invoice, nominal: 0, 
                   user: current_user, store: current_user.store,
                   date: DateTime.now, customer: customer
+      
       nominal = 0
+      nominal_trx_buy_g1 = 0
+      nominal_trx_buy_g2 = 0
+      
       buy_items.each do |buy_item|
         buy_item_params = buy_item[1]
         trx_buy_item = TrxBuyItem.create description: buy_item_params[:description],
@@ -180,7 +186,52 @@ class TrxesController < ApplicationController
                           weight: buy_item_params[:weight],
                           buy: buy_item_params[:total], 
                           trx_buy: trx_buy
+        if trx_buy_item.gold_type == GoldType.first
+          if trx_buy_g1.present?
+            trx_buy_item = TrxBuyG1Item.create description: buy_item_params[:description],
+                          gold_type_id: buy_item_params[:gold],
+                          weight: buy_item_params[:weight],
+                          buy: buy_item_params[:total], 
+                          trx_buy: trx_buy_g1
+            nominal_trx_buy_g1 += trx_buy_item.buy
+          else
+            trx_buy_item = TrxBuyG1Item.create description: buy_item_params[:description],
+                          gold_type_id: buy_item_params[:gold],
+                          weight: buy_item_params[:weight],
+                          buy: buy_item_params[:total], 
+                          trx_buy: trx_buy_g1
+            nominal_trx_buy_g1 += trx_buy_item.buy
+          end
+        else
+          if trx_buy_g2.present?
+            trx_buy_item = TrxBuyG2Item.create description: buy_item_params[:description],
+                          gold_type_id: buy_item_params[:gold],
+                          weight: buy_item_params[:weight],
+                          buy: buy_item_params[:total], 
+                          trx_buy: trx_buy_g2
+            nominal_trx_buy_g1 += trx_buy_item.buy
+          else
 
+            trx_buy_g1 = TrxBuyG2.create invoice: invoice, nominal: 0, 
+                  user: current_user, store: current_user.store,
+                  date: DateTime.now, customer: customer
+            trx_buy_item = TrxBuyG2Item.create description: buy_item_params[:description],
+                          gold_type_id: buy_item_params[:gold],
+                          weight: buy_item_params[:weight],
+                          buy: buy_item_params[:total], 
+                          trx_buy: trx_buy_g2
+            nominal_trx_buy_g2 += trx_buy_item.buy
+          end
+        end
+
+        if trx_buy_g1.present?
+          trx_buy_g1.nominal = nominal
+          trx_buy_g1.save!
+        end
+        if trx_buy_g2.present?
+          trx_buy_g2.nominal = nominal
+          trx_buy_g2.save!
+        end
         nominal += trx_buy_item.buy
       end
       trx_buy.nominal = nominal
@@ -209,7 +260,7 @@ class TrxesController < ApplicationController
           
           if item.gold_type == GoldType.first
             if trx_g1.present?
-              trx_sell_item = TrxG1Item.create trx: trx,
+              trx_sell_item = TrxG1Item.create trx: trx_g1,
                             buy: sell_item_params[:buy],
                             sell: sell_item_params[:sell], 
                             item: item
@@ -218,7 +269,7 @@ class TrxesController < ApplicationController
               trx_g1 = Trx.create invoice: invoice, nominal: 0, 
                     user: current_user, store: current_user.store,
                     date: DateTime.now, customer: customer
-              trx_sell_item = TrxG1Item.create trx: trx,
+              trx_sell_item = TrxG1Item.create trx: trx_g1,
                             buy: sell_item_params[:buy],
                             sell: sell_item_params[:sell], 
                             item: item
@@ -228,7 +279,7 @@ class TrxesController < ApplicationController
           else
 
             if trx_g2.present?
-              trx_sell_item = TrxG2Item.create trx: trx,
+              trx_sell_item = TrxG2Item.create trx: trx_g2,
                             buy: sell_item_params[:buy],
                             sell: sell_item_params[:sell], 
                             item: item
@@ -237,7 +288,7 @@ class TrxesController < ApplicationController
               trx_g2 = Trx.create invoice: invoice, nominal: 0, 
                     user: current_user, store: current_user.store,
                     date: DateTime.now, customer: customer
-              trx_sell_item = TrxG1Item.create trx: trx,
+              trx_sell_item = TrxG1Item.create trx: trx_g2,
                             buy: sell_item_params[:buy],
                             sell: sell_item_params[:sell], 
                             item: item

@@ -1,4 +1,4 @@
-# Cantik Jelita
+# CJ
 
 ## DATABASE
 1. Create database 'parfish' with username 'postgres' and password 'postgres'
