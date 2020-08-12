@@ -6,7 +6,7 @@ class CreateMeld < ActiveRecord::Migration[5.2]
     	t.references :supplier, null: false, foreign_key: true
     	t.timestamp :done
     	t.bigint :cost, null: false, default: 0
-    	t.bigint :receive, null: false, default: 0
+    	t.float :receive, null: false, default: 0
     	t.references :gold_type, foreign_key: true, null:false
     	t.timestamps
     end
