@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_12_092501) do
+ActiveRecord::Schema.define(version: 2020_08_12_104648) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -248,6 +248,7 @@ ActiveRecord::Schema.define(version: 2020_08_12_092501) do
     t.bigint "gold_type_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "invoice", null: false
     t.index ["gold_type_id"], name: "index_melts_on_gold_type_id"
     t.index ["store_id"], name: "index_melts_on_store_id"
     t.index ["suppliers_id"], name: "index_melts_on_suppliers_id"
@@ -352,6 +353,14 @@ ActiveRecord::Schema.define(version: 2020_08_12_092501) do
     t.index ["user_id"], name: "index_receivables_on_user_id"
   end
 
+  create_table "sales", force: :cascade do |t|
+    t.string "name"
+    t.bigint "store_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_sales_on_store_id"
+  end
+
   create_table "service_items", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -368,6 +377,7 @@ ActiveRecord::Schema.define(version: 2020_08_12_092501) do
     t.bigint "cost", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "invoice", null: false
     t.index ["store_id"], name: "index_services_on_store_id"
     t.index ["suppliers_id"], name: "index_services_on_suppliers_id"
     t.index ["user_id"], name: "index_services_on_user_id"
@@ -582,8 +592,8 @@ ActiveRecord::Schema.define(version: 2020_08_12_092501) do
   end
 
   create_table "trx_items", force: :cascade do |t|
-    t.bigint "item_id", null: false
     t.bigint "trx_id", null: false
+    t.bigint "item_id", null: false
     t.bigint "buy", null: false
     t.bigint "sell", null: false
     t.datetime "created_at", null: false
@@ -596,8 +606,8 @@ ActiveRecord::Schema.define(version: 2020_08_12_092501) do
     t.datetime "date", null: false
     t.bigint "store_id", null: false
     t.bigint "user_id", null: false
-    t.bigint "bank_id"
     t.bigint "customer_id"
+    t.bigint "bank_id"
     t.bigint "nominal", null: false
     t.string "invoice", null: false
     t.integer "payment_type", default: 1, null: false
@@ -677,6 +687,7 @@ ActiveRecord::Schema.define(version: 2020_08_12_092501) do
   add_foreign_key "payments", "users"
   add_foreign_key "receivables", "stores"
   add_foreign_key "receivables", "users"
+  add_foreign_key "sales", "stores"
   add_foreign_key "service_items", "items"
   add_foreign_key "services", "stores"
   add_foreign_key "services", "suppliers", column: "suppliers_id"

@@ -53,6 +53,7 @@ Rails.application.routes.draw do
     resources :bank_flows
 
     resources :custom_orders
+    resources :melts
 
 
     get '/refresh/asset_values', to: 'asset_values#refresh', as: 'refresh_asset_values'
