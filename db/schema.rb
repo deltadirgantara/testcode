@@ -233,16 +233,18 @@ ActiveRecord::Schema.define(version: 2020_08_12_104648) do
   create_table "melt_items", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "melt_id", null: false
     t.bigint "item_id", null: false
     t.string "description"
     t.index ["item_id"], name: "index_melt_items_on_item_id"
+    t.index ["melt_id"], name: "index_melt_items_on_melt_id"
   end
 
   create_table "melts", force: :cascade do |t|
     t.bigint "store_id", null: false
     t.bigint "user_id", null: false
-    t.bigint "suppliers_id", null: false
-    t.datetime "done", null: false
+    t.bigint "supplier_id", null: false
+    t.datetime "done"
     t.bigint "cost", default: 0, null: false
     t.bigint "receive", default: 0, null: false
     t.bigint "gold_type_id", null: false
@@ -251,7 +253,7 @@ ActiveRecord::Schema.define(version: 2020_08_12_104648) do
     t.string "invoice", null: false
     t.index ["gold_type_id"], name: "index_melts_on_gold_type_id"
     t.index ["store_id"], name: "index_melts_on_store_id"
-    t.index ["suppliers_id"], name: "index_melts_on_suppliers_id"
+    t.index ["supplier_id"], name: "index_melts_on_supplier_id"
     t.index ["user_id"], name: "index_melts_on_user_id"
   end
 
@@ -353,33 +355,27 @@ ActiveRecord::Schema.define(version: 2020_08_12_104648) do
     t.index ["user_id"], name: "index_receivables_on_user_id"
   end
 
-  create_table "sales", force: :cascade do |t|
-    t.string "name"
-    t.bigint "store_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["store_id"], name: "index_sales_on_store_id"
-  end
-
   create_table "service_items", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "service_id", null: false
     t.bigint "item_id", null: false
     t.string "description"
     t.index ["item_id"], name: "index_service_items_on_item_id"
+    t.index ["service_id"], name: "index_service_items_on_service_id"
   end
 
   create_table "services", force: :cascade do |t|
     t.bigint "store_id", null: false
     t.bigint "user_id", null: false
-    t.bigint "suppliers_id", null: false
-    t.datetime "done", null: false
+    t.bigint "supplier_id", null: false
+    t.datetime "done"
     t.bigint "cost", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "invoice", null: false
     t.index ["store_id"], name: "index_services_on_store_id"
-    t.index ["suppliers_id"], name: "index_services_on_suppliers_id"
+    t.index ["supplier_id"], name: "index_services_on_supplier_id"
     t.index ["user_id"], name: "index_services_on_user_id"
   end
 
@@ -592,8 +588,8 @@ ActiveRecord::Schema.define(version: 2020_08_12_104648) do
   end
 
   create_table "trx_items", force: :cascade do |t|
-    t.bigint "trx_id", null: false
     t.bigint "item_id", null: false
+    t.bigint "trx_id", null: false
     t.bigint "buy", null: false
     t.bigint "sell", null: false
     t.datetime "created_at", null: false
@@ -606,8 +602,8 @@ ActiveRecord::Schema.define(version: 2020_08_12_104648) do
     t.datetime "date", null: false
     t.bigint "store_id", null: false
     t.bigint "user_id", null: false
-    t.bigint "customer_id"
     t.bigint "bank_id"
+    t.bigint "customer_id"
     t.bigint "nominal", null: false
     t.string "invoice", null: false
     t.integer "payment_type", default: 1, null: false
@@ -669,9 +665,10 @@ ActiveRecord::Schema.define(version: 2020_08_12_104648) do
   add_foreign_key "kasbons", "stores"
   add_foreign_key "kasbons", "users"
   add_foreign_key "melt_items", "items"
+  add_foreign_key "melt_items", "melts"
   add_foreign_key "melts", "gold_types"
   add_foreign_key "melts", "stores"
-  add_foreign_key "melts", "suppliers", column: "suppliers_id"
+  add_foreign_key "melts", "suppliers"
   add_foreign_key "melts", "users"
   add_foreign_key "modals", "stores"
   add_foreign_key "modals", "users"
@@ -687,10 +684,10 @@ ActiveRecord::Schema.define(version: 2020_08_12_104648) do
   add_foreign_key "payments", "users"
   add_foreign_key "receivables", "stores"
   add_foreign_key "receivables", "users"
-  add_foreign_key "sales", "stores"
   add_foreign_key "service_items", "items"
+  add_foreign_key "service_items", "services"
   add_foreign_key "services", "stores"
-  add_foreign_key "services", "suppliers", column: "suppliers_id"
+  add_foreign_key "services", "suppliers"
   add_foreign_key "services", "users"
   add_foreign_key "store_banks", "banks"
   add_foreign_key "store_banks", "stores"

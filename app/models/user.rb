@@ -24,4 +24,6 @@ class User < ApplicationRecord
   has_many :customers
   has_many :custom_orders
   has_many :operationals
+  has_many :melts
+  has_many :services
 end

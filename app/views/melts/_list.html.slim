@@ -2,8 +2,8 @@ tr
 	td #{melt.invoice}
 	td #{melt.store.name}
 	td #{melt.gold_type.name}
-	td #{number_with_delimiter(melt.weight, delimiter: ".")}
-	td #{melt.description}
+	- weight = Item.where(id: melt.melt_items.pluck(:item_id)).sum(:weight)
+	td #{number_with_delimiter(weight, delimiter: ".")}
 	td
 		a href='#{melt_path(id: melt.id)}'
 	      	button.btn.btn-info type="button" 

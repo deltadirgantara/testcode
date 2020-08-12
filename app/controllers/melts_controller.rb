@@ -29,11 +29,11 @@ class MeltsController < ApplicationController
 
   	def show
   		return redirect_back_data_error melts_path, "Date tidak ditemukan" if params[:id].nil?
-  		@melts = Melts.find_by(id: params[:id])
+  		@melt = Melt.find_by(id: params[:id])
   		return redirect_back_data_error melts_path, "Data tidak ditemukan" if @melt.nil?
     
     	respond_to do |format|
-      		format.html do
+      	format.html do
       	end
       	format.pdf do
         	@recap_type = "invoice"

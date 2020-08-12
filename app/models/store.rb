@@ -8,5 +8,7 @@ class Store < ApplicationRecord
   has_many :taxs
   has_many :buckets
   has_many :asset_values
+  has_many :melts
+  has_many :services
 end
 

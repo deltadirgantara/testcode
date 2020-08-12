@@ -5,4 +5,5 @@ class Melt < ApplicationRecord
   belongs_to :user
   belongs_to :supplier
   belongs_to :gold_type
+  has_many :melt_items
 end
