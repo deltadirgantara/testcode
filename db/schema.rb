@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_02_220250) do
+ActiveRecord::Schema.define(version: 2020_08_12_092501) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -171,6 +171,12 @@ ActiveRecord::Schema.define(version: 2020_08_02_220250) do
     t.index ["user_id"], name: "index_fix_costs_on_user_id"
   end
 
+  create_table "gold_masters", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "gold_prices", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -184,6 +190,8 @@ ActiveRecord::Schema.define(version: 2020_08_02_220250) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "gold_master_id"
+    t.index ["gold_master_id"], name: "index_gold_types_on_gold_master_id"
   end
 
   create_table "items", force: :cascade do |t|
@@ -198,6 +206,7 @@ ActiveRecord::Schema.define(version: 2020_08_02_220250) do
     t.datetime "updated_at", null: false
     t.bigint "bucket_id"
     t.float "buy", default: 0.0, null: false
+    t.string "name", default: "-", null: false
     t.index ["bucket_id"], name: "index_items_on_bucket_id"
     t.index ["gold_type_id"], name: "index_items_on_gold_type_id"
     t.index ["store_id"], name: "index_items_on_store_id"
@@ -219,6 +228,30 @@ ActiveRecord::Schema.define(version: 2020_08_02_220250) do
     t.datetime "updated_at", null: false
     t.index ["store_id"], name: "index_kasbons_on_store_id"
     t.index ["user_id"], name: "index_kasbons_on_user_id"
+  end
+
+  create_table "melt_items", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "item_id", null: false
+    t.string "description"
+    t.index ["item_id"], name: "index_melt_items_on_item_id"
+  end
+
+  create_table "melts", force: :cascade do |t|
+    t.bigint "store_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "suppliers_id", null: false
+    t.datetime "done", null: false
+    t.bigint "cost", default: 0, null: false
+    t.bigint "receive", default: 0, null: false
+    t.bigint "gold_type_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["gold_type_id"], name: "index_melts_on_gold_type_id"
+    t.index ["store_id"], name: "index_melts_on_store_id"
+    t.index ["suppliers_id"], name: "index_melts_on_suppliers_id"
+    t.index ["user_id"], name: "index_melts_on_user_id"
   end
 
   create_table "modals", force: :cascade do |t|
@@ -317,6 +350,27 @@ ActiveRecord::Schema.define(version: 2020_08_02_220250) do
     t.datetime "updated_at", null: false
     t.index ["store_id"], name: "index_receivables_on_store_id"
     t.index ["user_id"], name: "index_receivables_on_user_id"
+  end
+
+  create_table "service_items", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "item_id", null: false
+    t.string "description"
+    t.index ["item_id"], name: "index_service_items_on_item_id"
+  end
+
+  create_table "services", force: :cascade do |t|
+    t.bigint "store_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "suppliers_id", null: false
+    t.datetime "done", null: false
+    t.bigint "cost", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_services_on_store_id"
+    t.index ["suppliers_id"], name: "index_services_on_suppliers_id"
+    t.index ["user_id"], name: "index_services_on_user_id"
   end
 
   create_table "store_banks", force: :cascade do |t|
@@ -597,12 +651,18 @@ ActiveRecord::Schema.define(version: 2020_08_02_220250) do
   add_foreign_key "fix_costs", "stores"
   add_foreign_key "fix_costs", "users"
   add_foreign_key "gold_prices", "gold_types"
+  add_foreign_key "gold_types", "gold_masters"
   add_foreign_key "items", "buckets"
   add_foreign_key "items", "gold_types"
   add_foreign_key "items", "stores"
   add_foreign_key "items", "sub_categories"
   add_foreign_key "kasbons", "stores"
   add_foreign_key "kasbons", "users"
+  add_foreign_key "melt_items", "items"
+  add_foreign_key "melts", "gold_types"
+  add_foreign_key "melts", "stores"
+  add_foreign_key "melts", "suppliers", column: "suppliers_id"
+  add_foreign_key "melts", "users"
   add_foreign_key "modals", "stores"
   add_foreign_key "modals", "users"
   add_foreign_key "notifications", "users", column: "from_user_id"
@@ -617,6 +677,10 @@ ActiveRecord::Schema.define(version: 2020_08_02_220250) do
   add_foreign_key "payments", "users"
   add_foreign_key "receivables", "stores"
   add_foreign_key "receivables", "users"
+  add_foreign_key "service_items", "items"
+  add_foreign_key "services", "stores"
+  add_foreign_key "services", "suppliers", column: "suppliers_id"
+  add_foreign_key "services", "users"
   add_foreign_key "store_banks", "banks"
   add_foreign_key "store_banks", "stores"
   add_foreign_key "store_cashes", "stores"

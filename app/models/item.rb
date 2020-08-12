@@ -6,5 +6,7 @@ class Item < ApplicationRecord
   belongs_to :store
   belongs_to :bucket
   has_many :trx_items
+  has_many :service_items
+  has_many :melt_items
 end
 
