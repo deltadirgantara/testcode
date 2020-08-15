@@ -270,7 +270,7 @@ function addNewRowTrxBuy(){
    var gold_types = gon.gold_types;
    var gold_prices = gon.gold_prices;
    var gon_sub_categories = gon.sub_categories;
-   var stats = [[1, "Cuci"],[2, "Service"], [3, "Lebur"]];
+   var stats = [[2, "Cuci"],[3, "Service"], [4, "Lebur"]];
    var table = document.getElementById("buys_table");
    
    var row = table.insertRow(-1);

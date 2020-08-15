@@ -9,5 +9,13 @@ class Item < ApplicationRecord
   has_many :service_items
   has_many :melt_items
   has_many :wash_items
+
+  enum status: {
+  	TERJUAL: -1, 
+    TERSEDIA: 0,
+    CUCI: 1,
+    SERVICE: 2,
+    LEBUR: 3
+  }
 end
 

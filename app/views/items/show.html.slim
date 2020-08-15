@@ -6,7 +6,7 @@
           | Detil Barang
       .card-body
         .row
-          .col-12.text-center
+          / .col-12.text-center
             - if @item.image.present?
               =image_tag("/uploads/items/#{@item.image}", height: '400', width: '600', class:" z-depth-2")
             - else
@@ -45,17 +45,7 @@
 
               .form-group
                 label Status
-                - if @item.stock == 1
-                    input readonly=true value="Tersedia" class="form-control md-form" style="color: green" 
-                - else
-                  input readonly=true value="Tidak Tersedia" class="form-control md-form"  style="color: red" 
-
-                  .form-group
-                    label.text-danger TERJUAL
-                    br
-                    label Kasir - Tanggal
-                    input readonly=true value="-" class="form-control md-form"
-              
+                input readonly=true value="#{@item.status}" class="form-control md-form" 
               - if @item.stock > 0
                 .row
                   .col-6.text-center

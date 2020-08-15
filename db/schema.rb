@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_15_145350) do
+ActiveRecord::Schema.define(version: 2020_08_15_162407) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -207,6 +207,7 @@ ActiveRecord::Schema.define(version: 2020_08_15_145350) do
     t.bigint "bucket_id"
     t.float "buy", default: 0.0, null: false
     t.string "name", default: "-", null: false
+    t.integer "status", default: 0, null: false
     t.index ["bucket_id"], name: "index_items_on_bucket_id"
     t.index ["gold_type_id"], name: "index_items_on_gold_type_id"
     t.index ["store_id"], name: "index_items_on_store_id"
