@@ -4,5 +4,5 @@ class Service < ApplicationRecord
   belongs_to :store
   belongs_to :user
   belongs_to :supplier
-  has_many :melt_items
+  has_many :service_items
 end

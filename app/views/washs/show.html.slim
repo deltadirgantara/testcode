@@ -1,0 +1,39 @@
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.success-color
+        h5.font-weight-500.my-1
+          | Informasi Perbaikan
+      .card-body
+        .row
+          .col-3
+            label Invoice
+            input disabled="disabled" class="form-control md-form" value="#{@wash.invoice}"
+          .col-3
+            label Tgl. Dibuat
+            input disabled="disabled" class="form-control md-form" value="#{@wash.created_at}"
+          .col-3
+            - weight = Item.where(id: @wash.wash_items.pluck(:item_id)).sum(:weight)
+            label Total Berat
+            input disabled="disabled" class="form-control md-form" value="#{number_with_delimiter(weight, delimiter: ".")}"
+          .col-3
+            label Tgl. Jadi
+            input disabled="disabled" class="form-control md-form" value="#{@wash.done}"
+          
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.success-color
+        h5.font-weight-500.my-1
+          | Daftar Barang
+      .card-body.table-responsive.text-nowrap
+        table class="table"
+          thead
+            th Kode
+            th Jenis Emas
+            th Berat
+            th Baki
+            th Kategori
+            th Keterangan
+          tbody
+            = render partial: 'list_show', collection: @wash.wash_items, as: :wash_item

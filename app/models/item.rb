@@ -8,5 +8,6 @@ class Item < ApplicationRecord
   has_many :trx_items
   has_many :service_items
   has_many :melt_items
+  has_many :wash_items
 end
 

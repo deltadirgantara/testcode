@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_12_104648) do
+ActiveRecord::Schema.define(version: 2020_08_15_145350) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -647,6 +647,27 @@ ActiveRecord::Schema.define(version: 2020_08_12_104648) do
     t.index ["store_id"], name: "index_users_on_store_id"
   end
 
+  create_table "wash_items", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "wash_id", null: false
+    t.bigint "item_id", null: false
+    t.string "description"
+    t.index ["item_id"], name: "index_wash_items_on_item_id"
+    t.index ["wash_id"], name: "index_wash_items_on_wash_id"
+  end
+
+  create_table "washes", force: :cascade do |t|
+    t.bigint "store_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "done"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "invoice", null: false
+    t.index ["store_id"], name: "index_washes_on_store_id"
+    t.index ["user_id"], name: "index_washes_on_user_id"
+  end
+
   add_foreign_key "asset_values", "stores"
   add_foreign_key "bank_flows", "banks"
   add_foreign_key "bank_flows", "stores"
@@ -737,4 +758,8 @@ ActiveRecord::Schema.define(version: 2020_08_12_104648) do
   add_foreign_key "trxes", "customers"
   add_foreign_key "trxes", "stores"
   add_foreign_key "trxes", "users"
+  add_foreign_key "wash_items", "items"
+  add_foreign_key "wash_items", "washes"
+  add_foreign_key "washes", "stores"
+  add_foreign_key "washes", "users"
 end

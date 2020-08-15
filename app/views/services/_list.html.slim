@@ -1,0 +1,11 @@
+tr 
+	td #{service.invoice}
+	td #{service.store.name}
+	td #{service.user.name}
+	td #{service.supplier.name}
+	- weight = Item.where(id: service.service_items.pluck(:item_id)).sum(:weight)
+	td #{number_with_delimiter(weight, delimiter: ".")}
+	td
+		a href='#{service_path(id: service.id)}'
+	      	button.btn.btn-info type="button" 
+	  	       	| Detil

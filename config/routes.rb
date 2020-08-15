@@ -54,6 +54,8 @@ Rails.application.routes.draw do
 
     resources :custom_orders
     resources :melts
+    resources :services
+    resources :washs
 
 
     get '/refresh/asset_values', to: 'asset_values#refresh', as: 'refresh_asset_values'

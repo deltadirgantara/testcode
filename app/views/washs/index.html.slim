@@ -1,0 +1,62 @@
+.row
+  .col
+    h5
+      | Daftar Perbaikan
+  .col.text-right
+      a href="#{new_wash_path}"
+        button.btn.btn-success type="button" 
+          i.fas.fa-plus 
+          |   Tambah
+
+br
+.container-fluid
+  .col-xl-12.col-lg-12.col-md-12.pb-2 
+  .col-lg-12.col-md-12
+    .card-header.white-text.info-color
+      h5.font-weight-500.my-1
+        | Pencarian
+    .card.mb-4
+      .card-body
+        = form_for :wash, url: washs_path, method: 'GET' do |form|
+          .row.align-middle
+            .col
+              label Nomor Invoice
+              input type="text" class="form-control md-form" id="search" name="search" placeholder="Nomor Invoice ..."
+            - if ["owner", "super_admin"].include? current_user.level
+              .col
+                label Toko
+                select name="store_id" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" id="store" searchable="Cari..."
+                  option value="-"
+                    | Semua Toko
+                  - Store.all.each do |store|
+                    option value="#{store.id}"
+                      | #{store.name}
+            .col-md-12.text-center
+              button class="btn btn-primary"
+                | Cari
+
+        .col-md-12.text-center.grey-text
+          a href="#{washs_path(option: @params.to_s, format: :pdf)}"
+            b
+              - if @search == "" || @search.nil?
+                | Pencarian Semua Toko
+              - else
+                | #{@search}
+
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Data
+      .card-body.table-responsive.text-nowrap
+        table class="table"
+          thead
+            th Nomor Invoice
+            th Toko
+            th Diperbaiki Oleh
+            th Total Berat
+            th Aksi
+          tbody
+            = render partial: 'list', collection: @washs, as: :wash
+        = paginate @washs

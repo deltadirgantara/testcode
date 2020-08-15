@@ -1,0 +1,10 @@
+tr 
+	td #{wash.invoice}
+	td #{wash.store.name}
+	td #{wash.user.name}
+	- weight = Item.where(id: wash.wash_items.pluck(:item_id)).sum(:weight)
+	td #{number_with_delimiter(weight, delimiter: ".")}
+	td
+		a href='#{wash_path(id: wash.id)}'
+	      	button.btn.btn-info type="button" 
+	  	       	| Detil
