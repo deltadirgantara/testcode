@@ -269,6 +269,8 @@ function addNewRowTrxSell(result_arr){
 function addNewRowTrxBuy(){
    var gold_types = gon.gold_types;
    var gold_prices = gon.gold_prices;
+   var gon_sub_categories = gon.sub_categories;
+   var stats = [[1, "Cuci"],[2, "Service"], [3, "Lebur"]];
    var table = document.getElementById("buys_table");
    
    var row = table.insertRow(-1);
@@ -277,6 +279,8 @@ function addNewRowTrxBuy(){
    var cell3 = row.insertCell(2);
    var cell4 = row.insertCell(3);
    var cell5 = row.insertCell(4);
+   var cell6 = row.insertCell(5);
+   var cell7 = row.insertCell(6);
 
 
    let desc = "<input type='text' required class='md-form form-control' value='' name='trxs[buy_item]["+add_counter+"][description]'/>";
@@ -285,19 +289,33 @@ function addNewRowTrxBuy(){
      gold+= '<option value="'+gold_types[i][0]+'"> '+ gold_types[i][1] +'</option>';
    }
    gold+="</select>";
+   let sub_categories = '<select required name="trxs[buy_item]['+add_counter+'][sub_category]" required=true class="browser-default mdb-select md-form colorful-select dropdown-primary" display="block !important">';
+   for (var i = 0; i < gon_sub_categories.length; i++) {
+     sub_categories+= '<option value="'+gon_sub_categories[i][0]+'"> '+ gon_sub_categories[i][1] +'</option>';
+   }
+   let status = '<select required name="trxs[buy_item]['+add_counter+'][status]" required=true class="browser-default mdb-select md-form colorful-select dropdown-primary" display="block !important">';
+   for (var i = 0; i < stats.length; i++) {
+     status+= '<option value="'+stats[i][0]+'"> '+ stats[i][1] +'</option>';
+   }
+
    let weight = "<input required type='number' step='0.01' class='md-form form-control' value='0' min=0 name='trxs[buy_item]["+add_counter+"][weight]'/>";
    let total = "<input required type='number' class='md-form form-control' value='0' min=0 name='trxs[buy_item]["+add_counter+"][total]'/>";
    let remove = "<i class='fa fa-trash text-danger' onclick='removeRowBuy(this)'></i>"; 
    cell1.innerHTML = desc;
    cell2.innerHTML = gold;
-   cell3.innerHTML = weight;
-   cell4.innerHTML = total;
-   cell5.innerHTML = remove;
+   cell3.innerHTML = sub_categories;
+   cell4.innerHTML = weight;
+   cell5.innerHTML = total;
+   cell6.innerHTML = status;
+   cell7.innerHTML = remove;
+
    cell1.style.verticalAlign = "middle";
    cell2.style.verticalAlign = "middle";
    cell3.style.verticalAlign = "middle";
    cell4.style.verticalAlign = "middle";
    cell5.style.verticalAlign = "middle";
+   cell6.style.verticalAlign = "middle";
+   cell7.style.verticalAlign = "middle";
    add_counter++;
    return false;
 }

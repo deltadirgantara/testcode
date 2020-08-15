@@ -355,14 +355,6 @@ ActiveRecord::Schema.define(version: 2020_08_15_145350) do
     t.index ["user_id"], name: "index_receivables_on_user_id"
   end
 
-  create_table "sales", force: :cascade do |t|
-    t.string "name"
-    t.bigint "store_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["store_id"], name: "index_sales_on_store_id"
-  end
-
   create_table "service_items", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -596,8 +588,8 @@ ActiveRecord::Schema.define(version: 2020_08_15_145350) do
   end
 
   create_table "trx_items", force: :cascade do |t|
-    t.bigint "trx_id", null: false
     t.bigint "item_id", null: false
+    t.bigint "trx_id", null: false
     t.bigint "buy", null: false
     t.bigint "sell", null: false
     t.datetime "created_at", null: false
@@ -610,8 +602,8 @@ ActiveRecord::Schema.define(version: 2020_08_15_145350) do
     t.datetime "date", null: false
     t.bigint "store_id", null: false
     t.bigint "user_id", null: false
-    t.bigint "customer_id"
     t.bigint "bank_id"
+    t.bigint "customer_id"
     t.bigint "nominal", null: false
     t.string "invoice", null: false
     t.integer "payment_type", default: 1, null: false
@@ -713,7 +705,6 @@ ActiveRecord::Schema.define(version: 2020_08_15_145350) do
   add_foreign_key "payments", "users"
   add_foreign_key "receivables", "stores"
   add_foreign_key "receivables", "users"
-  add_foreign_key "sales", "stores"
   add_foreign_key "service_items", "items"
   add_foreign_key "service_items", "services"
   add_foreign_key "services", "stores"

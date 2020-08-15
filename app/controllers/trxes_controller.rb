@@ -155,6 +155,7 @@ class TrxesController < ApplicationController
       types << [g_type.id,g_type.name]
       prices << g_type.gold_price.buy
     end
+    gon.sub_categories = SubCategory.all.pluck(:id,:name)
     gon.gold_prices = prices
     gon.gold_types = types
   end

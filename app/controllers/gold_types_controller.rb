@@ -37,7 +37,15 @@ class GoldTypesController < ApplicationController
   	gold_type = GoldType.new gold_params
     return redirect_back_data_error new_user_path, "Data tidak valid!" if gold_type.invalid?
     gold_type.save!
+    gold_price = GoldPrice.new gold_price_params
+    gold_price.gold_type = gold_type
+    if gold_price.invalid?
+      gold_type.destroy
+      return redirect_back_data_error new_user_path, "Data tidak valid!" 
+    end
+    gold_price.save!
     gold_type.create_activity :create, owner: current_user
+    gold_price.create_activity :create, owner: current_user
     return redirect_success gold_type_path(id: gold_type.id), "Jenis Emas berhasil ditambahkan"
   end
 
@@ -87,6 +95,12 @@ class GoldTypesController < ApplicationController
     def gold_params
       params.require(:gold).permit(
         :name
+      )
+    end
+
+    def gold_price_params
+      params.require(:gold).permit(
+        :buy, :sell
       )
     end
 
