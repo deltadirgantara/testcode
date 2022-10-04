@@ -206,7 +206,7 @@ GEM
     nio4r (2.5.2)
     nokogiri (1.10.7)
       mini_portile2 (~> 2.4.0)
-    pdfkit (0.8.4.1)
+    pdfkit (0.8.7)
     pg (1.2.1)
     pry (0.12.2)
       coderay (~> 1.1.0)
